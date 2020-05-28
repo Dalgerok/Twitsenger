@@ -102,7 +102,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
-CREATE TRIGGER check_insert_friend_request BEFORE INSERT TO friend_request 
+CREATE TRIGGER check_insert_friend_request BEFORE INSERT ON friend_request 
 FOR EACH ROW EXECUTE PROCEDURE check_friend_request();
 
 CREATE OR REPLACE FUNCTION add_friend_request()
@@ -125,7 +125,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
-CREATE TRIGGER insert_friend_request BEFORE INSERT TO friend_request
+CREATE TRIGGER insert_friend_request BEFORE INSERT ON friend_request
 FOR EACH ROW EXECUTE PROCEDURE add_friend_request();
 ----
 
