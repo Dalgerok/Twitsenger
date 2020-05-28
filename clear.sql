@@ -1,2 +1,2 @@
-drop schema public cascade;
-create schema public;
+DROP SCHEMA IF EXISTS public CASCADE;
+CREATE SCHEMA public;
