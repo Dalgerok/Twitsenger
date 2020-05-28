@@ -1,11 +1,15 @@
 --GOOD
 CREATE  TABLE locations ( 
 	location_id          SERIAL	   ,
-	city                 varchar   ,
 	country              varchar   ,
+	city                 varchar   ,
 	CONSTRAINT pk_location_id PRIMARY KEY ( location_id ),
-	CONSTRAINT un_location UNIQUE (city, country)
+	CONSTRAINT un_location UNIQUE (country, city)
  );
+CREATE RULE no_delete_locations AS ON DELETE TO locations
+DO INSTEAD NOTHING;
+CREATE RULE no_update_locations AS ON UPDATE TO locations
+DO INSTEAD NOTHING;
 ----
 
 --GOOD
@@ -28,19 +32,17 @@ CREATE  TABLE users (
 	last_name            varchar(100)  NOT NULL ,
 	birthday             timestamp  NOT NULL ,
 	email                varchar(254)  NOT NULL ,
-	current_location_id  integer   ,
+	user_location_id  integer   ,
 	relationship_status  relationshipstatus  NOT NULL ,
 	gender               genders  NOT NULL ,
-	hometown_location_id integer   ,
 	picture_url 		 varchar(255),
 	CONSTRAINT pk_tbl_user_id PRIMARY KEY ( user_id ),
-	CONSTRAINT fk_user_location FOREIGN KEY ( current_location_id ) REFERENCES locations( location_id ) ON DELETE SET NULL ON UPDATE CASCADE,
-	CONSTRAINT fk_user_location_0 FOREIGN KEY ( hometown_location_id ) REFERENCES locations( location_id ) ON DELETE SET NULL ON UPDATE CASCADE,  
+	CONSTRAINT fk_user_location FOREIGN KEY ( user_location_id ) REFERENCES locations( location_id ),
  	CONSTRAINT ch_user_birthday CHECK ((now() - (birthday)::timestamp with time zone) >= '13 years'::interval year)
 );
 
 --BAD (NEED TRIGGERS)!!!
-CREATE  TABLE friendrequest ( 
+CREATE  TABLE friend_request ( 
 	from_whom            integer  NOT NULL ,
 	to_whom              integer  NOT NULL ,
 	request_date         timestamp DEFAULT CURRENT_DATE NOT NULL ,
@@ -69,8 +71,8 @@ CREATE  TABLE message (
 	message_text         varchar(250)  NOT NULL ,
 	message_date         timestamp DEFAULT CURRENT_DATE NOT NULL ,
 	CONSTRAINT pk_message_message_id PRIMARY KEY ( message_id ),
-	CONSTRAINT fk_message_user FOREIGN KEY ( user_from ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_message_user_0 FOREIGN KEY ( user_to ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT fk_message_user1 FOREIGN KEY ( user_from ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT fk_message_user2 FOREIGN KEY ( user_to ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT ch_message CHECK (user_from <> user_to)
  );
 ----
@@ -84,12 +86,12 @@ CREATE  TABLE post (
 	reposted_from        integer   ,
 	CONSTRAINT pk_post_post_id PRIMARY KEY ( post_id ),
 	CONSTRAINT fk_post_post FOREIGN KEY ( reposted_from ) REFERENCES post( post_id ) ON DELETE SET NULL ON UPDATE CASCADE,
-	CONSTRAINT fk_user_post FOREIGN KEY ( user_id) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT fk_user_post FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE
  );
 ----
 
 --GOOD
-CREATE  TABLE likesign ( 
+CREATE  TABLE like_sign ( 
 	post_id              integer  NOT NULL ,
 	user_id              integer  NOT NULL ,
 	CONSTRAINT pk_likesign PRIMARY KEY ( post_id, user_id ),
@@ -99,13 +101,17 @@ CREATE  TABLE likesign (
 ----
 
 --GOOD
-CREATE TABLE facility_type(
+CREATE TABLE facility_types(
 	facility_type_id SERIAL,
 	facility_description varchar(100) NOT NULL,
 	CONSTRAINT pk_facility_type PRIMARY KEY ( facility_type_id ),
 	CONSTRAINT un_facility_description UNIQUE ( facility_description )
 );
-INSERT INTO facility_type(facility_description)
+CREATE RULE no_delete_facility_types AS ON DELETE TO facility_types
+DO INSTEAD NOTHING;
+CREATE RULE no_update_facility_types AS ON UPDATE TO facility_types
+DO INSTEAD NOTHING;
+INSERT INTO facility_types(facility_description)
 VALUES ('School'), ('University'), ('Work');
 
 CREATE  TABLE facility ( 
@@ -114,9 +120,11 @@ CREATE  TABLE facility (
 	facility_location  integer NOT NULL,
 	facility_type	   integer NOT NULL,
 	CONSTRAINT pk_facility_id PRIMARY KEY ( facility_id ),
-	CONSTRAINT fk_facility_location FOREIGN KEY ( facility_location ) REFERENCES locations( location_id ) ON DELETE CASCADE ON UPDATE CASCADE
- );
-CREATE  TABLE userfacility ( 
+	CONSTRAINT fk_facility_location FOREIGN KEY ( facility_location ) REFERENCES locations( location_id ),
+	CONSTRAINT fk_facility_type FOREIGN KEY ( facility_type) REFERENCES facility_types( facility_type_id)
+);
+
+CREATE  TABLE user_facility ( 
 	user_id              integer  NOT NULL ,
 	facility_id          integer  NOT NULL ,
 	date_from            timestamp  NOT NULL ,
@@ -124,7 +132,7 @@ CREATE  TABLE userfacility (
 	description          varchar(100),
 	CONSTRAINT pk_userfacility PRIMARY KEY ( user_id, facility_id, date_from ),
 	CONSTRAINT fk_userfacility_user FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT fk_userfacility_facility FOREIGN KEY ( facility_id ) REFERENCES facility( facility_id ) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT fk_userfacility_facility FOREIGN KEY ( facility_id ) REFERENCES facility( facility_id ),
 	CONSTRAINT ch_date CHECK ((date_to IS NULL) OR (date_to >= date_from))
  );
 ----
