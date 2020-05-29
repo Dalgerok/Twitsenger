@@ -8,8 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<FlowPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0"
-          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.RegisterSceneController">
+<FlowPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.RegisterSceneController">
    <children>
       <VBox alignment="TOP_CENTER" spacing="10.0">
          <children>
@@ -22,7 +21,7 @@
             <TextField fx:id="secondNameField" promptText="Second name" />
             <TextField fx:id="registerEmail" promptText="Email address" />
             <PasswordField fx:id="registerPassword" promptText="Password" />
-            <TextField fx:id="registerPassword2" promptText="Re-enter password" />
+            <PasswordField fx:id="registerPassword2" promptText="Re-enter password" />
             <DatePicker fx:id="birthadayField" promptText="Birthday" />
             <HBox spacing="50.0">
                <children>
