@@ -2,8 +2,11 @@ package main.java.org.Client;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -19,9 +22,11 @@ public class Main extends Application{
 
     static StartSceneController startSceneController;
     static RegisterSceneController registerSceneController;
+    static MainSceneController mainSceneController;
 
     static Scene startScene;
     static Scene registerScene;
+    static Scene mainScene;
 
     public static void setRegisterScene() {
         primaryStage.setScene(registerScene);
@@ -36,12 +41,17 @@ public class Main extends Application{
         primaryStage.setWidth(800);
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
-        primaryStage.setScene(startScene);
+        primaryStage.setScene(mainScene);
         primaryStage.show();
+
+        ObservableList<MainSceneController.PostPane> posts = FXCollections.observableArrayList();
+        posts.addAll(new MainSceneController.PostPane(), new MainSceneController.PostPane(), new MainSceneController.PostPane());
+        mainSceneController.postView.setItems(posts);
     }
     private void createContent(){
         initStartScene();
         initRegisterScene();
+        initMainScene();
     }
     private void initStartScene() {
         FXMLLoader startLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/startScene.fxml"));
@@ -68,6 +78,19 @@ public class Main extends Application{
         }
         registerSceneController = registerLoader.getController();
         registerScene = new Scene(registerPane);
+    }
+    private void initMainScene(){
+        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/mainScene.fxml"));
+        Pane mainPane = null;
+        try {
+            mainPane = mainLoader.load();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            System.out.println("Can't load startScene");
+            System.exit(0);
+        }
+        mainSceneController = mainLoader.getController();
+        mainScene = new Scene(mainPane);
     }
 
 
@@ -108,5 +131,8 @@ public class Main extends Application{
 
         return conn;
     }
+
+
+
 
 }
