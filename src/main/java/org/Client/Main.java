@@ -73,11 +73,11 @@ public class Main extends Application{
 
 
     public static void main(String[] args) {
-        /*Main main = new Main();
+        Main main = new Main();
         Connection sqlConnection = main.connect();
 
 
-        String SQL = "SELECT * FROM \"User\"";
+        String SQL = "SELECT * FROM \"User\" ORDER BY first_name";
         try {
             Statement statement = sqlConnection.createStatement();
             ResultSet rs = statement.executeQuery(SQL);
@@ -86,7 +86,7 @@ public class Main extends Application{
             throwables.printStackTrace();
         }
 
-        */
+
         launch(args);
 
     }
