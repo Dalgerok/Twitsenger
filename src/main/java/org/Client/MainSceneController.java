@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -15,6 +16,10 @@ public class MainSceneController {
 
 
     public ListView<PostPane> postView;
+
+    public void logoutButtonHandlet(MouseEvent mouseEvent) {
+        Main.logout();
+    }
 
     public static class PostPane extends VBox{
         public PostPane(){

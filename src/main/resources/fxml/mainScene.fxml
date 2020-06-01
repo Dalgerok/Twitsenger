@@ -9,11 +9,12 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.MainSceneController">
    <children>
-      <VBox prefHeight="800.0" prefWidth="200.0" style="-: 200px;">
+      <VBox prefHeight="800.0" prefWidth="200.0" style=":200px;">
          <children>
             <Button mnemonicParsing="false" text="My account" />
             <Button mnemonicParsing="false" text="Friends" />
             <Button mnemonicParsing="false" text="News" />
+            <Button alignment="TOP_LEFT" mnemonicParsing="false" onMouseClicked="#logoutButtonHandlet" text="Log out" />
          </children>
       </VBox>
       <VBox layoutX="200.0" prefHeight="800.0" prefWidth="600.0">

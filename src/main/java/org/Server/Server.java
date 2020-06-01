@@ -1,5 +1,7 @@
 package main.java.org.Server;
 
+import main.java.org.Tools.ConnectionMessage;
+import main.java.org.Tools.LoginInfo;
 import main.java.org.Tools.RegisterInfo;
 
 import java.io.IOException;
@@ -22,11 +24,13 @@ public class Server {
 
     private static ResultSet sqlGetQuery(String SQL){
         try {
-            if (sqlConnection.isClosed())sqlConnection = connectToSQL();
+            if (sqlConnection == null || sqlConnection.isClosed())sqlConnection = connectToSQL();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            return null;
         }
         try {
+            System.out.println(SQL);
             return sqlStatement.executeQuery(SQL);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -35,16 +39,21 @@ public class Server {
     }
     private static boolean sqlUpdQuery(String SQL){
         try {
-            if (sqlConnection.isClosed())sqlConnection = connectToSQL();
+            if (sqlConnection == null || sqlConnection.isClosed())sqlConnection = connectToSQL();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            return false;
         }
         try {
-            return sqlStatement.execute(SQL);
+            System.out.println(SQL);
+            //sqlStatement.
+            System.out.println(sqlStatement.execute(SQL));
+            //System.out.println(sqlStatement.executeQuery(SQL));
+            return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            return false;
         }
-        return false;
     }
     public static Connection connectToSQL() {
         Connection conn = null;
@@ -87,6 +96,7 @@ public class Server {
             connections.add(this);
         }
 
+        String email = null;
         @Override
         public void run() {
             Object obj;
@@ -95,87 +105,66 @@ public class Server {
                 System.out.println(obj);
                 if (obj instanceof RegisterInfo){
                     RegisterInfo info = (RegisterInfo)obj;
-                    sqlUpdQuery("INSERT INTO users (first_name, last_name, birthday, email, relationship_status, gender, user_password) VALUES ( " +
+                    email = info.getEmail();
+                    if (sqlUpdQuery("INSERT INTO users (first_name, last_name, birthday, email, relationship_status, gender, user_password) VALUES ( " +
                                 compose(info.getFirstName(), info.getLastName(), info.getBirthday(), info.getEmail(),
                                         info.getRelationship(), info.getGender(), info.getPassword()) + "" +
-                                " );");
-                }else if (obj instanceof )
-                //System.out.println("i am here");
+                                " );")){
+                        sendObject(ConnectionMessage.SIGN_UP);
+                    }else {
+                        sendObject(ConnectionMessage.BAD_EMAIL);
+                        return;
+                    }
+                }else if (obj instanceof LoginInfo){
+                    LoginInfo info = (LoginInfo)obj;
+                    email = info.getEmail();
+                    ResultSet rs = sqlGetQuery("SELECT check_email(" + info.getEmail() + ");");
+                    try {
+                        if (rs == null || !rs.next()){
+                            sendObject(ConnectionMessage.BAD_EMAIL);
+                            return;
+                        }else {
+                            if (!rs.getBoolean(1)){
+                                sendObject(ConnectionMessage.BAD_EMAIL);
+                                return;
+                            }
+                        }
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                        return;
+                    }
+                    rs = sqlGetQuery("SELECT check_password(" + compose(info.getEmail(), info.getPassword()) + ");");
+                    try {
+                        if (rs == null || !rs.next()){
+                            sendObject(ConnectionMessage.BAD_PASSWORD);
+                            return;
+                        }else {
+                            if (!rs.getBoolean(1)){
+                                sendObject(ConnectionMessage.BAD_PASSWORD);
+                                return;
+                            }
+                        }
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                        return;
+                    }
+                    sendObject(ConnectionMessage.SIGN_IN);
+                }else return;
+                System.out.println("logined or registered");
                 while (true) {
                     obj = readObject();
                     System.out.println("received " + obj);
-                    if (obj.equals(ConnectionMessage.RETURN_TO_MENU)){
-                        sendObject(ConnectionMessage.STOP_READING);
-                        player.reset();
-                        continue;
-                    }
-                    if (!player.inLobby()){
-                        if (obj instanceof String){
-                            System.out.println("i am here");
-                            String[] msg = ((String)obj).split(":");
-                            int maxPlayers = Integer.parseInt(msg[0]);
-                            boolean isPrivate = (Integer.parseInt(msg[1])%2 == 1);
-                            Server.createNewLobby(player, isPrivate, maxPlayers, msg[2], msg[3]);
-                            continue;
-                        }
-                        if (!(obj instanceof ConnectionMessage)){
-                            System.out.println("not get com.charades.tools.ConnectionMessage");
-                            break;
-                        }
-                        ConnectionMessage msg = (ConnectionMessage)obj;
-                        if (msg.equals(ConnectionMessage.CONNECT_TO_LOBBY)){
-                            obj = readObject();
-                            if (!(obj instanceof String)){
-                                System.out.println("not get String");
-                                break;
-                            }
-                            String ID = (String)obj;
-                            System.out.println(ID);
-                            if (!lobbyIDs.containsKey(ID)){
-                                sendObject(ConnectionMessage.BAD_ID);
-                                continue;
-                            }
-                            if (lobbyIDs.get(ID).isFull()){
-                                sendObject(ConnectionMessage.LOBBY_FULL);
-                                continue;
-                            }
-                            lobbyIDs.get(ID).addPlayer(player);
-                        }
-                        if (msg.equals(ConnectionMessage.LOBBY_LIST)){
-                            ArrayList<String> arr = new ArrayList<>();
-                            for (Lobby lobby : lobbyIDs.values()){
-                                if (!lobby.isPrivate()){
-                                    arr.add(lobby.getMetadata());
-                                }
-                            }
-                            sendObject(arr.size());
-                            for (String metadata : arr){
-                                sendObject(metadata);
-                            }
-                        }
-                    }else {
-                        player.getLobby().handleMessage(obj, player);
-                    }
                 }
             } catch(IOException e){
                 System.out.println("client disconnected");
             } finally{
-                if (player != null){
-                    //System.out.println("CLOSING LOBBY " + player.getLobby().empty());
-                    if (player.inLobby()){
-                        player.getLobby().removePlayer(player);
-                        if (player.getLobby().empty()){
-                            player.getLobby().closeLobby();
-                        }
-                    }
-                    usernames.remove(player.getUsername());
-                }
+
                 try {
                     socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println(player + " is disconnected");
+                System.out.println(email + " is disconnected");
             }
         }
         public void sendObject(Object o) throws IOException {

@@ -1,22 +1,23 @@
 package main.java.org.Client;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import main.java.org.Tools.ConnectionMessage;
+import main.java.org.Tools.LoginInfo;
+import main.java.org.Tools.RegisterInfo;
 
 import java.io.IOException;
-import java.sql.*;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.net.Socket;
 
 public class Main extends Application{
-    private final String url = "jdbc:postgresql://94.245.108.117:5432/facebook";
-    private final String user = "nazarii";
-    private final String password = "1234";
 
     static Stage primaryStage;
 
@@ -30,7 +31,120 @@ public class Main extends Application{
 
     public static void setRegisterScene() {
         primaryStage.setScene(registerScene);
+        registerSceneController.messageText.setVisible(false);
     }
+
+    public static void setStartScene() {
+        primaryStage.setScene(startScene);
+        registerSceneController.messageText.setVisible(false);
+    }
+
+    public static void setMainScene() {
+        primaryStage.setScene(mainScene);
+    }
+
+    private static final String hostname = "localhost";
+    private static final int port = 4001;
+    private static Socket clientSocket;
+    private static ObjectInputStream in;
+    private static ObjectOutputStream out;
+    public static void signUp(RegisterInfo registerInfo) {
+        if (!connect())return;
+        if (!sendObject(registerInfo))return;
+        Object o = getObject();
+        if (ConnectionMessage.SIGN_UP.equals(o)){
+            startRead();
+            setMainScene();
+        }else {
+            disconnect();
+        }
+    }
+
+    public static void signIn(LoginInfo loginInfo) {
+        if (!connect())return;
+        sendObject(loginInfo);
+        Object o = getObject();
+        if (ConnectionMessage.SIGN_IN.equals(o)){
+            startRead();
+            setMainScene();
+        }else{
+            disconnect();
+        }
+    }
+
+    public static void logout() {
+        disconnect();
+        setStartScene();
+    }
+
+    private static ObjectReader reader = null;
+    private static void startRead() {
+        reader = new ObjectReader();
+        reader.start();
+    }
+    private static void stopRead(){
+        System.out.println("Stop read");
+        if (reader != null && !reader.isInterrupted()){
+            System.out.println("Interrupting...  DSFDVRWWFDWWRDWGR");
+            reader.interrupt();
+        }
+    }
+
+    private static <T extends Serializable> boolean sendObject(T o) {
+        if (clientSocket == null || out == null)return false;
+        try{
+            synchronized (out){
+                out.writeObject(o);
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public static Object getObject() {
+        if (clientSocket == null || in == null)return null;
+        try{
+            Object o;
+            synchronized (in) {
+                o = in.readObject();
+                return o;
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            disconnect();
+            //System.exit(0);
+        }
+        return null;
+    }
+
+    private static boolean connect() {
+        try{
+            clientSocket = new Socket(hostname, port);
+            System.out.println(clientSocket.isConnected());
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
+            in = new ObjectInputStream(clientSocket.getInputStream());
+            System.out.println("Established connection");
+            return true;
+        } catch (IOException e) {
+            //e.printStackTrace();
+            System.out.println("cannot connect");
+            disconnect();
+            return false;
+        }
+    }
+    public static void disconnect() {
+        stopRead();
+        try{
+            in = null;
+            out = null;
+            if (clientSocket != null)clientSocket.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -41,7 +155,7 @@ public class Main extends Application{
         primaryStage.setWidth(800);
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
-        primaryStage.setScene(mainScene);
+        primaryStage.setScene(startScene);
         primaryStage.show();
 
         ObservableList<MainSceneController.PostPane> posts = FXCollections.observableArrayList();
@@ -97,42 +211,30 @@ public class Main extends Application{
 
     public static void main(String[] args) {
         Main main = new Main();
-        Connection sqlConnection = main.connect();
-
-
-        String SQL = "SELECT * FROM \"User\" ORDER BY first_name";
-        try {
-            Statement statement = sqlConnection.createStatement();
-            ResultSet rs = statement.executeQuery(SQL);
-            displayUser(rs);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-
         launch(args);
-
     }
-    private static void displayUser(ResultSet rs) throws SQLException {
-        while (rs.next()){
-            System.out.println(rs.getString("first_name") + "\t" + rs.getString("last_name") + "\t" +
-                    rs.getString("birthday"));
 
+    public static class ObjectReader extends Thread {
+        @Override
+        public void run() {
+            System.out.println("STARTED READING");
+            while (!isInterrupted()) {
+                try {
+                    System.out.println("start receiving");
+                    //Object obj = getObjectForReader();
+                    Object obj;
+                    synchronized (in){
+                        obj = getObject();
+                    }
+                    System.out.println("RECEIVED " + obj);
+
+                } catch (Exception e) {
+                    System.out.println("SERVER DOWN");
+                    //Platform.runLater(() -> returnToStart("SERVER DOWN"));
+                    // TODO: 02.06.2020
+                }
+            }
+            //System.out.println("STOPPED READING");
         }
     }
-    public Connection connect() {
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Connected to the PostgreSQL server successfully.");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return conn;
-    }
-
-
-
-
 }

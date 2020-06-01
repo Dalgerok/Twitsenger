@@ -1,8 +1,9 @@
 package main.java.org.Tools;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class RegisterInfo {
+public class RegisterInfo implements Serializable {
     private final String firstName;
     private final String lastName;
     private final LocalDate birthday;
@@ -14,7 +15,8 @@ public class RegisterInfo {
     public RegisterInfo(String firstName, String lastName, LocalDate birthday, String email, String relationship, String gender, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthday = birthday;
+        this.birthday = LocalDate.of(2000, 1, 1);//todo
+
         this.email = email;
         this.relationship = relationship;
         this.gender = gender;
