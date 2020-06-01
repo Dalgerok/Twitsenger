@@ -51,6 +51,7 @@ CREATE  TABLE users (
                         picture_url 		 varchar(255),
                         user_id              SERIAL ,
                         CONSTRAINT pk_user PRIMARY KEY ( user_id ),
+                        CONSTRAINT un_email UNIQUE ( email ),
                         CONSTRAINT fk_user_location FOREIGN KEY ( user_location_id ) REFERENCES locations( location_id ) ON DELETE SET NULL ON UPDATE CASCADE,
                         CONSTRAINT ch_user_birthday CHECK ((now() - (birthday)::timestamp with time zone) >= '13 years'::interval year)
 );
