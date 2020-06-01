@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+
+<FlowPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.RegisterSceneController">
+   <children>
+      <VBox alignment="TOP_CENTER" spacing="10.0">
+         <children>
+            <Label text="Create a new account">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="firstNameField" promptText="First name" text="a" />
+            <TextField fx:id="lastNameField" promptText="Last name" text="b" />
+            <DatePicker fx:id="birthadayField" prefHeight="25.0" prefWidth="289.0" promptText="Birthday" />
+            <TextField fx:id="registerEmail" promptText="Email address" text="qqqqq" />
+            <ChoiceBox fx:id="relationshipBox" prefHeight="25.0" prefWidth="289.0" value="Single">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="Single" />
+                     <String fx:value="Married" />
+                     <String fx:value="Engaged" />
+                     <String fx:value="In a civil partnership" />
+                     <String fx:value="In a domestic partnership" />
+                     <String fx:value="In an open relationship" />
+                     <String fx:value="It is complicated" />
+                     <String fx:value="Separated" />
+                     <String fx:value="Divorced" />
+                     <String fx:value="Widowed" />
+                  </FXCollections>
+               </items>
+            </ChoiceBox>
+
+            <HBox spacing="50.0">
+               <children>
+                  <RadioButton fx:id="maleButton" mnemonicParsing="false" selected="true" text="Male">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="GroupGender" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="femaleButton" mnemonicParsing="false" text="Female" toggleGroup="$GroupGender" />
+                  <RadioButton fx:id="unspecifiedButton" mnemonicParsing="false" text="Unspecified" toggleGroup="$GroupGender" />
+               </children>
+            </HBox>
+            <PasswordField fx:id="registerPassword" promptText="Password" text="1234" />
+            <PasswordField fx:id="registerPassword2" promptText="Re-enter password" text="1234" />
+            <Button alignment="CENTER" mnemonicParsing="false" onMouseClicked="#signUpHandler" text="Sign up" />
+            <Text fx:id="messageText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+         </children>
+      </VBox>
+   </children>
+</FlowPane>
