@@ -55,6 +55,27 @@ CREATE  TABLE users (
                         CONSTRAINT fk_user_location FOREIGN KEY ( user_location_id ) REFERENCES locations( location_id ) ON DELETE SET NULL ON UPDATE CASCADE,
                         CONSTRAINT ch_user_birthday CHECK ((now() - (birthday)::timestamp with time zone) >= '13 years'::interval year)
 );
+CREATE OR REPLACE FUNCTION check_password(
+    _email varchar,
+    _user_password varchar
+)
+    RETURNS BOOLEAN AS
+$$
+BEGIN
+    RETURN EXISTS (SELECT * FROM users WHERE users.email = _email AND users.user_password = _user_password);
+END;
+$$
+    LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION check_email(
+    _email varchar
+)
+    RETURNS BOOLEAN AS
+$$
+BEGIN
+    RETURN EXISTS (SELECT * FROM users WHERE users.email = _email);
+END;
+$$
+    LANGUAGE plpgsql;
 ----
 
 --GOOD
