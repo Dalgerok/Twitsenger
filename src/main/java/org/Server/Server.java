@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class Server {
-    private static final String url = "jdbc:postgresql://localhost:5433/twitmess";
+    private static final String url = "jdbc:postgresql://localhost:5432/postgres";
     private static final String user = "postgres";
     private static final String password = "1321";
     private static Connection sqlConnection;
@@ -30,29 +30,31 @@ public class Server {
             return null;
         }
         try {
-            System.out.println(SQL);
             return sqlStatement.executeQuery(SQL);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return null;
     }
-    private static boolean sqlUpdQuery(String SQL){
+    private static String sqlUpdQuery(String SQL){
         try {
             if (sqlConnection == null || sqlConnection.isClosed())sqlConnection = connectToSQL();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "bad connection";
         }
         try {
-            System.out.println(SQL);
-            //sqlStatement.
             System.out.println(sqlStatement.execute(SQL));
-            //System.out.println(sqlStatement.executeQuery(SQL));
-            return true;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return false;
+            return "ok";
+        } catch (SQLException e) {
+            System.out.println(e.getLocalizedMessage());
+            String[] s = e.toString().split("\"");
+            if(s.length == 3){
+                return s[1];
+            }
+            else{
+                return s[3];
+            }
         }
     }
     public static Connection connectToSQL() {
@@ -63,6 +65,7 @@ public class Server {
             System.out.println("Connected to the PostgreSQL server successfully.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return null;
         }
 
         return conn;
@@ -106,12 +109,16 @@ public class Server {
                 if (obj instanceof RegisterInfo){
                     RegisterInfo info = (RegisterInfo)obj;
                     email = info.getEmail();
-                    if (sqlUpdQuery("INSERT INTO users (first_name, last_name, birthday, email, relationship_status, gender, user_password) VALUES ( " +
-                                compose(info.getFirstName(), info.getLastName(), info.getBirthday(), info.getEmail(),
-                                        info.getRelationship(), info.getGender(), info.getPassword()) + "" +
-                                " );")){
+                    String s = sqlUpdQuery("INSERT INTO users (first_name, last_name, birthday, email, relationship_status, gender, user_password) VALUES ( " +
+                            compose(info.getFirstName(), info.getLastName(), info.getBirthday(), info.getEmail(),
+                                    info.getRelationship(), info.getGender(), info.getPassword()) + "" +
+                            " );");
+                    if ("ok".equals(s)){
                         sendObject(ConnectionMessage.SIGN_UP);
-                    }else {
+                    }else if("ch_user_birthday".equals(s)){
+                        sendObject(ConnectionMessage.BAD_BIRTHDAY);
+                        return;
+                    }else{
                         sendObject(ConnectionMessage.BAD_EMAIL);
                         return;
                     }

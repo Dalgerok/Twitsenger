@@ -14,7 +14,7 @@
             <Button mnemonicParsing="false" text="My account" />
             <Button mnemonicParsing="false" text="Friends" />
             <Button mnemonicParsing="false" text="News" />
-            <Button alignment="TOP_LEFT" mnemonicParsing="false" onMouseClicked="#logoutButtonHandlet" text="Log out" />
+            <Button alignment="TOP_LEFT" mnemonicParsing="false" onMouseClicked="#logoutButtonHandler" text="Log out" />
          </children>
       </VBox>
       <VBox layoutX="200.0" prefHeight="800.0" prefWidth="600.0">

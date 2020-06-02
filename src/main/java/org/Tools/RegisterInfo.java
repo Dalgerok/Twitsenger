@@ -15,7 +15,7 @@ public class RegisterInfo implements Serializable {
     public RegisterInfo(String firstName, String lastName, LocalDate birthday, String email, String relationship, String gender, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthday = LocalDate.of(2000, 1, 1);//todo
+        this.birthday = birthday;
 
         this.email = email;
         this.relationship = relationship;
@@ -32,7 +32,7 @@ public class RegisterInfo implements Serializable {
     }
 
     public String getBirthday() {
-        return "'" + birthday + "'";
+        return "'" + birthday.toString() + "'";
     }
 
     public String getEmail() {

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.net.Socket;
 
 public class Main extends Application{
@@ -30,16 +31,20 @@ public class Main extends Application{
     static Scene mainScene;
 
     public static void setRegisterScene() {
+        System.out.println("SET REGISTER SCENE");
         primaryStage.setScene(registerScene);
         registerSceneController.messageText.setVisible(false);
     }
 
     public static void setStartScene() {
+        System.out.println("SET START SCENE");
         primaryStage.setScene(startScene);
+        startSceneController.textMessage.setVisible(false);
         registerSceneController.messageText.setVisible(false);
     }
 
     public static void setMainScene() {
+        System.out.println("SET MAIN SCENE");
         primaryStage.setScene(mainScene);
     }
 
@@ -48,27 +53,32 @@ public class Main extends Application{
     private static Socket clientSocket;
     private static ObjectInputStream in;
     private static ObjectOutputStream out;
-    public static void signUp(RegisterInfo registerInfo) {
-        if (!connect())return;
-        if (!sendObject(registerInfo))return;
+    public static ConnectionMessage signUp(RegisterInfo registerInfo) {
+        if (!connect())return ConnectionMessage.UNABLE_TO_CONNECT;
+        if (!sendObject(registerInfo))return ConnectionMessage.UNABLE_TO_CONNECT;
         Object o = getObject();
         if (ConnectionMessage.SIGN_UP.equals(o)){
             startRead();
             setMainScene();
+            return ConnectionMessage.SIGN_UP;
         }else {
             disconnect();
+            return (ConnectionMessage)o;
         }
     }
 
-    public static void signIn(LoginInfo loginInfo) {
-        if (!connect())return;
+    public static ConnectionMessage signIn(LoginInfo loginInfo) {
+        if (!connect())return ConnectionMessage.UNABLE_TO_CONNECT;
         sendObject(loginInfo);
         Object o = getObject();
         if (ConnectionMessage.SIGN_IN.equals(o)){
             startRead();
             setMainScene();
-        }else{
+            return ConnectionMessage.SIGN_IN;
+        }
+        else {
             disconnect();
+            return (ConnectionMessage)o;
         }
     }
 
@@ -111,7 +121,7 @@ public class Main extends Application{
                 return o;
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             disconnect();
             //System.exit(0);
         }
@@ -143,6 +153,7 @@ public class Main extends Application{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("DISCONNECTED SUCCESSFULLY");
     }
 
 

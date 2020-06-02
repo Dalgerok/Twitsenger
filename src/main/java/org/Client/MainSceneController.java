@@ -17,7 +17,7 @@ public class MainSceneController {
 
     public ListView<PostPane> postView;
 
-    public void logoutButtonHandlet(MouseEvent mouseEvent) {
+    public void logoutButtonHandler(MouseEvent mouseEvent) {
         Main.logout();
     }
 
