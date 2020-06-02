@@ -250,14 +250,9 @@ public class Main extends Application{
                 postsSceneController.enterMessage.clear();
             }
         });
-        // TODO: 02.06.2020
-        ObservableList<PostsSceneController.PostPane> l = FXCollections.observableArrayList();
-        l.addAll(new PostsSceneController.PostPane(), new PostsSceneController.PostPane());
-        postsSceneController.postView.setItems(l);
     }
-    private static void updatePostsScene(){
+    public static void updatePostsScene(){
         System.out.println("UPDATE POSTS SCENE");
-        // TODO: 02.06.2020
         ObservableList<PostsSceneController.PostPane> l = FXCollections.observableArrayList();
         sendObject(ConnectionMessage.GET_POSTS);
         Object o = getObject();
@@ -270,7 +265,6 @@ public class Main extends Application{
     }
 
     private static void sendMessage(String s) {
-        // TODO: 02.06.2020
         System.out.println("SEND MESSAGE " + s);
         sendObject(new Post(s));
         updatePostsScene();

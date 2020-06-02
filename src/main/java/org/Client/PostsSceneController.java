@@ -6,6 +6,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -19,6 +20,10 @@ public class PostsSceneController {
     @FXML public ListView<PostPane> postView;
     @FXML public VBox postsVBox;
     @FXML public TextField enterMessage;
+
+    public void refreshButtonHandler(MouseEvent mouseEvent) {
+        Main.updatePostsScene();
+    }
 
     public static class PostPane extends VBox implements Serializable {
         public PostPane(){
