@@ -12,10 +12,10 @@ public class LoginInfo implements Serializable {
     }
 
     public String getEmail() {
-        return "'" + email + "'";
+        return email;
     }
 
     public String getPassword() {
-        return "'" + password + "'";
+        return password;
     }
 }

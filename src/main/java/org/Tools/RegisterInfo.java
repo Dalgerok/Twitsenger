@@ -24,30 +24,30 @@ public class RegisterInfo implements Serializable {
     }
 
     public String getFirstName() {
-        return "'" + firstName + "'";
+        return firstName;
     }
 
     public String getLastName() {
-        return "'" + lastName + "'";
+        return lastName;
     }
 
     public String getBirthday() {
-        return "'" + birthday.toString() + "'";
+        return birthday.toString();
     }
 
     public String getEmail() {
-        return "'" + email + "'";
+        return email;
     }
 
     public String getRelationship() {
-        return "'" + relationship + "'";
+        return relationship;
     }
 
     public String getGender() {
-        return "'" + gender + "'";
+        return gender;
     }
 
     public String getPassword() {
-        return "'" + password + "'";
+        return password;
     }
 }
