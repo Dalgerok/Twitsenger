@@ -129,6 +129,7 @@ public class Server {
                                     rs.getString("email"), rs.getString("relationship_status"), rs.getString("gender"),
                                     rs.getString("user_password"), rs.getInt("user_location_id"), rs.getString("picture_url"),
                                     rs.getInt("user_id"));
+                            sendObject(user);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -184,6 +185,7 @@ public class Server {
                                 rs.getString("email"), rs.getString("relationship_status"), rs.getString("gender"),
                                 rs.getString("user_password"), rs.getInt("user_location_id"), rs.getString("picture_url"),
                                 rs.getInt("user_id"));
+                        sendObject(user);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -224,10 +226,29 @@ public class Server {
                                 "Orap", "kek"));
                         sendObject(posts);
                     }
-                    else if(obj instanceof Post){
-                        System.out.println("KEK " + obj);
-                        Post p = (Post)obj;
-                        sqlUpdQuery("INSERT INTO post VALUES(" + compose(String.valueOf(user.user_id), p.post_text) + ");");
+                    else if(obj instanceof ConnectionMessage) {
+                        if(ConnectionMessage.NEW_POST.equals(obj)) {
+                            obj = readObject();
+                            if (obj instanceof Post) {
+                                System.out.println("NEW POST " + obj);
+                                Post p = (Post) obj;
+                                sqlUpdQuery("INSERT INTO post VALUES(" + compose(String.valueOf(user.user_id), p.post_text) + ");");
+                            }
+                            else{
+                                System.out.println("BAD NEW POST!!!");
+                            }
+                        }
+                        else if(ConnectionMessage.DEL_POST.equals(obj)) {
+                            obj = readObject();
+                            if (obj instanceof Post) {
+                                System.out.println("DEL POST " + obj);
+                                Post p = (Post)obj;
+                                sqlUpdQuery("DELETE FROM post WHERE post.post_id=" + p.post_id + ";");
+                            }
+                            else{
+                                System.out.println("BAD DEL POST!!!");
+                            }
+                        }
                     }
                 }
             } catch(IOException e){

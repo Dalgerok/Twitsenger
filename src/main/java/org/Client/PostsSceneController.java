@@ -1,5 +1,6 @@
 package main.java.org.Client;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -71,9 +72,9 @@ public class PostsSceneController {
             getChildren().addAll(user, postText, buttons);
         }
 
-        public PostPane(Post p) {
+        public PostPane(Post p, int user_id) {
             super();
-            System.out.println("NEW POST_PANE " + p.first_name + " " + p.last_name);
+            System.out.println("NEW POST_PANE " + p.first_name + " " + p.last_name + " " + user_id);
             HBox user = new HBox();
             ImageView userIcon = new ImageView(); // TODO: 02.06.2020 add picture_url
             Text userName = new Text(p.first_name + " " + p.last_name);
@@ -88,10 +89,17 @@ public class PostsSceneController {
             Button like = new Button("like");
             Button repost = new Button("repost");
             buttons.getChildren().addAll(like, repost);
+            if(p.user_id == user_id) {
+                Button delete = new Button("delete");
+                delete.setOnMouseClicked(mouseEvent -> {
+                    Main.delMessage(p);
+                });
+                buttons.getChildren().add(delete);
+            }
 
             Separator separator = new Separator();
 
-            getChildren().addAll(user, postText, buttons);
+            getChildren().addAll(user, postText, buttons, separator);
         }
     }
 }

@@ -1,8 +1,9 @@
 package main.java.org.Tools;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class ServerUser {
+public class ServerUser implements Serializable {
     public String first_name;
     public String last_name;
     public Date birthday;

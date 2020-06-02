@@ -12,10 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import main.java.org.Tools.ConnectionMessage;
-import main.java.org.Tools.LoginInfo;
-import main.java.org.Tools.Post;
-import main.java.org.Tools.RegisterInfo;
+import main.java.org.Tools.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -78,11 +75,18 @@ public class Main extends Application{
     private static Socket clientSocket;
     private static ObjectInputStream in;
     private static ObjectOutputStream out;
+    public static ServerUser user;
     public static ConnectionMessage signUp(RegisterInfo registerInfo) {
         if (!connect())return ConnectionMessage.UNABLE_TO_CONNECT;
         if (!sendObject(registerInfo))return ConnectionMessage.UNABLE_TO_CONNECT;
         Object o = getObject();
         if (ConnectionMessage.SIGN_UP.equals(o)){
+            o = getObject();
+            if(!(o instanceof ServerUser)){
+                disconnect();
+                return ConnectionMessage.UNABLE_TO_CONNECT;
+            }
+            user = (ServerUser)o;
             setPostsScene();
             return ConnectionMessage.SIGN_UP;
         }else {
@@ -96,6 +100,12 @@ public class Main extends Application{
         sendObject(loginInfo);
         Object o = getObject();
         if (ConnectionMessage.SIGN_IN.equals(o)){
+            o = getObject();
+            if(!(o instanceof ServerUser)){
+                disconnect();
+                return ConnectionMessage.UNABLE_TO_CONNECT;
+            }
+            user = (ServerUser)o;
             setPostsScene();
             return ConnectionMessage.SIGN_IN;
         }
@@ -164,6 +174,7 @@ public class Main extends Application{
         }
         System.out.println("DISCONNECTED SUCCESSFULLY");
     }
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -259,14 +270,21 @@ public class Main extends Application{
         System.out.println("GOT " + o);
         ArrayList<Post> list = (ArrayList<Post>)o;
         for(Post p : list){
-            l.add(new PostsSceneController.PostPane(p));
+            l.add(new PostsSceneController.PostPane(p, user.user_id));
         }
         postsSceneController.postView.setItems(l);
     }
 
     private static void sendMessage(String s) {
         System.out.println("SEND MESSAGE " + s);
+        sendObject(ConnectionMessage.NEW_POST);
         sendObject(new Post(s));
+        updatePostsScene();
+    }
+    public static void delMessage(Post p) {
+        System.out.println("DEL MESSAGE " + p);
+        sendObject(ConnectionMessage.DEL_POST);
+        sendObject(p);
         updatePostsScene();
     }
 
