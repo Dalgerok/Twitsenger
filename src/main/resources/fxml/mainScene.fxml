@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.MainSceneController">
+<AnchorPane fx:id="mainAnchorPane" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.MainSceneController">
    <children>
       <VBox prefHeight="800.0" prefWidth="200.0" style=":200px;">
          <children>
-            <Button mnemonicParsing="false" text="My account" />
-            <Button mnemonicParsing="false" text="Friends" />
-            <Button mnemonicParsing="false" text="News" />
+            <Button mnemonicParsing="false" text="My profile" />
+            <Button mnemonicParsing="false" onMouseClicked="#editMyProfileHandler" text="Edit my profile" />
+            <Button mnemonicParsing="false" onMouseClicked="#myFriendsHandler" text="My friends" />
+            <Button mnemonicParsing="false" onMouseClicked="#postsHandler" text="Posts" />
             <Button alignment="TOP_LEFT" mnemonicParsing="false" onMouseClicked="#logoutButtonHandler" text="Log out" />
          </children>
       </VBox>
-      <VBox layoutX="200.0" prefHeight="800.0" prefWidth="600.0">
-         <children>
-            <ListView fx:id="postView" prefHeight="800.0" prefWidth="600.0" />
-         </children>
-      </VBox>
+      <VBox layoutX="200.0" layoutY="14.0" prefHeight="200.0" prefWidth="100.0" />
    </children>
 </AnchorPane>

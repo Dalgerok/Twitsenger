@@ -1,5 +1,8 @@
 package main.java.org.Server;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import main.java.org.Client.PostsSceneController;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.LoginInfo;
 import main.java.org.Tools.RegisterInfo;
@@ -161,6 +164,33 @@ public class Server {
                 while (true) {
                     obj = readObject();
                     System.out.println("received " + obj);
+                    if(ConnectionMessage.GET_POSTS.equals(obj)){
+                        ResultSet rs = sqlGetQuery("SELECT * FROM post JOIN users ON post.user_id = users.user_id;");
+                        ObservableList<PostsSceneController.PostPane> posts = FXCollections.observableArrayList();
+                        if(rs != null) {
+                            try {
+                                while (rs.next()) {
+                                    int user_id = rs.getInt(1);
+                                    String post_text = rs.getString(2);
+                                    Timestamp post_time = rs.getTimestamp(3);
+                                    int reposted_from = rs.getInt(4);
+                                    int post_id = rs.getInt(5);
+                                    String first_name = rs.getString(6);
+                                    String last_name = rs.getString(7);
+                                    String user_picture_url = rs.getString("picture_url");
+                                    // TODO: 02.06.2020 ADD NUMBER OF LIKES AND REPOSTS
+                                    posts.add(new PostsSceneController.PostPane(
+                                            user_id, post_text, post_time,
+                                            reposted_from, post_id, first_name,
+                                            last_name, user_picture_url));
+                                }
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        System.out.println("I WANNA TO SEND POSTS!!!");
+                        sendObject(posts);
+                    }
                 }
             } catch(IOException e){
                 System.out.println("client disconnected");
@@ -176,15 +206,11 @@ public class Server {
         }
         public void sendObject(Object o) throws IOException {
             System.out.println("Something sent " + o);
-            synchronized (out){
-                out.writeObject(o);
-            }
+            out.writeObject(o);
         }
         public Object readObject() throws IOException {
             try {
-                synchronized (in){
-                    return in.readObject();
-                }
+                return in.readObject();
             } catch (IOException e) {
                 throw e;
             } catch (ClassNotFoundException e) {

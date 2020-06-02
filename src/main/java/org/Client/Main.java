@@ -1,11 +1,16 @@
 package main.java.org.Client;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.LoginInfo;
@@ -17,6 +22,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.util.Collection;
 
 public class Main extends Application{
 
@@ -25,10 +31,12 @@ public class Main extends Application{
     static StartSceneController startSceneController;
     static RegisterSceneController registerSceneController;
     static MainSceneController mainSceneController;
+    static PostsSceneController postsSceneController;
 
     static Scene startScene;
     static Scene registerScene;
     static Scene mainScene;
+    static Scene postsScene;
 
     public static void setRegisterScene() {
         System.out.println("SET REGISTER SCENE");
@@ -45,7 +53,22 @@ public class Main extends Application{
 
     public static void setMainScene() {
         System.out.println("SET MAIN SCENE");
+        initMainScene();
         primaryStage.setScene(mainScene);
+    }
+    public static void setEditProfileScene() {
+        setMainScene();
+        // TODO: 02.06.2020  
+    }
+    public static void setMyProfileScene() {
+        setMainScene();
+        // TODO: 02.06.2020
+    }
+    public static void setPostsScene() {
+        Platform.runLater(Main::setMainScene);
+        Platform.runLater(Main::updatePostsScene);
+        System.out.println("SET POSTS SCENE");
+        mainSceneController.mainAnchorPane.getChildren().add(postsSceneController.postsVBox);
     }
 
     private static final String hostname = "localhost";
@@ -58,8 +81,7 @@ public class Main extends Application{
         if (!sendObject(registerInfo))return ConnectionMessage.UNABLE_TO_CONNECT;
         Object o = getObject();
         if (ConnectionMessage.SIGN_UP.equals(o)){
-            startRead();
-            setMainScene();
+            setPostsScene();
             return ConnectionMessage.SIGN_UP;
         }else {
             disconnect();
@@ -72,8 +94,7 @@ public class Main extends Application{
         sendObject(loginInfo);
         Object o = getObject();
         if (ConnectionMessage.SIGN_IN.equals(o)){
-            startRead();
-            setMainScene();
+            Platform.runLater(Main::setPostsScene);
             return ConnectionMessage.SIGN_IN;
         }
         else {
@@ -87,25 +108,10 @@ public class Main extends Application{
         setStartScene();
     }
 
-    private static ObjectReader reader = null;
-    private static void startRead() {
-        reader = new ObjectReader();
-        reader.start();
-    }
-    private static void stopRead(){
-        System.out.println("Stop read");
-        if (reader != null && !reader.isInterrupted()){
-            System.out.println("Interrupting...  DSFDVRWWFDWWRDWGR");
-            reader.interrupt();
-        }
-    }
-
     private static <T extends Serializable> boolean sendObject(T o) {
         if (clientSocket == null || out == null)return false;
         try{
-            synchronized (out){
-                out.writeObject(o);
-            }
+            out.writeObject(o);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,13 +119,14 @@ public class Main extends Application{
         return false;
     }
     public static Object getObject() {
+        System.out.println("STREAM ONE " + (in == null));
         if (clientSocket == null || in == null)return null;
+        System.out.println("STREAM TWO " + (in == null));
         try{
             Object o;
-            synchronized (in) {
-                o = in.readObject();
-                return o;
-            }
+            o = in.readObject();
+            System.out.println("READ " + o);
+            return o;
         } catch (IOException | ClassNotFoundException e) {
             //e.printStackTrace();
             disconnect();
@@ -144,7 +151,6 @@ public class Main extends Application{
         }
     }
     public static void disconnect() {
-        stopRead();
         try{
             in = null;
             out = null;
@@ -155,7 +161,6 @@ public class Main extends Application{
         }
         System.out.println("DISCONNECTED SUCCESSFULLY");
     }
-
 
     @Override
     public void start(Stage primaryStage) {
@@ -168,15 +173,12 @@ public class Main extends Application{
         primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
         primaryStage.setScene(startScene);
         primaryStage.show();
-
-        ObservableList<MainSceneController.PostPane> posts = FXCollections.observableArrayList();
-        posts.addAll(new MainSceneController.PostPane(), new MainSceneController.PostPane(), new MainSceneController.PostPane());
-        mainSceneController.postView.setItems(posts);
     }
     private void createContent(){
         initStartScene();
         initRegisterScene();
         initMainScene();
+        initPostsScene();
     }
     private void initStartScene() {
         FXMLLoader startLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/startScene.fxml"));
@@ -204,8 +206,8 @@ public class Main extends Application{
         registerSceneController = registerLoader.getController();
         registerScene = new Scene(registerPane);
     }
-    private void initMainScene(){
-        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/mainScene.fxml"));
+    private static void initMainScene(){
+        FXMLLoader mainLoader = new FXMLLoader(Main.class.getResource("/main/resources/fxml/mainScene.fxml"));
         Pane mainPane = null;
         try {
             mainPane = mainLoader.load();
@@ -217,35 +219,59 @@ public class Main extends Application{
         mainSceneController = mainLoader.getController();
         mainScene = new Scene(mainPane);
     }
+    private static void initPostsScene(){
+        FXMLLoader postsLoader = new FXMLLoader(Main.class.getResource("/main/resources/fxml/postsScene.fxml"));
+        VBox kek = null;
+        try{
+            kek = postsLoader.load();
+        } catch (Exception e){
+            System.out.println("Can't load postsScene");
+            System.exit(0);
+        }
+        postsSceneController = postsLoader.getController();
+        postsSceneController.enterMessage.setOnKeyTyped(event -> {
+            String string = postsSceneController.enterMessage.getText();
 
+            if (string.length() > 250) {
+                postsSceneController.enterMessage.setText(string.substring(0, 250));
+                postsSceneController.enterMessage.positionCaret(string.length());
+            }
+        });
+        postsSceneController.enterMessage.setOnKeyPressed(ke -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
+            {
+                String s = postsSceneController.enterMessage.getText();
+                if(!s.isEmpty()){
+                    sendMessage(s);
+                }
+                postsSceneController.enterMessage.clear();
+            }
+        });
+        // TODO: 02.06.2020
+        ObservableList<PostsSceneController.PostPane> l = FXCollections.observableArrayList();
+        l.addAll(new PostsSceneController.PostPane(), new PostsSceneController.PostPane());
+        postsSceneController.postView.setItems(l);
+    }
+    private static void updatePostsScene(){
+        System.out.println("UPDATE POSTS SCENE");
+        // TODO: 02.06.2020
+        ObservableList<PostsSceneController.PostPane> l = FXCollections.observableArrayList();
+        sendObject(ConnectionMessage.GET_POSTS);
+        Object o = getObject();
+        System.out.println("GOT " + o);
+        l.addAll((Collection<? extends PostsSceneController.PostPane>) o);
+        postsSceneController.postView.setItems(l);
+    }
+
+    private static void sendMessage(String s) {
+        // TODO: 02.06.2020
+        System.out.println("SEND MESSAGE " + s);
+
+    }
 
 
     public static void main(String[] args) {
         Main main = new Main();
         launch(args);
-    }
-
-    public static class ObjectReader extends Thread {
-        @Override
-        public void run() {
-            System.out.println("STARTED READING");
-            while (!isInterrupted()) {
-                try {
-                    System.out.println("start receiving");
-                    //Object obj = getObjectForReader();
-                    Object obj;
-                    synchronized (in){
-                        obj = getObject();
-                    }
-                    System.out.println("RECEIVED " + obj);
-
-                } catch (Exception e) {
-                    System.out.println("SERVER DOWN");
-                    //Platform.runLater(() -> returnToStart("SERVER DOWN"));
-                    // TODO: 02.06.2020
-                }
-            }
-            //System.out.println("STOPPED READING");
-        }
     }
 }
