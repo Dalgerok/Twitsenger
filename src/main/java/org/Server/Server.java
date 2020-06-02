@@ -3,9 +3,7 @@ package main.java.org.Server;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import main.java.org.Client.PostsSceneController;
-import main.java.org.Tools.ConnectionMessage;
-import main.java.org.Tools.LoginInfo;
-import main.java.org.Tools.RegisterInfo;
+import main.java.org.Tools.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -40,6 +38,7 @@ public class Server {
         return null;
     }
     private static String sqlUpdQuery(String SQL){
+        System.out.println("QUERY: " + SQL);
         try {
             if (sqlConnection == null || sqlConnection.isClosed())sqlConnection = connectToSQL();
         } catch (SQLException e) {
@@ -94,6 +93,7 @@ public class Server {
         private final Socket socket;
         private final ObjectInputStream in;
         private final ObjectOutputStream out;
+        private ServerUser user;
 
         public ConnectionThread(Socket socket) throws IOException {
             this.socket = socket;
@@ -118,6 +118,20 @@ public class Server {
                             " );");
                     if ("ok".equals(s)){
                         sendObject(ConnectionMessage.SIGN_UP);
+                        ResultSet rs = sqlGetQuery("SELECT * FROM users WHERE users.email = " + compose(info.getEmail()) + ";");
+                        if(rs == null){
+                            System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+                            System.exit(0);
+                        }
+                        try {
+                            rs.next();
+                            user = new ServerUser(rs.getString("first_name"), rs.getString("last_name"), rs.getDate("birthday"),
+                                    rs.getString("email"), rs.getString("relationship_status"), rs.getString("gender"),
+                                    rs.getString("user_password"), rs.getInt("user_location_id"), rs.getString("picture_url"),
+                                    rs.getInt("user_id"));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                     }else if("ch_user_birthday".equals(s)){
                         sendObject(ConnectionMessage.BAD_BIRTHDAY);
                         return;
@@ -128,7 +142,7 @@ public class Server {
                 }else if (obj instanceof LoginInfo){
                     LoginInfo info = (LoginInfo)obj;
                     email = info.getEmail();
-                    ResultSet rs = sqlGetQuery("SELECT check_email(" + info.getEmail() + ");");
+                    ResultSet rs = sqlGetQuery("SELECT check_email(" + compose(info.getEmail()) + ");");
                     try {
                         if (rs == null || !rs.next()){
                             sendObject(ConnectionMessage.BAD_EMAIL);
@@ -159,27 +173,42 @@ public class Server {
                         return;
                     }
                     sendObject(ConnectionMessage.SIGN_IN);
+                    rs = sqlGetQuery("SELECT * FROM users WHERE users.email = " + compose(info.getEmail()) + ";");
+                    if(rs == null){
+                        System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+                        System.exit(0);
+                    }
+                    try {
+                        rs.next();
+                        user = new ServerUser(rs.getString("first_name"), rs.getString("last_name"), rs.getDate("birthday"),
+                                rs.getString("email"), rs.getString("relationship_status"), rs.getString("gender"),
+                                rs.getString("user_password"), rs.getInt("user_location_id"), rs.getString("picture_url"),
+                                rs.getInt("user_id"));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }else return;
                 System.out.println("logined or registered");
                 while (true) {
                     obj = readObject();
                     System.out.println("received " + obj);
                     if(ConnectionMessage.GET_POSTS.equals(obj)){
-                        ResultSet rs = sqlGetQuery("SELECT * FROM post JOIN users ON post.user_id = users.user_id;");
-                        ObservableList<PostsSceneController.PostPane> posts = FXCollections.observableArrayList();
+                        ResultSet rs = sqlGetQuery("SELECT * FROM post JOIN users ON post.user_id = users.user_id ORDER BY post_date DESC;");
+                        ArrayList<Post> posts = new ArrayList<>();
                         if(rs != null) {
                             try {
                                 while (rs.next()) {
                                     int user_id = rs.getInt(1);
                                     String post_text = rs.getString(2);
                                     Timestamp post_time = rs.getTimestamp(3);
+                                    System.out.println("TIME: " + post_time);
                                     int reposted_from = rs.getInt(4);
                                     int post_id = rs.getInt(5);
                                     String first_name = rs.getString(6);
                                     String last_name = rs.getString(7);
                                     String user_picture_url = rs.getString("picture_url");
                                     // TODO: 02.06.2020 ADD NUMBER OF LIKES AND REPOSTS
-                                    posts.add(new PostsSceneController.PostPane(
+                                    posts.add(new Post(
                                             user_id, post_text, post_time,
                                             reposted_from, post_id, first_name,
                                             last_name, user_picture_url));
@@ -189,7 +218,16 @@ public class Server {
                             }
                         }
                         System.out.println("I WANNA TO SEND POSTS!!!");
+                        posts.add(new Post(
+                                1, "LUL", Timestamp.valueOf("2020-10-10 10:10:10"),
+                                0, 1, "Andrii",
+                                "Orap", "kek"));
                         sendObject(posts);
+                    }
+                    else if(obj instanceof Post){
+                        System.out.println("KEK " + obj);
+                        Post p = (Post)obj;
+                        sqlUpdQuery("INSERT INTO post VALUES(" + compose(String.valueOf(user.user_id), p.post_text) + ");");
                     }
                 }
             } catch(IOException e){
@@ -224,7 +262,7 @@ public class Server {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < args.length; ++i){
             if (i > 0) s.append(", ");
-            s.append(args[i]);
+            s.append("'").append(args[i]).append("'");
         }
         return s.toString();
     }

@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.LoginInfo;
+import main.java.org.Tools.Post;
 import main.java.org.Tools.RegisterInfo;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Main extends Application{
@@ -65,8 +67,8 @@ public class Main extends Application{
         // TODO: 02.06.2020
     }
     public static void setPostsScene() {
-        Platform.runLater(Main::setMainScene);
-        Platform.runLater(Main::updatePostsScene);
+        setMainScene();
+        updatePostsScene();
         System.out.println("SET POSTS SCENE");
         mainSceneController.mainAnchorPane.getChildren().add(postsSceneController.postsVBox);
     }
@@ -94,7 +96,7 @@ public class Main extends Application{
         sendObject(loginInfo);
         Object o = getObject();
         if (ConnectionMessage.SIGN_IN.equals(o)){
-            Platform.runLater(Main::setPostsScene);
+            setPostsScene();
             return ConnectionMessage.SIGN_IN;
         }
         else {
@@ -124,11 +126,12 @@ public class Main extends Application{
         System.out.println("STREAM TWO " + (in == null));
         try{
             Object o;
+            System.out.println("IM HERE");
             o = in.readObject();
             System.out.println("READ " + o);
             return o;
         } catch (IOException | ClassNotFoundException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             disconnect();
             //System.exit(0);
         }
@@ -259,14 +262,18 @@ public class Main extends Application{
         sendObject(ConnectionMessage.GET_POSTS);
         Object o = getObject();
         System.out.println("GOT " + o);
-        l.addAll((Collection<? extends PostsSceneController.PostPane>) o);
+        ArrayList<Post> list = (ArrayList<Post>)o;
+        for(Post p : list){
+            l.add(new PostsSceneController.PostPane(p));
+        }
         postsSceneController.postView.setItems(l);
     }
 
     private static void sendMessage(String s) {
         // TODO: 02.06.2020
         System.out.println("SEND MESSAGE " + s);
-
+        sendObject(new Post(s));
+        updatePostsScene();
     }
 
 
