@@ -171,7 +171,7 @@ CREATE  TABLE message (
 CREATE  TABLE post (
                        user_id 			 integer NOT NULL,
                        post_text         	 varchar(250)  NOT NULL ,
-                       post_date            timestamp DEFAULT CURRENT_DATE NOT NULL ,
+                       post_date            timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
                        reposted_from        integer   ,
                        post_id              SERIAL ,
                        CONSTRAINT pk_post_id PRIMARY KEY ( post_id ),
