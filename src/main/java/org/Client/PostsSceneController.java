@@ -23,7 +23,7 @@ public class PostsSceneController {
     @FXML public TextField enterMessage;
 
     public void refreshButtonHandler(MouseEvent mouseEvent) {
-        Main.updatePostsScene();
+        Main.askForUpdatePostsScene();
     }
 
     public static class PostPane extends VBox implements Serializable {

@@ -1,6 +1,7 @@
 package main.java.org.Client;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -14,6 +15,8 @@ public class StartSceneController {
     @FXML public TextField loginEmail;
     @FXML public PasswordField loginPassword;
     @FXML public Text textMessage;
+    @FXML public Button loginButton;
+
 
     @FXML
     public void loginButtonHandler(MouseEvent mouseEvent) {

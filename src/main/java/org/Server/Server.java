@@ -76,6 +76,7 @@ public class Server {
 
 
     public static void main(String[] args) {
+        sqlConnection = connectToSQL();
         final int portNumber = 4001;
         try {
             ServerSocket serverSocket = new ServerSocket(portNumber);
@@ -261,6 +262,7 @@ public class Server {
                     e.printStackTrace();
                 }
                 System.out.println(email + " is disconnected");
+                connections.remove(this);
             }
         }
         public void sendObject(Object o) throws IOException {

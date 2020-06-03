@@ -65,7 +65,7 @@ public class Main extends Application{
     }
     public static void setPostsScene() {
         setMainScene();
-        updatePostsScene();
+        askForUpdatePostsScene();
         System.out.println("SET POSTS SCENE");
         mainSceneController.mainAnchorPane.getChildren().add(postsSceneController.postsVBox);
     }
@@ -87,6 +87,7 @@ public class Main extends Application{
                 return ConnectionMessage.UNABLE_TO_CONNECT;
             }
             user = (ServerUser)o;
+            startRead();
             setPostsScene();
             return ConnectionMessage.SIGN_UP;
         }else {
@@ -106,6 +107,7 @@ public class Main extends Application{
                 return ConnectionMessage.UNABLE_TO_CONNECT;
             }
             user = (ServerUser)o;
+            startRead();
             setPostsScene();
             return ConnectionMessage.SIGN_IN;
         }
@@ -141,7 +143,7 @@ public class Main extends Application{
             System.out.println("READ " + o);
             return o;
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             disconnect();
             //System.exit(0);
         }
@@ -164,6 +166,7 @@ public class Main extends Application{
         }
     }
     public static void disconnect() {
+        stopRead();
         try{
             in = null;
             out = null;
@@ -205,6 +208,17 @@ public class Main extends Application{
             System.exit(0);
         }
         startSceneController = startLoader.getController();
+
+        startSceneController.loginButton.setOnKeyPressed(ke -> {
+            if (ke.getCode().equals(KeyCode.ENTER)) {
+                startSceneController.loginButtonHandler(null);
+            }
+        });
+        startPane.setOnKeyPressed(ke -> {
+            if (ke.getCode().equals(KeyCode.ENTER)) {
+                startSceneController.loginButtonHandler(null);
+            }
+        });
         startScene = new Scene(startPane);
     }
     private void initRegisterScene() {
@@ -262,13 +276,13 @@ public class Main extends Application{
             }
         });
     }
-    public static void updatePostsScene(){
+    public static void askForUpdatePostsScene(){
+        System.out.println("ASK FOR UPDATE POSTS SCENE");
+        sendObject(ConnectionMessage.GET_POSTS);
+    }
+    public static void updatePostsScene(ArrayList<Post> list){
         System.out.println("UPDATE POSTS SCENE");
         ObservableList<PostsSceneController.PostPane> l = FXCollections.observableArrayList();
-        sendObject(ConnectionMessage.GET_POSTS);
-        Object o = getObject();
-        System.out.println("GOT " + o);
-        ArrayList<Post> list = (ArrayList<Post>)o;
         for(Post p : list){
             l.add(new PostsSceneController.PostPane(p, user.user_id));
         }
@@ -279,18 +293,55 @@ public class Main extends Application{
         System.out.println("SEND MESSAGE " + s);
         sendObject(ConnectionMessage.NEW_POST);
         sendObject(new Post(s));
-        updatePostsScene();
+        askForUpdatePostsScene();
     }
     public static void delMessage(Post p) {
         System.out.println("DEL MESSAGE " + p);
         sendObject(ConnectionMessage.DEL_POST);
         sendObject(p);
-        updatePostsScene();
+        askForUpdatePostsScene();
     }
 
 
     public static void main(String[] args) {
         Main main = new Main();
         launch(args);
+    }
+    private static ObjectReader reader = null;
+
+    private static void startRead() {
+        reader = new ObjectReader();
+        reader.start();
+    }
+    private static void stopRead(){
+        System.out.println("Stop read");
+        if (reader != null && !reader.isInterrupted()){
+            System.out.println("Interrupting...  DSFDVRWWFDWWRDWGR");
+            reader.interrupt();
+        }
+    }
+    public static class ObjectReader extends Thread {
+        @Override
+        public void run() {
+            System.out.println("STARTED READING");
+            while (!isInterrupted()) {
+                try {
+                    System.out.println("start receiving");
+                    Object obj;
+                    synchronized (in){
+                        obj = getObject();
+                    }
+                    System.out.println("RECEIVED " + obj);
+                    if (obj instanceof ArrayList){
+                        if (((ArrayList) obj).size() > 0 && ((ArrayList) obj).get(0) instanceof Post)Platform.runLater(() -> updatePostsScene((ArrayList<Post>) obj));
+                    }
+                } catch (Exception e) {
+                    System.out.println("SERVER DOWN");
+                    //Platform.runLater(() -> returnToStart("SERVER DOWN"));
+                    // TODO: 02.06.2020
+                }
+            }
+            //System.out.println("STOPPED READING");
+        }
     }
 }

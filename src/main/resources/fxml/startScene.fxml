@@ -18,7 +18,7 @@
             <TextField fx:id="loginEmail" layoutX="326.0" layoutY="287.0" />
             <Label layoutX="326.0" layoutY="317.0" text="Password" />
             <PasswordField fx:id="loginPassword" layoutX="326.0" layoutY="334.0" />
-            <Button layoutX="377.0" layoutY="368.0" mnemonicParsing="false" onMouseClicked="#loginButtonHandler" text="Login" />
+            <Button fx:id="loginButton" layoutX="377.0" layoutY="368.0" mnemonicParsing="false" onMouseClicked="#loginButtonHandler" text="Login" />
             <TextFlow layoutX="300.0" layoutY="400.0" prefHeight="20.0" prefWidth="200.0">
                <children>
                   <Label text="First time on Twitterissimo?" />
