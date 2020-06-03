@@ -21,7 +21,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.RegisterSceneController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="255.0" layoutY="202.0" spacing="10.0">
@@ -35,7 +34,7 @@
             <TextField fx:id="lastNameField" promptText="Last name" />
             <DatePicker fx:id="birthdayField" editable="false" prefHeight="25.0" prefWidth="289.0" promptText="Birthday" />
             <TextField fx:id="registerEmail" promptText="Email address" />
-            <ChoiceBox fx:id="relationshipBox" prefHeight="25.0" prefWidth="290.0" value="Single">
+            <ComboBox fx:id="relationshipBox" prefHeight="25.0" prefWidth="290.0" value="Single">
                <items>
                   <FXCollections fx:factory="observableArrayList">
                      <String fx:value="Single" />
@@ -50,7 +49,7 @@
                      <String fx:value="Widowed" />
                   </FXCollections>
                </items>
-            </ChoiceBox>
+            </ComboBox>
             <HBox spacing="50.0">
                <children>
                   <RadioButton fx:id="maleButton" mnemonicParsing="false" selected="true" text="Male">

@@ -6,9 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -18,10 +16,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class Main extends Application{
 
@@ -31,11 +27,12 @@ public class Main extends Application{
     static RegisterSceneController registerSceneController;
     static MainSceneController mainSceneController;
     static PostsSceneController postsSceneController;
+    static ProfileSceneController profileSceneController;
 
     static Scene startScene;
     static Scene registerScene;
     static Scene mainScene;
-    static Scene postsScene;
+    static ClientPlace clientPlace;
 
     public static void setRegisterScene() {
         System.out.println("SET REGISTER SCENE");
@@ -57,17 +54,26 @@ public class Main extends Application{
     }
     public static void setEditProfileScene() {
         setMainScene();
+
+        clientPlace = ClientPlace.EDIT_PROFILE_SCENE;
         // TODO: 02.06.2020  
     }
-    public static void setMyProfileScene() {
+    public static void setProfileScene(int id) {
         setMainScene();
+        askForProfileInfo(id);
+        System.out.println("SET PROFILE SCENE " + id);
+        mainSceneController.mainPane.getChildren().add(profileSceneController.profilePane);
+
+        clientPlace = ClientPlace.PROFILE_SCENE;
         // TODO: 02.06.2020
     }
     public static void setPostsScene() {
         setMainScene();
         askForUpdatePostsScene();
         System.out.println("SET POSTS SCENE");
-        mainSceneController.mainAnchorPane.getChildren().add(postsSceneController.postsVBox);
+        mainSceneController.mainPane.getChildren().add(postsSceneController.postsVBox);
+
+        clientPlace = ClientPlace.POST_SCENE;
     }
 
     private static final String hostname = "localhost";
@@ -196,6 +202,7 @@ public class Main extends Application{
         initRegisterScene();
         initMainScene();
         initPostsScene();
+        initProfileScene();
     }
     private void initStartScene() {
         FXMLLoader startLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/startScene.fxml"));
@@ -247,6 +254,18 @@ public class Main extends Application{
         mainSceneController = mainLoader.getController();
         mainScene = new Scene(mainPane);
     }
+    private static void initProfileScene(){
+        FXMLLoader mainLoader = new FXMLLoader(Main.class.getResource("/main/resources/fxml/profileScene.fxml"));
+        Pane profilePane = null;
+        try {
+            profilePane = mainLoader.load();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            System.out.println("Can't load profileScene");
+            System.exit(0);
+        }
+        profileSceneController = mainLoader.getController();
+    }
     private static void initPostsScene(){
         FXMLLoader postsLoader = new FXMLLoader(Main.class.getResource("/main/resources/fxml/postsScene.fxml"));
         VBox kek = null;
@@ -288,6 +307,14 @@ public class Main extends Application{
         }
         postsSceneController.postView.setItems(l);
     }
+    private static void updateProfileScene(ProfileInfo pi) {
+        System.out.println("UPDATE PROFILE SCENE");
+        profileSceneController.updateProfile(pi);
+    }
+    public static void askForProfileInfo(int id){
+        System.out.println("ASK FOR USER INFO");
+        sendObject(new ProfileRequest(id));
+    }
 
     private static void sendMessage(String s) {
         System.out.println("SEND MESSAGE " + s);
@@ -299,6 +326,8 @@ public class Main extends Application{
         System.out.println("DEL MESSAGE " + p);
         sendObject(ConnectionMessage.DEL_POST);
         sendObject(p);
+
+        sendObject(new ProfileRequest(user.user_id));
         askForUpdatePostsScene();
     }
 
@@ -332,16 +361,24 @@ public class Main extends Application{
                         obj = getObject();
                     }
                     System.out.println("RECEIVED " + obj);
+                    if (obj instanceof ConnectionMessage){
+                        if (obj.equals(ConnectionMessage.UPDATE_POSTS)){
+                            if (clientPlace.equals(ClientPlace.PROFILE_SCENE))askForProfileInfo(profileSceneController.profileId);
+                            if (clientPlace.equals(ClientPlace.POST_SCENE))askForUpdatePostsScene();
+                        }
+                    }
                     if (obj instanceof ArrayList){
                         if (((ArrayList) obj).size() > 0 && ((ArrayList) obj).get(0) instanceof Post)Platform.runLater(() -> updatePostsScene((ArrayList<Post>) obj));
                     }
+                    if (obj instanceof ProfileInfo)Platform.runLater(() -> updateProfileScene((ProfileInfo)obj));
                 } catch (Exception e) {
                     System.out.println("SERVER DOWN");
-                    //Platform.runLater(() -> returnToStart("SERVER DOWN"));
+                    e.printStackTrace();
                     // TODO: 02.06.2020
                 }
             }
             //System.out.println("STOPPED READING");
         }
+
     }
 }

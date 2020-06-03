@@ -17,12 +17,64 @@ public class Server {
     private static final String url = "jdbc:postgresql://localhost:5432/postgres";
     private static final String user = "postgres";
     private static final String password = "1321";
+    private static Connection sqlConnection;
+    private static Statement sqlStatement;
 
+    private static ResultSet sqlGetQuery(String SQL){
+
+        System.out.println("GET QUERY: " + SQL);
+        try {
+            if (sqlConnection == null || sqlConnection.isClosed())sqlConnection = connectToSQL();
+        } catch (SQLException throwables) {
+            return null;
+        }
+        try {
+            return sqlStatement.executeQuery(SQL);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+    private static String sqlUpdQuery(String SQL){
+        System.out.println("QUERY: " + SQL);
+        try {
+            if (sqlConnection == null || sqlConnection.isClosed())sqlConnection = connectToSQL();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "bad connection";
+        }
+        try {
+            sqlStatement.execute(SQL);
+            return "ok";
+        } catch (SQLException e) {
+            System.out.println(e.getLocalizedMessage());
+            String[] s = e.toString().split("\"");
+            if(s.length == 3){
+                return s[1];
+            }
+            else{
+                return s[3];
+            }
+        }
+    }
+    public static Connection connectToSQL() {
+        Connection conn;
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+            sqlStatement = conn.createStatement();
+            System.out.println("Connected to the PostgreSQL server successfully.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+
+        return conn;
+    }
 
 
     public static void main(String[] args) {
         //String SQL = "SELECT * FROM users";
-        //sqlConnection = connectToSQL();
+        sqlConnection = connectToSQL();
         /*Connection connection1 = connectToSQL();
         Connection connection2 = connectToSQL();
         try {
@@ -53,8 +105,6 @@ public class Server {
         private final ObjectInputStream in;
         private final ObjectOutputStream out;
         private ServerUser user;
-        private Connection sqlConnection;
-        private  Statement sqlStatement;
 
         public ConnectionThread(Socket socket) throws IOException {
             this.socket = socket;
@@ -62,76 +112,25 @@ public class Server {
             this.out = new ObjectOutputStream(this.socket.getOutputStream());
             connections.add(this);
         }
-        private ResultSet sqlGetQuery(String SQL){
-
-            System.out.println("GET QUERY: " + SQL);
-            try {
-                if (sqlConnection == null || sqlConnection.isClosed())sqlConnection = connectToSQL();
-            } catch (SQLException throwables) {
-                return null;
-            }
-            try {
-                return sqlStatement.executeQuery(SQL);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            return null;
-        }
-        private String sqlUpdQuery(String SQL){
-            System.out.println("QUERY: " + SQL);
-            try {
-                if (sqlConnection == null || sqlConnection.isClosed())sqlConnection = connectToSQL();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return "bad connection";
-            }
-            try {
-                sqlStatement.execute(SQL);
-                return "ok";
-            } catch (SQLException e) {
-                System.out.println(e.getLocalizedMessage());
-                String[] s = e.toString().split("\"");
-                if(s.length == 3){
-                    return s[1];
-                }
-                else{
-                    return s[3];
-                }
-            }
-        }
-        public Connection connectToSQL() {
-            Connection conn;
-            try {
-                conn = DriverManager.getConnection(Server.url, Server.user, Server.password);
-                sqlStatement = conn.createStatement();
-                System.out.println("Connected to the PostgreSQL server successfully.");
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-                return null;
-            }
-
-            return conn;
-        }
 
         String email = null;
-
         @Override
         public void run() {
             Object obj;
             try {
-                obj = readObject();
+                obj  = readObject();
                 System.out.println(obj);
-                if (obj instanceof RegisterInfo) {
-                    RegisterInfo info = (RegisterInfo) obj;
+                if (obj instanceof RegisterInfo){
+                    RegisterInfo info = (RegisterInfo)obj;
                     email = info.getEmail();
                     String s = sqlUpdQuery("INSERT INTO users (first_name, last_name, birthday, email, relationship_status, gender, user_password) VALUES ( " +
                             compose(info.getFirstName(), info.getLastName(), info.getBirthday(), info.getEmail(),
                                     info.getRelationship(), info.getGender(), info.getPassword()) + "" +
                             " );");
-                    if ("ok".equals(s)) {
+                    if ("ok".equals(s)){
                         sendObject(ConnectionMessage.SIGN_UP);
                         ResultSet rs = sqlGetQuery("SELECT * FROM users WHERE users.email = " + compose(info.getEmail()) + ";");
-                        if (rs == null) {
+                        if(rs == null){
                             System.out.println("VERY VERY BAD (IMPOSSIBLE)");
                             System.exit(0);
                         }
@@ -145,23 +144,23 @@ public class Server {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                    } else if ("ch_user_birthday".equals(s)) {
+                    }else if("ch_user_birthday".equals(s)){
                         sendObject(ConnectionMessage.BAD_BIRTHDAY);
                         return;
-                    } else {
+                    }else{
                         sendObject(ConnectionMessage.BAD_EMAIL);
                         return;
                     }
-                } else if (obj instanceof LoginInfo) {
-                    LoginInfo info = (LoginInfo) obj;
+                }else if (obj instanceof LoginInfo){
+                    LoginInfo info = (LoginInfo)obj;
                     email = info.getEmail();
                     ResultSet rs = sqlGetQuery("SELECT check_email(" + compose(info.getEmail()) + ");");
                     try {
-                        if (rs == null || !rs.next()) {
+                        if (rs == null || !rs.next()){
                             sendObject(ConnectionMessage.BAD_EMAIL);
                             return;
-                        } else {
-                            if (!rs.getBoolean(1)) {
+                        }else {
+                            if (!rs.getBoolean(1)){
                                 sendObject(ConnectionMessage.BAD_EMAIL);
                                 return;
                             }
@@ -172,11 +171,11 @@ public class Server {
                     }
                     rs = sqlGetQuery("SELECT check_password(" + compose(info.getEmail(), info.getPassword()) + ");");
                     try {
-                        if (rs == null || !rs.next()) {
+                        if (rs == null || !rs.next()){
                             sendObject(ConnectionMessage.BAD_PASSWORD);
                             return;
-                        } else {
-                            if (!rs.getBoolean(1)) {
+                        }else {
+                            if (!rs.getBoolean(1)){
                                 sendObject(ConnectionMessage.BAD_PASSWORD);
                                 return;
                             }
@@ -187,7 +186,7 @@ public class Server {
                     }
                     sendObject(ConnectionMessage.SIGN_IN);
                     rs = sqlGetQuery("SELECT * FROM users WHERE users.email = " + compose(info.getEmail()) + ";");
-                    if (rs == null) {
+                    if(rs == null){
                         System.out.println("VERY VERY BAD (IMPOSSIBLE)");
                         System.exit(0);
                     }
@@ -201,44 +200,48 @@ public class Server {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                } else return;
+                }else return;
                 System.out.println("logined or registered");
                 while (true) {
                     obj = readObject();
                     System.out.println("received " + obj);
-                    if (ConnectionMessage.GET_POSTS.equals(obj)) {
+                    if(ConnectionMessage.GET_POSTS.equals(obj)){
                         System.out.println("I WANNA TO SEND POSTS!!!");
                         sendObject(getPosts(null));
-                    } else if (obj instanceof ConnectionMessage) {
-                        if (ConnectionMessage.NEW_POST.equals(obj)) {
+                    }
+                    else if(obj instanceof ConnectionMessage) {
+                        if(ConnectionMessage.NEW_POST.equals(obj)) {
                             obj = readObject();
                             if (obj instanceof Post) {
                                 System.out.println("NEW POST " + obj);
                                 Post p = (Post) obj;
                                 sqlUpdQuery("INSERT INTO post VALUES(" + compose(String.valueOf(user.user_id), p.post_text) + ");");
-                            } else {
+                            }
+                            else{
                                 System.out.println("BAD NEW POST!!!");
                             }
                             sendAll(ConnectionMessage.UPDATE_POSTS);
-                        } else if (ConnectionMessage.DEL_POST.equals(obj)) {
+                        }
+                        else if(ConnectionMessage.DEL_POST.equals(obj)) {
                             obj = readObject();
                             if (obj instanceof Post) {
                                 System.out.println("DEL POST " + obj);
-                                Post p = (Post) obj;
+                                Post p = (Post)obj;
                                 sqlUpdQuery("DELETE FROM post WHERE post.post_id=" + p.post_id + ";");
-                            } else {
+                            }
+                            else{
                                 System.out.println("BAD DEL POST!!!");
                             }
                             sendAll(ConnectionMessage.UPDATE_POSTS);
                         }
-                    } else if (obj instanceof ProfileRequest) {
-                        ProfileRequest pr = (ProfileRequest) obj;
+                    }else if (obj instanceof ProfileRequest){
+                        ProfileRequest pr = (ProfileRequest)obj;
                         sendObject(getProfileInfo(pr.getId()));
                     }
                 }
-            } catch (IOException e) {
+            } catch(IOException e){
                 System.out.println("client disconnected");
-            } finally {
+            } finally{
 
                 try {
                     socket.close();
@@ -251,7 +254,7 @@ public class Server {
         }
 
         private void sendAll(Object o) {
-            for (ConnectionThread connectionThread : connections) {
+            for (ConnectionThread connectionThread : connections){
                 try {
                     connectionThread.sendObject(o);
                 } catch (IOException e) {
@@ -264,7 +267,6 @@ public class Server {
             System.out.println("Something sent " + o);
             out.writeObject(o);
         }
-
         public Object readObject() throws IOException {
             try {
                 return in.readObject();
@@ -276,120 +278,115 @@ public class Server {
                 return null;
             }
         }
+    }
+    private static ArrayList<Post> getPosts(Integer user_id){
+        ResultSet rs;
+        ArrayList<Post> posts = new ArrayList<>();
+        String SQL = "SELECT * FROM post JOIN users ON post.user_id = users.user_id ";
+        if (user_id != null)SQL = SQL + "WHERE post.user_id = " + user_id + " ";
+        SQL = SQL + "ORDER BY post_date DESC;";
 
-        private ArrayList<Post> getPosts(Integer user_id) {
-            ResultSet rs;
-            ArrayList<Post> posts = new ArrayList<>();
-            String SQL = "SELECT * FROM post JOIN users ON post.user_id = users.user_id ";
-            if (user_id != null) SQL = SQL + "WHERE post.user_id = " + user_id + " ";
-            SQL = SQL + "ORDER BY post_date DESC;";
-
-            rs = sqlGetQuery(SQL);
-            if (rs != null) {
-                try {
-                    while (rs.next()) {
-                        user_id = rs.getInt(1);
-                        String post_text = rs.getString(2);
-                        Timestamp post_time = rs.getTimestamp(3);
-                        int reposted_from = rs.getInt(4);
-                        int post_id = rs.getInt(5);
-                        String first_name = rs.getString(6);
-                        String last_name = rs.getString(7);
-                        String user_picture_url = rs.getString("picture_url");
-                        // TODO: 02.06.2020 ADD NUMBER OF LIKES AND REPOSTS
-                        posts.add(new Post(
-                                user_id, post_text, post_time,
-                                reposted_from, post_id, first_name,
-                                last_name, user_picture_url));
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            return posts;
-        }
-
-        private ProfileInfo getUserInfo(int user_id) {
-            ResultSet rs = sqlGetQuery("SELECT * FROM users WHERE users.user_id = " + user_id + ";");
-            if (rs == null) {
-                System.out.println("VERY VERY BAD (IMPOSSIBLE)");
-                System.exit(0);
-            }
+        rs = sqlGetQuery(SQL);
+        if(rs != null) {
             try {
-                rs.next();
-                //System.out.println(rs.getInt("user_location_id"));
-                return new ProfileInfo(rs.getString("first_name"), rs.getString("last_name"), rs.getDate("birthday"),
-                        rs.getString("email"), rs.getString("relationship_status"), rs.getString("gender"),
-                        rs.getString("user_password"), rs.getInt("user_location_id"), rs.getString("picture_url"),
-                        rs.getInt("user_id"));
+                while (rs.next()) {
+                    user_id = rs.getInt(1);
+                    String post_text = rs.getString(2);
+                    Timestamp post_time = rs.getTimestamp(3);
+                    int reposted_from = rs.getInt(4);
+                    int post_id = rs.getInt(5);
+                    String first_name = rs.getString(6);
+                    String last_name = rs.getString(7);
+                    String user_picture_url = rs.getString("picture_url");
+                    // TODO: 02.06.2020 ADD NUMBER OF LIKES AND REPOSTS
+                    posts.add(new Post(
+                            user_id, post_text, post_time,
+                            reposted_from, post_id, first_name,
+                            last_name, user_picture_url));
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return null;
         }
-
-        private ProfileInfo getProfileInfo(int user_id) {
-            ProfileInfo pi = getUserInfo(user_id);
-            if (pi.user_location_id != 0) {
-                pi.location = getLocation(pi.user_location_id);
-            }
-            pi.posts = getPosts(user_id);
-
-            String SQL = "SELECT facility_id FROM user_facility WHERE user_id = " + user_id + ";";
-            ResultSet rs = sqlGetQuery(SQL);
-            ArrayList<Facility> facilities = new ArrayList<>();
-            if (rs == null) {
-                System.out.println("VERY VERY BAD (IMPOSSIBLE)");
-                System.exit(0);
-            }
-            try {
-                while (rs.next()) {
-                    facilities.add(getFacility(rs.getInt(1)));
-                }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            pi.facilities = facilities;
-            return pi;
+        return posts;
+    }
+    private static ProfileInfo getUserInfo(int user_id){
+        ResultSet rs = sqlGetQuery("SELECT * FROM users WHERE users.user_id = " + user_id + ";");
+        if(rs == null){
+            System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+            System.exit(0);
         }
-
-        private Location getLocation(int location_id) {
-            String SQL = "SELECT * FROM locations WHERE locations.location_id = " + location_id + ";";
-            ResultSet rs = sqlGetQuery(SQL);
-            if (rs == null) {
-                System.out.println("VERY VERY BAD (IMPOSSIBLE)");
-                System.exit(0);
-            }
-            try {
-                if (!rs.next()) {
-                    return new Location("", "", location_id);
-                } else {
-                    return new Location(rs.getString(1), rs.getString(2), location_id);
-                }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            return new Location("", "", location_id);
+        try {
+            rs.next();
+            //System.out.println(rs.getInt("user_location_id"));
+            return new ProfileInfo(rs.getString("first_name"), rs.getString("last_name"), rs.getDate("birthday"),
+                    rs.getString("email"), rs.getString("relationship_status"), rs.getString("gender"),
+                    rs.getString("user_password"), rs.getInt("user_location_id"), rs.getString("picture_url"),
+                    rs.getInt("user_id"));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        private Facility getFacility(int facility_id) {
-            String SQL = "SELECT * FROM facility WHERE facility.facility_id = " + facility_id + ";";
-            ResultSet rs = sqlGetQuery(SQL);
-            if (rs == null) {
-                System.out.println("VERY VERY BAD (IMPOSSIBLE)");
-                System.exit(0);
-            }
-            try {
-                if (!rs.next()) {
-                    return new Facility("", new Location("", "", 0), "", facility_id);
-                } else {
-                    return new Facility(rs.getString(1), getLocation(rs.getInt(2)), rs.getString(3), facility_id);
-                }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            return new Facility("", new Location("", "", 0), "", facility_id);
+        return null;
+    }
+    private static ProfileInfo getProfileInfo(int user_id){
+        ProfileInfo pi = getUserInfo(user_id);
+        if (pi.user_location_id != 0){
+            pi.location = getLocation(pi.user_location_id);
         }
+        pi.posts = getPosts(user_id);
+
+        String SQL = "SELECT facility_id FROM user_facility WHERE user_id = " + user_id + ";";
+        ResultSet rs = sqlGetQuery(SQL);
+        ArrayList<Facility> facilities = new ArrayList<>();
+        if (rs == null){
+            System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+            System.exit(0);
+        }
+        try {
+            while (rs.next()) {
+                facilities.add(getFacility(rs.getInt(1)));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        pi.facilities = facilities;
+        return pi;
+    }
+    private static Location getLocation(int location_id){
+        String SQL = "SELECT * FROM locations WHERE locations.location_id = " + location_id + ";";
+        ResultSet rs = sqlGetQuery(SQL);
+        if (rs == null){
+            System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+            System.exit(0);
+        }
+        try {
+            if (!rs.next()){
+                return new Location("", "", location_id);
+            }else {
+                return new Location(rs.getString(1), rs.getString(2), location_id);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new Location("", "", location_id);
+    }
+    private static Facility getFacility(int facility_id){
+        String SQL = "SELECT * FROM facility WHERE facility.facility_id = " + facility_id + ";";
+        ResultSet rs = sqlGetQuery(SQL);
+        if (rs == null){
+            System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+            System.exit(0);
+        }
+        try {
+            if (!rs.next()){
+                return new Facility("", new Location("", "", 0), "", facility_id);
+            }else {
+                return new Facility(rs.getString(1), getLocation(rs.getInt(2)), rs.getString(3), facility_id);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new Facility("", new Location("", "", 0), "", facility_id);
     }
     static String compose(String... args){
         StringBuilder s = new StringBuilder();

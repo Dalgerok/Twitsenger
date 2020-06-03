@@ -23,7 +23,7 @@ public class RegisterSceneController {
     @FXML public RadioButton femaleButton;
     @FXML public RadioButton unspecifiedButton;
 
-    @FXML public ChoiceBox<String> relationshipBox;
+    @FXML public ComboBox<String> relationshipBox;
     @FXML public Text messageText;
 
     @FXML
