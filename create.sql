@@ -100,13 +100,11 @@ CREATE OR REPLACE FUNCTION check_insert_friendship()
     RETURNS TRIGGER AS
 $$
 BEGIN
-    IF EXISTS (
+    IF NOT EXISTS (
             SELECT *
             FROM friendship f
             WHERE NEW.friend1 = f.friend1 AND NEW.friend2 = f.friend2
-        ) THEN
-        NEW = NULL;
-    ELSE
+    ) THEN
         INSERT INTO friendship VALUES (NEW.friend2, NEW.friend1, NEW.date_from);
     END IF;
     RETURN NEW;
@@ -114,7 +112,7 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER check_insert_friendship BEFORE INSERT ON friendship
+CREATE TRIGGER check_insert_friendship AFTER INSERT ON friendship
     FOR EACH ROW EXECUTE PROCEDURE check_insert_friendship();
 ----
 
@@ -360,8 +358,11 @@ BEGIN
 END;
 $$
     LANGUAGE plpgsql;
-
-
 ----
+
+INSERT INTO users
+VALUES ('Andrii', 'Orap', '12-12-2001', 'a', 'Single', 'Male', 'a');
+INSERT INTO users
+VALUES ('Nazarii', 'Denha', '10-10-2002', 'b', 'Single', 'Male', 'b');
 
 -- PERFECT TABLE :3 --
