@@ -93,8 +93,24 @@ CREATE  TABLE friendship (
 CREATE RULE no_update_friendship AS ON UPDATE TO friendship
     DO INSTEAD NOTHING;
 
-CREATE RULE check_delete_friendship AS ON DELETE TO friendship
-    DO ALSO DELETE FROM friendship kek WHERE kek.friend2 = OLD.friend1 AND kek.friend1 = OLD.friend2;
+CREATE OR REPLACE FUNCTION check_delete_friendship()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+    IF EXISTS (
+            SELECT *
+            FROM friendship f
+            WHERE f.friend1 = OLD.friend2 AND f.friend2 = OLD.friend1
+        ) THEN
+        DELETE FROM friendship f WHERE f.friend1 = OLD.friend2 AND f.friend2 = OLD.friend1;
+    END IF;
+    RETURN NULL;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER check_delete_friendship AFTER DELETE ON friendship
+    FOR EACH ROW EXECUTE PROCEDURE check_delete_friendship();
 
 CREATE OR REPLACE FUNCTION check_insert_friendship()
     RETURNS TRIGGER AS
@@ -103,11 +119,11 @@ BEGIN
     IF NOT EXISTS (
             SELECT *
             FROM friendship f
-            WHERE NEW.friend1 = f.friend1 AND NEW.friend2 = f.friend2
-    ) THEN
+            WHERE NEW.friend1 = f.friend2 AND NEW.friend2 = f.friend1
+        ) THEN
         INSERT INTO friendship VALUES (NEW.friend2, NEW.friend1, NEW.date_from);
     END IF;
-    RETURN NEW;
+    RETURN NULL;
 END;
 $$
     LANGUAGE plpgsql;
@@ -365,4 +381,10 @@ VALUES ('Andrii', 'Orap', '12-12-2001', 'a', 'Single', 'Male', 'a');
 INSERT INTO users
 VALUES ('Nazarii', 'Denha', '10-10-2002', 'b', 'Single', 'Male', 'b');
 
+-- PERFECT TABLE :3 --
+
+INSERT INTO friendship VALUES (1, 2);
+
+DELETE FROM friendship f WHERE f.friend1 = 1 AND f.friend2 = 2;
+SELECT * FROM friendship;
 -- PERFECT TABLE :3 --
