@@ -98,6 +98,15 @@ CREATE RULE check_insert_friendship AS ON INSERT TO friendship
     DO ALSO INSERT INTO friendship VALUES (NEW.friend2, NEW.friend1, NEW.date_from);
 ----
 
+
+CREATE FUNCTION get_number_of_user_friends(id integer) RETURNS integer AS
+$$
+BEGIN
+    RETURN (SELECT COUNT(*) FROM friendship WHERE friend1 = id);
+END;
+$$
+LANGUAGE plpgsql;
+
 ----
 CREATE  TABLE friend_request (
             from_whom            integer                             NOT NULL ,
@@ -181,20 +190,6 @@ CREATE  TABLE posts (
             CONSTRAINT fk_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE VIEW get_all_posts_sort_by_date
-    AS SELECT *, get_number_of_likes_on_post(post_id) as likes, get_number_of_reposts_on_post(post_id) as reposts
-    FROM posts
-    ORDER BY post_date DESC;
-
-CREATE VIEW get_all_posts_sort_by_likes
-AS SELECT *, get_number_of_likes_on_post(post_id) as likes, get_number_of_reposts_on_post(post_id) as reposts
-   FROM posts
-   ORDER BY likes, post_date DESC;
-
-CREATE VIEW get_all_posts_sort_by_reposts
-AS SELECT *, get_number_of_likes_on_post(post_id) as likes, get_number_of_reposts_on_post(post_id) as reposts
-   FROM posts
-   ORDER BY reposts, post_date DESC;
 
 CREATE FUNCTION get_user_posts(
     id integer
@@ -237,6 +232,23 @@ BEGIN
 END;
 $$
     LANGUAGE plpgsql;
+
+
+
+CREATE VIEW get_all_posts_sort_by_date
+AS SELECT *, get_number_of_likes_on_post(post_id) as likes, get_number_of_reposts_on_post(post_id) as reposts
+   FROM posts
+   ORDER BY post_date DESC;
+
+CREATE VIEW get_all_posts_sort_by_likes
+AS SELECT *, get_number_of_likes_on_post(post_id) as likes, get_number_of_reposts_on_post(post_id) as reposts
+   FROM posts
+   ORDER BY likes, post_date DESC;
+
+CREATE VIEW get_all_posts_sort_by_reposts
+AS SELECT *, get_number_of_likes_on_post(post_id) as likes, get_number_of_reposts_on_post(post_id) as reposts
+   FROM posts
+   ORDER BY reposts, post_date DESC;
 ----
 
 ----
@@ -299,7 +311,7 @@ CREATE  TABLE user_facilities (
             description          varchar(100),
             CONSTRAINT pk_user_facility PRIMARY KEY ( user_id, facility_id, date_from ),
             CONSTRAINT fk_user_facility_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
-            CONSTRAINT fk_user_facility_facility_id FOREIGN KEY ( facility_id ) REFERENCES facility( facility_id ),
+            CONSTRAINT fk_user_facility_facility_id FOREIGN KEY ( facility_id ) REFERENCES facilities( facility_id ),
             CONSTRAINT ch_date CHECK ((date_to IS NULL) OR (date_to >= date_from))
 );
 
@@ -320,7 +332,7 @@ $$
 BEGIN
     RETURN QUERY (
             SELECT f.facility_name, f.facility_type, l.country, l.city, uf.date_from, uf.date_to, uf.description
-            FROM user_facility uf
+            FROM user_facilities uf
             JOIN facilities f ON uf.facility_id = f.facility_id
             JOIN locations l ON f.facility_location = l.location_id
             WHERE uf.user_id = id
@@ -328,6 +340,8 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
+
+
 ----
 
 -- PERFECT TABLE :3 --

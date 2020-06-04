@@ -248,8 +248,8 @@ public class Main extends Application{
         try {
             mainPane = mainLoader.load();
         } catch (Exception e) {
-            //e.printStackTrace();
-            System.out.println("Can't load startScene");
+            e.printStackTrace();
+            System.out.println("Can't load mainScene");
             System.exit(0);
         }
         mainSceneController = mainLoader.getController();

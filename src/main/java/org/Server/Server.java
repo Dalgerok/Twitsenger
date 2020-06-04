@@ -216,7 +216,7 @@ public class Server {
                             if (obj instanceof Post) {
                                 System.out.println("NEW POST " + obj);
                                 Post p = (Post) obj;
-                                sqlUpdQuery("INSERT INTO post VALUES(" + compose(String.valueOf(user.user_id), p.post_text) + ");");
+                                sqlUpdQuery("INSERT INTO posts VALUES(" + compose(String.valueOf(user.user_id), p.post_text) + ");");
                             } else {
                                 System.out.println("BAD NEW POST!!!");
                             }
@@ -226,7 +226,7 @@ public class Server {
                             if (obj instanceof Post) {
                                 System.out.println("DEL POST " + obj);
                                 Post p = (Post) obj;
-                                sqlUpdQuery("DELETE FROM post WHERE post.post_id=" + p.post_id + ";");
+                                sqlUpdQuery("DELETE FROM posts WHERE posts.post_id=" + p.post_id + ";");
                             } else {
                                 System.out.println("BAD DEL POST!!!");
                             }
@@ -281,8 +281,8 @@ public class Server {
         private ArrayList<Post> getPosts(Integer user_id) {
             ResultSet rs;
             ArrayList<Post> posts = new ArrayList<>();
-            String SQL = "SELECT * FROM post JOIN users ON post.user_id = users.user_id ";
-            if (user_id != null) SQL = SQL + "WHERE post.user_id = " + user_id + " ";
+            String SQL = "SELECT * FROM posts JOIN users ON posts.user_id = users.user_id ";
+            if (user_id != null) SQL = SQL + "WHERE posts.user_id = " + user_id + " ";
             SQL = SQL + "ORDER BY post_date DESC;";
 
             rs = sqlGetQuery(SQL);
@@ -336,7 +336,7 @@ public class Server {
             }
             pi.posts = getPosts(user_id);
 
-            String SQL = "SELECT facility_id FROM user_facility WHERE user_id = " + user_id + ";";
+            String SQL = "SELECT facility_id FROM user_facilities WHERE user_id = " + user_id + ";";
             ResultSet rs = sqlGetQuery(SQL);
             ArrayList<Facility> facilities = new ArrayList<>();
             if (rs == null) {
@@ -374,7 +374,7 @@ public class Server {
         }
 
         private Facility getFacility(int facility_id) {
-            String SQL = "SELECT * FROM facility WHERE facility.facility_id = " + facility_id + ";";
+            String SQL = "SELECT * FROM facilities WHERE facility.facility_id = " + facility_id + ";";
             ResultSet rs = sqlGetQuery(SQL);
             if (rs == null) {
                 System.out.println("VERY VERY BAD (IMPOSSIBLE)");
