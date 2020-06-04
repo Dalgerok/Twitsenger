@@ -92,9 +92,12 @@ CREATE  TABLE friendship (
 );
 CREATE RULE no_update_friendship AS ON UPDATE TO friendship
     DO INSTEAD NOTHING;
+
 CREATE RULE check_delete_friendship AS ON DELETE TO friendship
     DO ALSO DELETE FROM friendship kek WHERE kek.friend2 = OLD.friend1 AND kek.friend1 = OLD.friend2;
+
 CREATE RULE check_insert_friendship AS ON INSERT TO friendship
+    WHERE NOT EXISTS (SELECT * FROM friendship f WHERE NEW.friend1 = f.friend1 AND NEW.friend2 = f.friend2)
     DO ALSO INSERT INTO friendship VALUES (NEW.friend2, NEW.friend1, NEW.date_from);
 ----
 
