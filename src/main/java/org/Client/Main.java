@@ -2,14 +2,20 @@ package main.java.org.Client;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import main.java.org.Server.Server;
 import main.java.org.Tools.*;
 
 import java.io.IOException;
@@ -17,6 +23,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.sql.Connection;
 import java.util.ArrayList;
 
 public class Main extends Application{
@@ -28,6 +35,8 @@ public class Main extends Application{
     static MainSceneController mainSceneController;
     static PostsSceneController postsSceneController;
     static ProfileSceneController profileSceneController;
+    static SearchSceneController searchSceneController;
+    static FriendsSceneController friendsSceneController;
 
     static Scene startScene;
     static Scene registerScene;
@@ -66,6 +75,24 @@ public class Main extends Application{
 
         clientPlace = ClientPlace.PROFILE_SCENE;
         // TODO: 02.06.2020
+    }
+    public static void setSearchScene() {
+        setMainScene();
+        searchSceneController.clearResults();
+        System.out.println("SET SEARCH SCENE");
+        mainSceneController.mainPane.getChildren().add(searchSceneController.searchPane);
+
+        clientPlace = ClientPlace.SEARCH_SCENE;
+        // TODO: 02.06.2020
+    }
+    public static void setFriendsScene(int id) {
+        setMainScene();
+        askForFriends(id);
+        friendsSceneController.clearResults();
+        System.out.println("SET FRIENDS SCENE");
+        mainSceneController.mainPane.getChildren().addAll(friendsSceneController.friendsPane);
+
+        clientPlace = ClientPlace.FRIENDS_SCENE;
     }
     public static void setPostsScene() {
         setMainScene();
@@ -128,7 +155,7 @@ public class Main extends Application{
         setStartScene();
     }
 
-    private static <T extends Serializable> boolean sendObject(T o) {
+    public static <T extends Serializable> boolean sendObject(T o) {
         System.out.println("Send object " + o);
         if (clientSocket == null || out == null)return false;
         try{
@@ -191,8 +218,8 @@ public class Main extends Application{
         Main.primaryStage = primaryStage;
         createContent();
 
-        primaryStage.setHeight(800);
-        primaryStage.setWidth(800);
+        //primaryStage.setHeight(800);
+        //primaryStage.setWidth(800);
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
         primaryStage.setScene(startScene);
@@ -204,6 +231,8 @@ public class Main extends Application{
         initMainScene();
         initPostsScene();
         initProfileScene();
+        initSearchScene();
+        initFriendsScene();
     }
     private void initStartScene() {
         FXMLLoader startLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/startScene.fxml"));
@@ -267,6 +296,30 @@ public class Main extends Application{
         }
         profileSceneController = mainLoader.getController();
     }
+    private static void initSearchScene(){
+        FXMLLoader mainLoader = new FXMLLoader(Main.class.getResource("/main/resources/fxml/searchScene.fxml"));
+        Pane searchPane = null;
+        try {
+            searchPane = mainLoader.load();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            System.out.println("Can't load searchScene");
+            System.exit(0);
+        }
+        searchSceneController = mainLoader.getController();
+    }
+    private static void initFriendsScene(){
+        FXMLLoader mainLoader = new FXMLLoader(Main.class.getResource("/main/resources/fxml/friendsScene.fxml"));
+        Pane friendsPane = null;
+        try {
+            friendsPane = mainLoader.load();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            System.out.println("Can't load friendsScene");
+            System.exit(0);
+        }
+        friendsSceneController = mainLoader.getController();
+    }
     private static void initPostsScene(){
         FXMLLoader postsLoader = new FXMLLoader(Main.class.getResource("/main/resources/fxml/postsScene.fxml"));
         VBox kek = null;
@@ -315,6 +368,10 @@ public class Main extends Application{
     public static void askForProfileInfo(int id){
         System.out.println("ASK FOR USER INFO");
         sendObject(new ProfileRequest(id));
+    }
+    public static void askForFriends(int id){
+        System.out.println("ASK FOR USER INFO");
+        sendObject(new GetUserFriends(id));
     }
 
     private static void sendMessage(String s) {
@@ -369,7 +426,12 @@ public class Main extends Application{
                         }
                     }
                     if (obj instanceof ArrayList){
-                        if (((ArrayList) obj).size() > 0 && ((ArrayList) obj).get(0) instanceof Post)Platform.runLater(() -> updatePostsScene((ArrayList<Post>) obj));
+                        Object o = ((ArrayList) obj).get(0);
+                        ((ArrayList) obj).remove(0);
+                        if (o instanceof Post)Platform.runLater(() -> updatePostsScene((ArrayList<Post>)obj));
+                        if (o instanceof ServerUser) System.out.println(((ServerUser) o).first_name);
+                        if (o instanceof ServerUser && ((ServerUser) o).first_name.equals("search"))Platform.runLater(() -> searchSceneController.updateSearchResults((ArrayList<ServerUser>)obj));
+                        if (o instanceof ServerUser && ((ServerUser) o).first_name.equals("friends"))Platform.runLater(() -> friendsSceneController.updateFriends((ArrayList<ServerUser>)obj));
                     }
                     if (obj instanceof ProfileInfo)Platform.runLater(() -> updateProfileScene((ProfileInfo)obj));
                 } catch (Exception e) {
@@ -381,5 +443,33 @@ public class Main extends Application{
             //System.out.println("STOPPED READING");
         }
 
+    }
+
+
+
+    public static class FriendBox extends HBox {
+        private ServerUser user;
+        private final Text fName;
+        private final Text lName;
+        private final Button goToProfile;
+        private final Button requestFriend;
+        public FriendBox(){
+            super();
+            fName = new Text("First Name");
+            lName = new Text("Second Name");
+            goToProfile = new Button("Go to profile");
+            requestFriend = new Button("Friend request");
+            getChildren().addAll(fName, lName, goToProfile, requestFriend);
+        }
+        public FriendBox(ServerUser us){
+            this();
+            this.user = us;
+            fName.setText(user.first_name);
+            lName.setText(user.last_name);
+            goToProfile.setOnMouseClicked(event -> Main.setProfileScene(user.user_id));
+            requestFriend.setOnMouseClicked(event -> {
+                // TODO: 04.06.2020
+            });
+        }
     }
 }

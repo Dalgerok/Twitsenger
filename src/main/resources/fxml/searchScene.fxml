@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane fx:id="searchPane" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.SearchSceneController">
+   <children>
+      <HBox prefHeight="60.0" prefWidth="600.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <TextField fx:id="firstName" promptText="First name">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+                  <TextField fx:id="lastName" promptText="Last name">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <TextField fx:id="country" promptText="Country">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+                  <TextField fx:id="city" promptText="City">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" onMouseClicked="#searchButtonHandler" prefWidth="200.0" text="Search" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <ListView fx:id="searchResults" layoutY="60.0" prefHeight="740.0" prefWidth="600.0" />
+   </children>
+</AnchorPane>

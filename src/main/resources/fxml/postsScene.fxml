@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="postsVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.PostsSceneController">
+<VBox fx:id="postsVBox" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.PostsSceneController">
    <children>
       <Button mnemonicParsing="false" onMouseClicked="#refreshButtonHandler" text="Refresh" />
-      <TextField fx:id="enterMessage" />
-      <ListView fx:id="postView" prefHeight="750.0" prefWidth="600.0" />
+      <TextArea fx:id="enterMessage" prefHeight="100.0" prefWidth="600.0" wrapText="true" prefRowCount="2">
+         <font>
+            <Font size="18.0" />
+         </font></TextArea>
+      <ListView fx:id="postView" prefHeight="675.0" prefWidth="600.0" />
    </children>
 </VBox>

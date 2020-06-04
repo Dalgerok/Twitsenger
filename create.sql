@@ -224,6 +224,13 @@ CREATE  TABLE posts (
                         CONSTRAINT fk_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE FUNCTION get_number_of_user_posts(id integer) RETURNS integer AS
+$$
+BEGIN
+    RETURN (SELECT COUNT(*) FROM posts WHERE user_id = id);
+END;
+$$
+    LANGUAGE plpgsql;
 
 CREATE FUNCTION get_user_posts(
     id integer
@@ -380,6 +387,8 @@ INSERT INTO users
 VALUES ('Andrii', 'Orap', '12-12-2001', 'a', 'Single', 'Male', 'a');
 INSERT INTO users
 VALUES ('Nazarii', 'Denha', '10-10-2002', 'b', 'Single', 'Male', 'b');
+INSERT INTO users
+VALUES ('Maxym', 'Zub', '10-10-2002', 'c', 'Single', 'Male', 'c');
 
 -- PERFECT TABLE :3 --
 
@@ -388,3 +397,48 @@ INSERT INTO friendship VALUES (1, 2);
 DELETE FROM friendship f WHERE f.friend1 = 1 AND f.friend2 = 2;
 SELECT * FROM friendship;
 -- PERFECT TABLE :3 --
+
+CREATE FUNCTION check_user_filter(
+    _user record,
+    fName varchar,
+    lName varchar,
+    _country varchar,
+    _city varchar
+) RETURNS boolean AS
+$$
+BEGIN
+    IF (_country IS NOT NULL AND _country != '')THEN
+        IF NOT EXISTS (SELECT * FROM locations WHERE location_id = _user.user_location_id AND lower(country) LIKE '%'||lower(_country)||'%')THEN RETURN FALSE;END IF;
+    END IF;
+    IF (_city IS NOT NULL AND _city != '')THEN
+        IF NOT EXISTS(SELECT * FROM locations WHERE location_id = _user.user_location_id AND lower(city) LIKE '%'||lower(_city)||'%')THEN RETURN FALSE;END IF;
+    END IF;
+    IF (lower(_user.first_name) LIKE '%'||lower(fName)||'%')THEN NULL;ELSE RETURN FALSE;END IF;
+    IF (lower(_user.last_name) LIKE '%'||lower(lName)||'%')THEN NULL;ELSE RETURN FALSE;END IF;
+    RETURN TRUE;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE FUNCTION get_user_friend(
+    id integer
+) RETURNS TABLE (first_name           varchar(100),
+                 last_name            varchar(100),
+                 birthday             date,
+                 email                varchar(254),
+                 relationship_status  relationshipstatus,
+                 gender               genders ,
+                 user_password 		 varchar(50),
+                 user_location_id  	 integer,
+                 picture_url 		 varchar(255),
+                 user_id              integer) AS
+$$
+BEGIN
+    RETURN QUERY (SELECT * FROM users WHERE (id, users.user_id) IN (SELECT friend1, friend2 FROM friendship));
+END;
+$$
+LANGUAGE plpgsql;
+
+--INSERT INTO friendship VALUES (1, 2);
+--INSERT INTO friendship VALUES (1, 3);
+--SELECT * FROM get_user_friend(1);

@@ -27,4 +27,8 @@ public class ServerUser implements Serializable {
         this.picture_url = picture_url;
         this.user_id = user_id;
     }
+
+    public ServerUser() {
+
+    }
 }

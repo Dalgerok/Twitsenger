@@ -44,7 +44,7 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="Friends">
+            <Button mnemonicParsing="false" onMouseClicked="#friendsButtonHandler" text="Friends">
                <font>
                   <Font size="14.0" />
                </font>

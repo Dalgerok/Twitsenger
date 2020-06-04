@@ -1,5 +1,6 @@
 package main.java.org.Server;
 
+import javafx.geometry.Pos;
 import main.java.org.Tools.*;
 import org.postgresql.core.SqlCommand;
 
@@ -209,7 +210,9 @@ public class Server {
                     System.out.println("received " + obj);
                     if (ConnectionMessage.GET_POSTS.equals(obj)) {
                         System.out.println("I WANNA TO SEND POSTS!!!");
-                        sendObject(getPosts(null));
+                        ArrayList<Post> arr = getPosts(null);
+                        arr.add(0, new Post());
+                        sendObject(arr);
                     } else if (obj instanceof ConnectionMessage) {
                         if (ConnectionMessage.NEW_POST.equals(obj)) {
                             obj = readObject();
@@ -235,6 +238,18 @@ public class Server {
                     } else if (obj instanceof ProfileRequest) {
                         ProfileRequest pr = (ProfileRequest) obj;
                         sendObject(getProfileInfo(pr.getId()));
+                    }else if (obj instanceof SearchProfileFilter){
+                        SearchProfileFilter spf = (SearchProfileFilter)obj;
+                        ArrayList<ServerUser> arr = getUsersByFilter(spf);
+                        arr.add(0, new ServerUser());
+                        arr.get(0).first_name = "search";
+                        sendObject(arr);
+                    }else if (obj instanceof GetUserFriends){
+                        GetUserFriends guf = (GetUserFriends)obj;
+                        ArrayList<ServerUser> arr = getUserFriends(guf.id);
+                        arr.add(0, new ServerUser());
+                        arr.get(0).first_name = "friends";
+                        sendObject(arr);
                     }
                 }
             } catch (IOException e) {
@@ -335,23 +350,77 @@ public class Server {
                 pi.location = getLocation(pi.user_location_id);
             }
             pi.posts = getPosts(user_id);
+            pi.numFriends = getNumberOfUserFriends(user_id);
+            pi.numPosts = getNumberOfUserPosts(user_id);
 
             String SQL = "SELECT facility_id FROM user_facilities WHERE user_id = " + user_id + ";";
             ResultSet rs = sqlGetQuery(SQL);
             ArrayList<Facility> facilities = new ArrayList<>();
+            ArrayList<Integer> facility_ids = new ArrayList<>();
             if (rs == null) {
                 System.out.println("VERY VERY BAD (IMPOSSIBLE)");
                 System.exit(0);
             }
             try {
                 while (rs.next()) {
-                    facilities.add(getFacility(rs.getInt(1)));
+                    facility_ids.add(rs.getInt(1));
                 }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
+            for (int id : facility_ids){
+                facilities.add(getFacility(id));
+            }
             pi.facilities = facilities;
             return pi;
+        }
+        private int getNumberOfUserFriends(int user_id){
+            String SQL = "SELECT get_number_of_user_friends(" + user_id + ");";
+            ResultSet rs = sqlGetQuery(SQL);
+            try{
+                if (rs == null || !rs.next()) {
+
+                }else {
+                    return rs.getInt(1);
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            return 0;
+        }
+        private ArrayList<ServerUser> getUserFriends(int user_id){
+            String SQL = "SELECT * FROM get_user_friend(" + user_id + ");";
+            ResultSet rs = sqlGetQuery(SQL);
+            if (rs == null){
+                System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+                System.exit(0);
+            }
+            ArrayList<ServerUser> users = new ArrayList<>();
+            try{
+                while (rs.next()){
+                    users.add(new ServerUser(rs.getString("first_name"), rs.getString("last_name"), rs.getDate("birthday"),
+                            rs.getString("email"), rs.getString("relationship_status"), rs.getString("gender"),
+                            rs.getString("user_password"), rs.getInt("user_location_id"), rs.getString("picture_url"),
+                            rs.getInt("user_id")));
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            return users;
+        }
+        private int getNumberOfUserPosts(int user_id){
+            String SQL = "SELECT get_number_of_user_posts(" + user_id + ");";
+            ResultSet rs = sqlGetQuery(SQL);
+            try{
+                if (rs == null || !rs.next()) {
+
+                }else {
+                    return rs.getInt(1);
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            return 0;
         }
 
         private Location getLocation(int location_id) {
@@ -384,12 +453,36 @@ public class Server {
                 if (!rs.next()) {
                     return new Facility("", new Location("", "", 0), "", facility_id);
                 } else {
-                    return new Facility(rs.getString(1), getLocation(rs.getInt(2)), rs.getString(3), facility_id);
+                    String name = rs.getString(1);
+                    int location_id = rs.getInt(2);
+                    String type = rs.getString(3);
+                    return new Facility(name, getLocation(location_id), type, facility_id);
                 }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
             return new Facility("", new Location("", "", 0), "", facility_id);
+        }
+        private ArrayList<ServerUser> getUsersByFilter(SearchProfileFilter filter){
+            String SQL = "SELECT * FROM users WHERE check_user_filter(users, " + compose(   filter.firstName, filter.lastName, filter.country, filter.city) +
+                    ")  = TRUE;";
+            ResultSet rs = sqlGetQuery(SQL);
+            if (rs == null){
+                System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+                System.exit(0);
+            }
+            ArrayList<ServerUser> users = new ArrayList<>();
+            try{
+                while (rs.next()){
+                    users.add(new ServerUser(rs.getString("first_name"), rs.getString("last_name"), rs.getDate("birthday"),
+                            rs.getString("email"), rs.getString("relationship_status"), rs.getString("gender"),
+                            rs.getString("user_password"), rs.getInt("user_location_id"), rs.getString("picture_url"),
+                            rs.getInt("user_id")));
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            return users;
         }
     }
     static String compose(String... args){

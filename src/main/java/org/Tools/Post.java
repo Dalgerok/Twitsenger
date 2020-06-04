@@ -27,4 +27,8 @@ public class Post implements Serializable {
     public Post(String s) {
         this.post_text = s;
     }
+
+    public Post() {
+
+    }
 }

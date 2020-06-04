@@ -31,6 +31,7 @@ public class MainSceneController {
     }
 
     public void myFriendsHandler(MouseEvent mouseEvent) {
+        Main.setFriendsScene(Main.user.user_id);
         // TODO: 03.06.2020
     }
 
@@ -40,6 +41,7 @@ public class MainSceneController {
     }
 
     public void findFriendsHandler(MouseEvent mouseEvent) {
+        Main.setSearchScene();
         // TODO: 04.06.2020
     }
 }

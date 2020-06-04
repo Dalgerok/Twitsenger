@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import main.java.org.Tools.Facility;
@@ -36,8 +37,8 @@ public class ProfileSceneController {
         profileRelationship.setText("Relationship status: " + pi.relationship_status);
         System.out.println(pi.location);
         if (pi.location != null)profileLocation.setText(pi.location.makeString());
-        profileNumFriend.setText("Friends: i don't know");
-        profileNumPost.setText("Posts: i don't know");
+        profileNumFriend.setText("Friends: " + pi.numFriends);
+        profileNumPost.setText("Posts: " + pi.numPosts);
 
         ObservableList<Text> schools = FXCollections.observableArrayList();
         ObservableList<Text> univers = FXCollections.observableArrayList();
@@ -59,5 +60,9 @@ public class ProfileSceneController {
 
 
         // TODO: 03.06.2020  
+    }
+
+    public void friendsButtonHandler(MouseEvent event) {
+        Main.setFriendsScene(profileId);
     }
 }
