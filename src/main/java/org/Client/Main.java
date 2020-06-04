@@ -77,7 +77,7 @@ public class Main extends Application{
     }
 
     private static final String hostname = "localhost";
-    private static final int port = 4001;
+    private static final int port = 4321;
     private static Socket clientSocket;
     private static ObjectInputStream in;
     private static ObjectOutputStream out;
@@ -129,6 +129,7 @@ public class Main extends Application{
     }
 
     private static <T extends Serializable> boolean sendObject(T o) {
+        System.out.println("Send object " + o);
         if (clientSocket == null || out == null)return false;
         try{
             out.writeObject(o);
@@ -149,7 +150,7 @@ public class Main extends Application{
             System.out.println("READ " + o);
             return o;
         } catch (IOException | ClassNotFoundException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             disconnect();
             //System.exit(0);
         }

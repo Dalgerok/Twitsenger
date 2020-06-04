@@ -35,10 +35,11 @@ public class Server {
         }*/
 
         //getUserInfo(1);
-        final int portNumber = 4001;
+        final int portNumber = 4321;
         try {
             ServerSocket serverSocket = new ServerSocket(portNumber);
             while (true){
+                System.out.println("I'm here!");
                 Socket socket = serverSocket.accept();
                 System.out.println("accepted");
                 new ConnectionThread(socket).start();
