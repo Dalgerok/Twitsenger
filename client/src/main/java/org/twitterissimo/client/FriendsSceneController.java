@@ -24,4 +24,11 @@ public class FriendsSceneController {
         }
         friendsView.setItems(results);
     }
+    public void updateButtons(){
+        if (friendsView != null){
+            for (Main.FriendBox fb : friendsView.getItems()){
+                fb.updateButtons();
+            }
+        }
+    }
 }

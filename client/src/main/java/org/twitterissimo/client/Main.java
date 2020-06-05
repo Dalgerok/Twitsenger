@@ -41,6 +41,8 @@ public class Main extends Application{
     static Scene mainScene;
     static ClientPlace clientPlace;
 
+    static ArrayList<ServerUser> friends = new ArrayList<>();
+
     public static void setRegisterScene() {
         System.out.println("SET REGISTER SCENE");
         primaryStage.setScene(registerScene);
@@ -126,6 +128,7 @@ public class Main extends Application{
                 return ConnectionMessage.UNABLE_TO_CONNECT;
             }
             user = (ServerUser)o;
+            clientPlace = ClientPlace.POST_SCENE;
             startRead();
             setPostsScene();
             return ConnectionMessage.SIGN_UP;
@@ -154,6 +157,7 @@ public class Main extends Application{
                 return ConnectionMessage.UNABLE_TO_CONNECT;
             }
             user = (ServerUser)o;
+            clientPlace = ClientPlace.POST_SCENE;
             startRead();
             setPostsScene();
             return ConnectionMessage.SIGN_IN;
@@ -224,6 +228,13 @@ public class Main extends Application{
             e.printStackTrace();
         }
         System.out.println("DISCONNECTED SUCCESSFULLY");
+    }
+
+    public static boolean isMyFriend(int profileId) {
+        for (ServerUser su : friends){
+            if (su.user_id == profileId)return true;
+        }
+        return false;
     }
 
 
@@ -486,6 +497,19 @@ public class Main extends Application{
                         if (o instanceof ServerUser) System.out.println(((ServerUser) o).first_name);
                         if (o instanceof ServerUser && ((ServerUser) o).first_name.equals("search"))Platform.runLater(() -> searchSceneController.updateSearchResults((ArrayList<ServerUser>)obj));
                         if (o instanceof ServerUser && ((ServerUser) o).first_name.equals("friends"))Platform.runLater(() -> friendsSceneController.updateFriends((ArrayList<ServerUser>)obj));
+                        if (o instanceof ServerUser && ((ServerUser) o).first_name.equals("myFriends")){
+                            friends.clear();
+                            friends.addAll((ArrayList<ServerUser>)obj);
+                            if (clientPlace.equals(ClientPlace.PROFILE_SCENE)){
+                                Platform.runLater(() -> profileSceneController.updateButtons());
+                            }
+                            if (clientPlace.equals(ClientPlace.FRIENDS_SCENE)){
+                                Platform.runLater(() -> friendsSceneController.updateButtons());
+                            }
+                            if (clientPlace.equals(ClientPlace.SEARCH_SCENE)){
+                                Platform.runLater(() -> searchSceneController.updateButtons());
+                            }
+                        }
                     }
                     if (obj instanceof ProfileInfo){
                         if (clientPlace.equals(ClientPlace.PROFILE_SCENE))
@@ -496,6 +520,7 @@ public class Main extends Application{
                 } catch (Exception e) {
                     System.out.println("SERVER DOWN");
                     e.printStackTrace();
+                    disconnect();
                     // TODO: 02.06.2020
                 }
             }
@@ -523,12 +548,30 @@ public class Main extends Application{
         public FriendBox(ServerUser us){
             this();
             this.user = us;
+            updateButtons();
             fName.setText(user.first_name);
             lName.setText(user.last_name);
             goToProfile.setOnMouseClicked(event -> Main.setProfileScene(user.user_id));
             requestFriend.setOnMouseClicked(event -> {
+                if (Main.isMyFriend(user.user_id)){
+                    Main.sendObject(new FriendStatusChange(Main.user, user, FriendStatusChange.FriendQuery.REMOVE));
+                }else{
+                    Main.sendObject(new FriendStatusChange(Main.user, user, FriendStatusChange.FriendQuery.ADD));
+                }
                 // TODO: 04.06.2020
             });
+        }
+        public void updateButtons() {
+            if (user.user_id == Main.user.user_id){
+                requestFriend.setVisible(false);
+            }else {
+                requestFriend.setVisible(true);
+                if (Main.isMyFriend(user.user_id)){
+                    requestFriend.setText("Unfriend");
+                }else {
+                    requestFriend.setText("Add friend");
+                }
+            }
         }
     }
 }

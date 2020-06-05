@@ -40,12 +40,12 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" text="Friend request">
+            <Button fx:id="friendRequestButton" mnemonicParsing="false" text="Friend request" onMouseClicked="#friendRequestButtonHandler">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="Send message">
+            <Button fx:id="sendMessageButton" mnemonicParsing="false" text="Send message">
                <font>
                   <Font size="14.0" />
                </font>

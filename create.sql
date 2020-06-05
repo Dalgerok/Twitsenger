@@ -130,6 +130,7 @@ $$
 
 CREATE TRIGGER check_insert_friendship AFTER INSERT ON friendship
     FOR EACH ROW EXECUTE PROCEDURE check_insert_friendship();
+
 ----
 
 
@@ -162,8 +163,12 @@ BEGIN
         (
             SELECT * FROM friendship kek
             WHERE (NEW.from_whom =  kek.friend1 AND NEW.to_whom = kek.friend2)
-               OR (NEW.from_whom = kek.friend2 AND NEW.to_whom = kek.friend1)
-        ) THEN
+        )
+        OR EXISTS
+        (
+            SELECT * FROM friend_request fr
+            WHERE NEW.from_whom = fr.from_whom AND NEW.to_whom = fr.to_whom
+        )THEN
         NEW = NULL;
     END IF;
     RETURN NEW;
@@ -184,7 +189,7 @@ BEGIN
             WHERE NEW.from_whom = kek.to_whom
               AND NEW.to_whom = kek.from_whom
         ) THEN
-        DELETE FROM friend_request
+        DELETE FROM friend_request kek
         WHERE NEW.from_whom = kek.to_whom AND NEW.to_whom = kek.from_whom;
         INSERT INTO friendship
         VALUES (NEW.from_whom, NEW.to_whom);
@@ -439,6 +444,26 @@ END;
 $$
 LANGUAGE plpgsql;
 
---INSERT INTO friendship VALUES (1, 2);
---INSERT INTO friendship VALUES (1, 3);
+/*INSERT INTO friendship VALUES (1, 2);
+INSERT INTO friendship VALUES (1, 2);
+INSERT INTO friendship VALUES (2, 1);
+
+INSERT INTO  friend_request VALUES (1, 2);
+INSERT INTO friend_request VALUES (1, 2);
+
+INSERT INTO friend_request VALUES (2, 3);
+INSERT INTO friend_request VALUES (2, 3);
+INSERT INTO friend_request VALUES (3, 2);
+INSERT INTO friend_request VALUES (3, 2);
+INSERT INTO friend_request VALUES (3, 2);
+INSERT INTO friend_request VALUES (3, 2);
+INSERT INTO friend_request VALUES (3, 2);
+
+INSERT INTO friend_request VALUES (1, 3);
+INSERT INTO friend_request VALUES (1, 3);
+INSERT INTO friend_request VALUES (1, 3);
+INSERT INTO friend_request VALUES (1, 3);
+
+SELECT * FROM friend_request;
+SELECT * FROM friendship;*/
 --SELECT * FROM get_user_friend(1);

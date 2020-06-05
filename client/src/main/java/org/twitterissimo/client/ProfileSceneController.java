@@ -4,6 +4,7 @@ import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -12,9 +13,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import org.twitterissimo.tools.Facility;
-import org.twitterissimo.tools.Post;
-import org.twitterissimo.tools.ProfileInfo;
+import org.twitterissimo.tools.*;
+
+import java.util.Map;
 
 public class ProfileSceneController {
     @FXML public ImageView profileImage;
@@ -34,9 +35,15 @@ public class ProfileSceneController {
     @FXML public Text firstNameAvatar;
     @FXML public Text lastNameAvatar;
 
+    @FXML public Button friendRequestButton;
+    @FXML public Button sendMessageButton;
     public int profileId;
+    ProfileInfo profileInfo;
+
     public void updateProfile(ProfileInfo pi) {
+        this.profileInfo = pi;
         profileId = pi.user_id;
+        updateButtons();
         profileName.setText(pi.first_name + " " + pi.last_name);
         profileGender.setText("Gender: " + pi.gender);
         profileBirthday.setText("Birthday: " + pi.birthday.toString());
@@ -83,5 +90,28 @@ public class ProfileSceneController {
 
     public void friendsButtonHandler(MouseEvent event) {
         Main.setFriendsScene(profileId);
+    }
+
+    public void friendRequestButtonHandler(MouseEvent event) {
+        if (Main.isMyFriend(profileId)){
+            Main.sendObject(new FriendStatusChange(Main.user, profileInfo, FriendStatusChange.FriendQuery.REMOVE));
+        }else{
+            Main.sendObject(new FriendStatusChange(Main.user, profileInfo, FriendStatusChange.FriendQuery.ADD));
+        }
+    }
+
+    public void updateButtons() {
+        if (profileId == Main.user.user_id){
+            sendMessageButton.setVisible(false);
+            friendRequestButton.setVisible(false);
+        }else {
+            sendMessageButton.setVisible(true);
+            friendRequestButton.setVisible(true);
+            if (Main.isMyFriend(profileId)){
+                friendRequestButton.setText("Unfriend");
+            }else {
+                friendRequestButton.setText("Add friend");
+            }
+        }
     }
 }

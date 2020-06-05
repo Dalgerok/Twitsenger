@@ -13,9 +13,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class Server {
-    private static final String url = "jdbc:postgresql://localhost:5432/twitterissimo";
-    private static final String user = "twitterissimo";
-    private static final String password = "project";
+    private static final String url = "jdbc:postgresql://localhost:5432/postgres";
+    private static final String user = "postgres";
+    private static final String password = "1321";
 
 
 
@@ -209,6 +209,8 @@ public class Server {
                     }
                 } else return;
                 System.out.println("logined or registered");
+                ArrayList<ServerUser> arr1 = getUserFriends(user.user_id);arr1.add(0, new ServerUser());arr1.get(0).first_name = "myFriends";
+                sendObject(arr1);
                 while (true) {
                     obj = readObject();
                     System.out.println("received " + obj);
@@ -295,10 +297,34 @@ public class Server {
                         arr.add(0, new ServerUser());
                         arr.get(0).first_name = "friends";
                         sendObject(arr);
+                    }else if (obj instanceof FriendStatusChange){
+                        FriendStatusChange fsc = (FriendStatusChange)obj;
+                        if (fsc.query == FriendStatusChange.FriendQuery.ADD){
+                            sqlUpdQuery("INSERT INTO friend_request VALUES (" + fsc.from.user_id + ", " + fsc.to.user_id + ");");
+                        }else if (fsc.query == FriendStatusChange.FriendQuery.REMOVE){
+                            sqlUpdQuery("DELETE FROM friendship f WHERE f.friend1 = " + fsc.from.user_id + "AND f.friend2 = " + fsc.to.user_id + ";");
+                        }
+
+                        ArrayList<ServerUser> arr;
+                        for (ConnectionThread conn : connections){
+                            //System.out.println("hah, spijmav");
+                            if (conn.user.user_id == fsc.from.user_id){
+                                arr = getUserFriends(fsc.from.user_id);arr.add(0, new ServerUser());arr.get(0).first_name = "myFriends";
+                                conn.sendObject(arr);
+                            }
+                        }
+                        for (ConnectionThread conn : connections){
+                            //System.out.println("hah, spijmav");
+                            if (conn.user.user_id == fsc.to.user_id){
+                                arr = getUserFriends(fsc.to.user_id);arr.add(0, new ServerUser());arr.get(0).first_name = "myFriends";
+                                conn.sendObject(arr);
+                            }
+                        }
                     }
                 }
             } catch (IOException e) {
                 System.out.println("client disconnected");
+                e.printStackTrace();
             } finally {
 
                 try {
@@ -328,7 +354,9 @@ public class Server {
 
         public Object readObject() throws IOException {
             try {
-                return in.readObject();
+                synchronized (in){
+                    return in.readObject();
+                }
             } catch (IOException e) {
                 throw e;
             } catch (ClassNotFoundException e) {

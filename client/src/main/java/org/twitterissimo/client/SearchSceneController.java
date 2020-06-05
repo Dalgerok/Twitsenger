@@ -35,4 +35,12 @@ public class SearchSceneController {
         }
         searchResults.setItems(results);
     }
+
+    public void updateButtons(){
+        if (searchResults != null){
+            for (Main.FriendBox fb : searchResults.getItems()){
+                fb.updateButtons();
+            }
+        }
+    }
 }
