@@ -60,6 +60,7 @@ public class RegisterSceneController {
                 registerEmail.getText(),
                 relationshipBox.getValue(),
                 ((RadioButton)GroupGender.getSelectedToggle()).getText(),
+                "",
                 registerPassword.getText(), false));
         System.out.println("GOT " + o);
         if(ConnectionMessage.BAD_BIRTHDAY.equals(o)){

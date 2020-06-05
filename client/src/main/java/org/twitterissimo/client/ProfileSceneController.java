@@ -6,9 +6,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import org.twitterissimo.tools.Facility;
 import org.twitterissimo.tools.Post;
@@ -28,6 +30,10 @@ public class ProfileSceneController {
     @FXML public Label profileName;
     @FXML public ListView<PostsSceneController.PostPane> profilePosts;
     @FXML public AnchorPane profilePane;
+    @FXML public StackPane circleAvatar;
+    @FXML public Text firstNameAvatar;
+    @FXML public Text lastNameAvatar;
+
     public int profileId;
     public void updateProfile(ProfileInfo pi) {
         profileId = pi.user_id;
@@ -57,6 +63,19 @@ public class ProfileSceneController {
             posts.add(new PostsSceneController.PostPane(post, Main.user.user_id));
         }
         profilePosts.setItems(posts);
+        boolean badUrl = pi.picture_url == null || pi.picture_url.length() == 0;
+        Image p = null;
+        if (!badUrl)
+            p = new Image(pi.picture_url);
+        if (!badUrl && p.getWidth() > 0) {
+            profileImage.setImage(p);
+            profileImage.setVisible(true);
+        }
+        else {
+            firstNameAvatar.setText(pi.first_name.substring(0, 1));
+            lastNameAvatar.setText(pi.last_name.substring(0, 1));
+            circleAvatar.setVisible(true);
+        }
 
 
         // TODO: 03.06.2020  

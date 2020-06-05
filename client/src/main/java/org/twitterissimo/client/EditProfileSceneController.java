@@ -22,6 +22,7 @@ public class EditProfileSceneController {
     @FXML public PasswordField passwordLabel;
     @FXML public PasswordField passwordConfirmLabel;
     @FXML public ToggleGroup genderToggle;
+    @FXML public TextField pictureUrlLabel;
 
 
     public void updateProfile(ProfileInfo pi){
@@ -29,6 +30,7 @@ public class EditProfileSceneController {
         lastNameLabel.setText(pi.last_name);
         System.out.println(pi.birthday.toString());
         birthdayDate.setValue(LocalDate.parse(pi.birthday.toString()));
+        pictureUrlLabel.setText(pi.picture_url);
         relationshipPicker.setValue(pi.relationship_status);
         if (pi.gender.equals("Male"))
             maleGender.fire();
@@ -66,7 +68,7 @@ public class EditProfileSceneController {
         Main.editProfileUpdate(new RegisterInfo(firstNameLabel.getText(), lastNameLabel.getText(), birthdayDate.getValue(),
                 Main.user.email,
                 relationshipPicker.getValue(),
-                ((RadioButton)genderToggle.getSelectedToggle()).getText(),
+                ((RadioButton)genderToggle.getSelectedToggle()).getText(), pictureUrlLabel.getText(),
                 (passwordLabel.getText().equals("") ? Main.user.user_password : passwordLabel.getText()), true));
     }
 

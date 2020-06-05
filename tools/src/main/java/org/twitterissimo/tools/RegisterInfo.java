@@ -10,10 +10,11 @@ public class RegisterInfo implements Serializable {
     private final String email;
     private final String relationship;
     private final String gender;
+    private final String pictureURL;
     private final String password;
     private final boolean update;
 
-    public RegisterInfo(String firstName, String lastName, LocalDate birthday, String email, String relationship, String gender, String password, boolean update) {
+    public RegisterInfo(String firstName, String lastName, LocalDate birthday, String email, String relationship, String gender, String pictureURL, String password, boolean update) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
@@ -21,6 +22,7 @@ public class RegisterInfo implements Serializable {
         this.email = email;
         this.relationship = relationship;
         this.gender = gender;
+        this.pictureURL = pictureURL;
         this.password = password;
         this.update = update;
     }
@@ -49,6 +51,10 @@ public class RegisterInfo implements Serializable {
         return gender;
     }
 
+    public String getPictureURL() {
+        return pictureURL;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -56,4 +62,5 @@ public class RegisterInfo implements Serializable {
     public boolean getUpdate() {
         return update;
     }
+
 }

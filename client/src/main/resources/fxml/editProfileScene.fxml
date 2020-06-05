@@ -82,6 +82,16 @@
                   <RadioButton fx:id="unspecifiedGender" mnemonicParsing="false" text="Unspecified" toggleGroup="$genderToggle" />
                </children>
             </HBox>
+            <HBox alignment="CENTER" prefHeight="49.0" prefWidth="294.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="97.0" text="Picture URL">
+                     <HBox.margin>
+                        <Insets right="15.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="pictureUrlLabel" prefHeight="35.0" prefWidth="218.0" />
+               </children>
+            </HBox>
             <PasswordField fx:id="passwordLabel" maxWidth="280.0" minWidth="280.0" promptText="password (leave empty if not changing)" />
             <PasswordField fx:id="passwordConfirmLabel" maxWidth="280.0" minWidth="280.0" promptText="repeat password" />
             <Label fx:id="errorText" text="Text" textFill="RED">
