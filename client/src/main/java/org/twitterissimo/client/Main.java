@@ -226,7 +226,7 @@ public class Main extends Application{
         }
     }
     public static void disconnect() {
-        Platform.runLater(Main::setStartScene);
+        //Platform.runLater(Main::setStartScene); IF YOU UNCOMMENT THIS, THEN YOU WILL NOT GET MESSAGES ON START SCENE (BAD EMAIL/PASSWORD)
         stopRead();
         try{
             in = null;
@@ -252,8 +252,8 @@ public class Main extends Application{
         Main.primaryStage = primaryStage;
         createContent();
 
-        primaryStage.setHeight(800);
-        primaryStage.setWidth(800);
+        primaryStage.setHeight(820);
+        primaryStage.setWidth(820);
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
         primaryStage.setScene(startScene);
@@ -526,7 +526,7 @@ public class Main extends Application{
                             if (clientPlace.equals(ClientPlace.POST_SCENE))askForUpdatePostsScene();
                         }
                         if (obj.equals(ConnectionMessage.UPDATED_PROFILE)){
-                            System.out.println("KEK IM UPDATEING PROFILE");
+                            System.out.println("KEK IM UPDATING PROFILE");
                             Object obj2;
                             obj2 = getObject();
                             if (!(obj2 instanceof ServerUser)){
@@ -582,9 +582,8 @@ public class Main extends Application{
                     }
                 } catch (Exception e) {
                     System.out.println("SERVER DOWN");
-                    e.printStackTrace();
+                    e.printStackTrace(); // TODO: 06.06.2020 COMMENT THIS LINE
                     disconnect();
-                    // TODO: 02.06.2020
                 }
             }
             //System.out.println("STOPPED READING");

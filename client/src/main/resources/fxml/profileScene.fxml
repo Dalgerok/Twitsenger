@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -14,64 +15,76 @@
 
 <AnchorPane fx:id="profilePane" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.ProfileSceneController">
    <children>
-      <ImageView fx:id="profileImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
-      <ListView fx:id="profileSchools" layoutX="150.0" layoutY="174.0" prefHeight="87.0" prefWidth="150.0" />
-      <ListView fx:id="profileUnivers" layoutX="300.0" layoutY="174.0" prefHeight="87.0" prefWidth="150.0" />
-      <ListView fx:id="profileJobs" layoutX="450.0" layoutY="174.0" prefHeight="87.0" prefWidth="150.0" />
-      <Label layoutX="194.0" layoutY="260.0" prefHeight="25.0" text="Schools">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="330.0" layoutY="260.0" prefHeight="25.0" text="Universities">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="507.0" layoutY="260.0" prefHeight="25.0" text="Jobs">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <VBox alignment="TOP_CENTER" layoutY="150.0" prefWidth="150.0">
+      <AnchorPane layoutY="156.0" prefHeight="132.0" prefWidth="600.0">
          <children>
-            <Label fx:id="profileName" text="User Name">
+            <Label fx:id="profileName" layoutX="10.0" prefHeight="27.0" prefWidth="341.0" text="Aser Namyadsadgyy">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Button fx:id="friendRequestButton" mnemonicParsing="false" text="Friend request" onMouseClicked="#friendRequestButtonHandler">
+            <Button fx:id="friendRequestButton" layoutX="10.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#friendRequestButtonHandler" prefHeight="25.0" text="Friend request">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="sendMessageButton" mnemonicParsing="false" text="Send message">
+            <Button layoutX="10.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#friendsButtonHandler" prefHeight="30.0" prefWidth="109.0" text="Friends">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onMouseClicked="#friendsButtonHandler" text="Friends">
+            <Button fx:id="sendMessageButton" layoutX="10.0" layoutY="94.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="109.0" text="Send message">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
+            <ListView fx:id="profileSchools" layoutX="138.0" layoutY="30.0" prefHeight="94.0" prefWidth="150.0" />
+            <ListView fx:id="profileUnivers" layoutX="288.0" layoutY="30.0" prefHeight="94.0" prefWidth="150.0" />
+            <ListView fx:id="profileJobs" layoutX="438.0" layoutY="30.0" prefHeight="94.0" prefWidth="150.0" />
          </children>
-      </VBox>
-      <ListView fx:id="profilePosts" layoutY="285.0" prefHeight="512.0" prefWidth="600.0" />
-      <VBox layoutX="150.0" stylesheets="@labels.css">
-         <children>
-            <Label fx:id="profileLocation" text="Location: no location" />
-            <Label fx:id="profileGender" text="Gender: Male" />
-            <Label fx:id="profileBirthday" text="Birthday: 28.08.2002" />
-            <Label fx:id="profileRelationship" text="Relationship status: In a domestic partnership" />
-            <Label fx:id="profileNumFriend" text="Friends: 423" />
-            <Label fx:id="profileNumPost" text="Posts: 150" />
-         </children>
-      </VBox>
+      </AnchorPane>
+      <ImageView fx:id="profileImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="184.0" layoutY="287.0" prefHeight="25.0" text="Schools">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="318.0" layoutY="287.0" prefHeight="25.0" text="Universities">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="496.0" layoutY="287.0" prefHeight="25.0" text="Jobs">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ListView fx:id="profilePosts" layoutY="319.0" prefHeight="478.0" prefWidth="600.0" />
+      <BorderPane layoutX="155.0" maxHeight="100000.0" maxWidth="100000.0" minHeight="0.0" minWidth="0.0">
+         <center>
+            <VBox prefHeight="150.0" prefWidth="400.0" stylesheets="@labels.css">
+               <children>
+                  <Label fx:id="profileLocation" text="Location: dsajkdasjkdjkjasskdjaskdjasdkasjdaskdjaskdjasdkasjdkasjdkasjdaskdjaskdjaskdjasdkasds" wrapText="true" />
+                  <HBox prefHeight="0.0" prefWidth="400.0">
+                     <children>
+                        <Label fx:id="profileBirthday" text="Birthday: 28.08.2002" />
+                        <Label fx:id="profileRelationship" text="Relationship status: In a domestic partnership" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="5.0" prefWidth="398.0">
+                     <children>
+                        <Label fx:id="profileGender" text="Gender: Male" />
+                        <Label fx:id="profileNumFriend" text="Friends: 423" />
+                        <Label fx:id="profileNumPost" text="Posts: 150" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
       <StackPane fx:id="circleAvatar" prefHeight="150.0" prefWidth="150.0">
          <children>
             <Circle fill="#23a7f7" radius="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="146.0" prefWidth="148.0">
                <children>
                   <Text fx:id="firstNameAvatar" fill="WHITE" stroke="#2f2a2a" strokeType="OUTSIDE" strokeWidth="0.0" text="U">
                      <font>
