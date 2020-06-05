@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
@@ -18,7 +19,7 @@
 
 <AnchorPane fx:id="editProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.EditProfileSceneController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="131.0" layoutY="167.0" prefHeight="481.0" prefWidth="339.0" style="-fx-spacing: 10;">
+      <VBox alignment="TOP_CENTER" layoutX="82.0" layoutY="32.0" prefHeight="714.0" prefWidth="436.0" style="-fx-spacing: 10;">
          <children>
             <Label text="Edit profile">
                <font>
@@ -92,6 +93,55 @@
                   <TextField fx:id="pictureUrlLabel" prefHeight="35.0" prefWidth="218.0" />
                </children>
             </HBox>
+            <HBox alignment="CENTER" prefHeight="178.0" prefWidth="436.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="207.0" prefWidth="143.0">
+                     <children>
+                        <Label text="Schools">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ListView fx:id="schoolList" prefHeight="110.0" prefWidth="143.0" />
+                        <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="add">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="207.0" prefWidth="143.0">
+                     <children>
+                        <Label text="Unviersities">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ListView fx:id="universityList" prefHeight="110.0" prefWidth="143.0" />
+                        <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="add">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="207.0" prefWidth="143.0">
+                     <children>
+                        <Label text="Jobs">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ListView fx:id="jobsList" prefHeight="110.0" prefWidth="143.0" />
+                        <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="add">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
             <PasswordField fx:id="passwordLabel" maxWidth="280.0" minWidth="280.0" promptText="password (leave empty if not changing)" />
             <PasswordField fx:id="passwordConfirmLabel" maxWidth="280.0" minWidth="280.0" promptText="repeat password" />
             <Label fx:id="errorText" text="Text" textFill="RED">
@@ -109,5 +159,6 @@
             <Insets />
          </opaqueInsets>
       </VBox>
+      <AnchorPane layoutX="100.0" layoutY="120.0" prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10 10 10 10;" />
    </children>
 </AnchorPane>

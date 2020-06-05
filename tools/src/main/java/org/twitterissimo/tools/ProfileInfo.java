@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class ProfileInfo extends ServerUser implements Serializable {
     public Location location;
     public ArrayList<Post> posts;
-    public ArrayList<Facility> facilities;
+    public ArrayList<UserFacility> facilities;
     public int numFriends;
     public int numPosts;
     public ProfileInfo(String first_name, String last_name, Date birthday, String email, String relationship_status, String gender,

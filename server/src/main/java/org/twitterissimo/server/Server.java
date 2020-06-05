@@ -426,25 +426,25 @@ public class Server {
             pi.numFriends = getNumberOfUserFriends(user_id);
             pi.numPosts = getNumberOfUserPosts(user_id);
 
-            String SQL = "SELECT facility_id FROM user_facilities WHERE user_id = " + user_id + ";";
+            String SQL = "SELECT * FROM user_facilities WHERE user_id = " + user_id + ";";
             ResultSet rs = sqlGetQuery(SQL);
-            ArrayList<Facility> facilities = new ArrayList<>();
-            ArrayList<Integer> facility_ids = new ArrayList<>();
+            ArrayList<UserFacility> userFacilities = new ArrayList<>();
             if (rs == null) {
                 System.out.println("VERY VERY BAD (IMPOSSIBLE)");
                 System.exit(0);
             }
             try {
                 while (rs.next()) {
-                    facility_ids.add(rs.getInt(1));
+                    userFacilities.add(new UserFacility(rs.getInt(1), rs.getInt(2), rs.getTimestamp(3), rs.getTimestamp(4), rs.getString(5)));
+                    System.out.println("KEK " + rs.getInt(1) + " " + rs.getInt(2));
                 }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-            for (int id : facility_ids){
-                facilities.add(getFacility(id));
+            for (UserFacility userFacility : userFacilities){
+                userFacility.setFacility(getFacility(userFacility.facilityId));
             }
-            pi.facilities = facilities;
+            pi.facilities = userFacilities;
             return pi;
         }
         private int getNumberOfUserFriends(int user_id){
@@ -516,7 +516,7 @@ public class Server {
         }
 
         private Facility getFacility(int facility_id) {
-            String SQL = "SELECT * FROM facilities WHERE facility.facility_id = " + facility_id + ";";
+            String SQL = "SELECT * FROM facilities WHERE facilities.facility_id = " + facility_id + ";";
             ResultSet rs = sqlGetQuery(SQL);
             if (rs == null) {
                 System.out.println("VERY VERY BAD (IMPOSSIBLE)");

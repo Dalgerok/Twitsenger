@@ -1,6 +1,5 @@
 package org.twitterissimo.client;
 
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,9 +12,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import org.twitterissimo.tools.Facility;
+import org.twitterissimo.tools.Post;
+import org.twitterissimo.tools.ProfileInfo;
+import org.twitterissimo.tools.UserFacility;
+
+import java.util.Date;
 import org.twitterissimo.tools.*;
 
-import java.util.Map;
 
 public class ProfileSceneController {
     @FXML public ImageView profileImage;
@@ -56,10 +60,20 @@ public class ProfileSceneController {
         ObservableList<Text> schools = FXCollections.observableArrayList();
         ObservableList<Text> univers = FXCollections.observableArrayList();
         ObservableList<Text> jobs = FXCollections.observableArrayList();
-        for (Facility facility : pi.facilities){
-            if (facility.type.equals("School"))schools.add(new Text(facility.name + ", " + facility.location.makeString()));
-            if (facility.type.equals("University"))univers.add(new Text(facility.name + ", " + facility.location.makeString()));
-            if (facility.type.equals("Work"))jobs.add(new Text(facility.name + ", " + facility.location.makeString()));
+        for (UserFacility userfacility : pi.facilities){
+            Facility facility = userfacility.facility;
+            if (facility.type.equals("School")){
+                schools.add(new Text(facility.name + "\n" + dateWTime(userfacility.date_from)+ " - "
+                + dateWTime(userfacility.date_to) + "\n" + userfacility.description + "\n" + facility.location.makeString() ));
+            }
+            if (facility.type.equals("University")){
+                univers.add(new Text(facility.name + "\n" + dateWTime(userfacility.date_from) + " - "
+                        + dateWTime(userfacility.date_to) + "\n" + userfacility.description + "\n" + facility.location.makeString() ));
+            }
+            if (facility.type.equals("Work")){
+                jobs.add(new Text(facility.name + "\n" + dateWTime(userfacility.date_from) + " - "
+                        + dateWTime(userfacility.date_to) + "\n" + userfacility.description + "\n" + facility.location.makeString() ));
+            }
         }
         profileSchools.setItems(schools);
         profileUnivers.setItems(univers);
@@ -91,6 +105,13 @@ public class ProfileSceneController {
     public void friendsButtonHandler(MouseEvent event) {
         Main.setFriendsScene(profileId);
     }
+
+    public String dateWTime(Date date){
+        if (date == null)
+            return "...";
+        return date.toString().substring(0, 10);
+    }
+
 
     public void friendRequestButtonHandler(MouseEvent event) {
         if (Main.isMyFriend(profileId)){

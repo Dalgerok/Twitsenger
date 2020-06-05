@@ -1,11 +1,12 @@
 package org.twitterissimo.client;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import org.twitterissimo.tools.ConnectionMessage;
-import org.twitterissimo.tools.ProfileInfo;
-import org.twitterissimo.tools.RegisterInfo;
+import javafx.scene.text.Text;
+import org.twitterissimo.tools.*;
 
 import java.time.LocalDate;
 
@@ -23,6 +24,9 @@ public class EditProfileSceneController {
     @FXML public PasswordField passwordConfirmLabel;
     @FXML public ToggleGroup genderToggle;
     @FXML public TextField pictureUrlLabel;
+    @FXML public ListView<Text> schoolList;
+    @FXML public ListView<Text> universityList;
+    @FXML public ListView<Text> jobsList;
 
 
     public void updateProfile(ProfileInfo pi){
@@ -38,6 +42,17 @@ public class EditProfileSceneController {
             femaleGender.fire();
         else
             unspecifiedGender.fire();
+        ObservableList<Text> schools = FXCollections.observableArrayList();
+        ObservableList<Text> univers = FXCollections.observableArrayList();
+        ObservableList<Text> jobs = FXCollections.observableArrayList();
+        for (UserFacility userfacility : pi.facilities){
+            //if (facility.type.equals("School"))schools.add(new Text(facility.name + ", " + facility.location.makeString()));
+            //if (facility.type.equals("University"))univers.add(new Text(facility.name + ", " + facility.location.makeString()));
+            //if (facility.type.equals("Work"))jobs.add(new Text(facility.name + ", " + facility.location.makeString()));
+        }
+        schoolList.setItems(schools);
+        universityList.setItems(univers);
+        jobsList.setItems(jobs);
     }
 
     @FXML
