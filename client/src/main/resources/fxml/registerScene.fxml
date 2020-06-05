@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.RegisterSceneController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="255.0" layoutY="202.0" spacing="10.0">
+         <children>
+            <Label text="Create a new account">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="firstNameField" promptText="First name" />
+            <TextField fx:id="lastNameField" promptText="Last name" />
+            <DatePicker fx:id="birthdayField" editable="false" prefHeight="25.0" prefWidth="289.0" promptText="Birthday" />
+            <TextField fx:id="registerEmail" promptText="Email address" />
+            <ComboBox fx:id="relationshipBox" prefHeight="25.0" prefWidth="290.0" value="Single">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="Single" />
+                     <String fx:value="Married" />
+                     <String fx:value="Engaged" />
+                     <String fx:value="In a civil partnership" />
+                     <String fx:value="In a domestic partnership" />
+                     <String fx:value="In an open relationship" />
+                     <String fx:value="It is complicated" />
+                     <String fx:value="Separated" />
+                     <String fx:value="Divorced" />
+                     <String fx:value="Widowed" />
+                  </FXCollections>
+               </items>
+            </ComboBox>
+            <HBox spacing="50.0">
+               <children>
+                  <RadioButton fx:id="maleButton" mnemonicParsing="false" selected="true" text="Male">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="GroupGender" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="femaleButton" mnemonicParsing="false" text="Female" toggleGroup="$GroupGender" />
+                  <RadioButton fx:id="unspecifiedButton" mnemonicParsing="false" text="Unspecified" toggleGroup="$GroupGender" />
+               </children>
+            </HBox>
+            <PasswordField fx:id="registerPassword" promptText="Password" />
+            <PasswordField fx:id="registerPassword2" promptText="Re-enter password" />
+            <Button alignment="CENTER" mnemonicParsing="false" onMouseClicked="#signUpHandler" text="Sign up" />
+            <Button mnemonicParsing="false" onMouseClicked="#returnHandler" text="Return" />
+            <Text fx:id="messageText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

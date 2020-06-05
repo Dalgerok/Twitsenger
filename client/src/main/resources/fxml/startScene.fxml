@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+
+<AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.StartSceneController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="300.0" layoutY="270.0">
+         <children>
+            <Label layoutX="326.0" layoutY="270.0" text="Email" />
+            <TextField fx:id="loginEmail" layoutX="326.0" layoutY="287.0" />
+            <Label layoutX="326.0" layoutY="317.0" text="Password" />
+            <PasswordField fx:id="loginPassword" layoutX="326.0" layoutY="334.0" />
+            <Button fx:id="loginButton" layoutX="377.0" layoutY="368.0" mnemonicParsing="false" onMouseClicked="#loginButtonHandler" text="Login" />
+            <TextFlow layoutX="300.0" layoutY="400.0" prefHeight="20.0" prefWidth="200.0">
+               <children>
+                  <Label text="First time on Twitterissimo?" />
+                  <Hyperlink onMouseClicked="#registerButtonHandler" text="Register" />
+               </children>
+            </TextFlow>
+         </children>
+      </VBox>
+      <Text fx:id="textMessage" fill="RED" layoutX="363.0" layoutY="422.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bad password!" textAlignment="JUSTIFY" visible="false" wrappingWidth="108.53668212890625" />
+   </children>
+</AnchorPane>
