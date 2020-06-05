@@ -82,7 +82,7 @@ public class Main extends Application{
         setMainScene();
         searchSceneController.clearResults();
         System.out.println("SET SEARCH SCENE");
-        mainSceneController.mainPane.getChildren().add(searchSceneController.searchPane);
+        mainSceneController.mainPane.getChildren().setAll(searchSceneController.searchPane);
 
         clientPlace = ClientPlace.SEARCH_SCENE;
         // TODO: 02.06.2020
@@ -92,7 +92,7 @@ public class Main extends Application{
         askForFriends(id);
         friendsSceneController.clearResults();
         System.out.println("SET FRIENDS SCENE");
-        mainSceneController.mainPane.getChildren().addAll(friendsSceneController.friendsPane);
+        mainSceneController.mainPane.getChildren().setAll(friendsSceneController.friendsPane);
 
         clientPlace = ClientPlace.FRIENDS_SCENE;
     }
