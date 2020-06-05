@@ -52,7 +52,7 @@ public class RegisterSceneController {
             return;
         }
         if (!registerPassword.getText().equals(registerPassword2.getText())){
-            messageText.setText("Password");
+            messageText.setText("Passwords don't match");
             messageText.setVisible(true);
             return;
         }

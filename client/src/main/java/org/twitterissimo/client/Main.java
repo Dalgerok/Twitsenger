@@ -352,7 +352,6 @@ public class Main extends Application{
                 registerSceneController.registerPassword.positionCaret(string.length());
             }
         });
-
         registerScene = new Scene(registerPane);
     }
     private static void initMainScene(){
@@ -440,6 +439,7 @@ public class Main extends Application{
             if (ke.getCode().equals(KeyCode.ENTER))
             {
                 String s = postsSceneController.enterMessage.getText();
+                s = s.substring(0, s.length() - 1);
                 if(!s.isEmpty()){
                     sendMessage(s);
                 }

@@ -225,6 +225,7 @@ public class Server {
                             if (obj instanceof Post) {
                                 System.out.println("NEW POST " + obj);
                                 Post p = (Post) obj;
+                                System.out.println("TEXT LENGTH IS: " + p.post_text.length());
                                 sqlUpdQuery("INSERT INTO posts VALUES(" + compose(String.valueOf(user.user_id), p.post_text) + ");");
                             } else {
                                 System.out.println("BAD NEW POST!!!");

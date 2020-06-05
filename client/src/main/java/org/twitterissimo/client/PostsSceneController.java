@@ -21,69 +21,22 @@ public class PostsSceneController {
     @FXML public TextArea enterMessage;
 
     public static class PostPane extends VBox implements Serializable {
-        public PostPane(){
-            super();
-
-            HBox user = new HBox();
-            ImageView userIcon = new ImageView();
-            Hyperlink userName = new Hyperlink();
-
-            user.getChildren().addAll(userIcon, userName);
-
-
-            Text postText = new Text("It's my post text");
-
-
-            HBox buttons = new HBox();
-            Button like = new Button("like");
-            Button repost = new Button("repost");
-            buttons.getChildren().addAll(like, repost);
-
-            Separator separator = new Separator();
-
-            getChildren().addAll(user, postText, buttons, separator);
-        }
-
-        public PostPane(int user_id, String post_text, Timestamp post_time, int reposted_from, int post_id, String first_name, String last_name, String user_picture_url)  {
-            super();
-            System.out.println("NEW POST_PANE " + first_name + " " + last_name);
-            HBox user = new HBox();
-            ImageView userIcon = new ImageView(); // TODO: 02.06.2020 add picture_url
-            Hyperlink userName = new Hyperlink(first_name + " " + last_name);
-            userName.setOnMouseClicked(mouseEvent -> {
-                Main.setProfileScene(user_id);
-            });
-            user.getChildren().addAll(userIcon, userName);
-            user.setVisible(true);
-
-
-            Text postText = new Text(post_text);
-
-
-            HBox buttons = new HBox();
-            //Button like = new Button("like");
-            //Button repost = new Button("repost");
-            //buttons.getChildren().addAll(like, repost);
-
-            //Separator separator = new Separator();
-
-            getChildren().addAll(user, postText, buttons);
-        }
-
         public PostPane(Post p, int user_id) {
             super();
             System.out.println("NEW POST_PANE " + p.first_name + " " + p.last_name + " " + user_id);
             HBox user = new HBox();
-            ImageView userIcon = new ImageView(); // TODO: 02.06.2020 add picture_url
+            ImageView userIcon = new ImageView(); // TODO: 02.06.2020 add picture_url ???
             Hyperlink userName = new Hyperlink(p.first_name + " " + p.last_name);
             userName.setOnMouseClicked(mouseEvent -> {
                 Main.setProfileScene(p.user_id);
             });
+
             user.getChildren().addAll(userIcon, userName);
             user.setVisible(true);
 
 
             Text postText = new Text(p.post_text);
+            postText.setWrappingWidth(600.0);
 
 
             HBox buttons = new HBox();
@@ -97,9 +50,7 @@ public class PostsSceneController {
                 });
                 buttons.getChildren().add(delete);
             }
-
             Separator separator = new Separator();
-
             getChildren().addAll(user, postText, buttons, separator);
         }
     }
