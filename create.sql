@@ -44,12 +44,12 @@ CREATE  TABLE users (
                         first_name           varchar(100)           NOT NULL ,
                         last_name            varchar(100)           NOT NULL ,
                         birthday             date                   NOT NULL ,
-                        email                varchar(254)           NOT NULL ,
+                        email                varchar(100)           NOT NULL ,
                         relationship_status  relationshipstatus     NOT NULL ,
                         gender               genders                NOT NULL ,
-                        user_password 		 varchar(50)            NOT NULL ,
+                        user_password 		 varchar(64)            NOT NULL ,
                         user_location_id  	 integer ,
-                        picture_url 		 varchar(255) ,
+                        picture_url 		 varchar(500) ,
                         user_id              SERIAL ,
                         CONSTRAINT pk_user PRIMARY KEY ( user_id ),
                         CONSTRAINT un_email UNIQUE ( email ),
@@ -242,7 +242,7 @@ CREATE FUNCTION get_user_posts(
 )
     RETURNS TABLE(
                      user_id integer,
-                     post_test varchar(250),
+                     post_text varchar(250),
                      post_date timestamp,
                      reposted_from integer,
                      post_id integer
@@ -317,10 +317,10 @@ CREATE TYPE facility_types AS ENUM (
 
 ----
 CREATE  TABLE facilities (
-                             facility_name        varchar(100)           NOT NULL ,
+                             facility_name        varchar(100)           NOT NULL,
                              facility_location    integer                NOT NULL,
-                             facility_type	     facility_types         NOT NULL,
-                             facility_id          SERIAL ,
+                             facility_type	      facility_types         NOT NULL,
+                             facility_id          SERIAL,
                              CONSTRAINT pk_facility_id PRIMARY KEY ( facility_id ),
                              CONSTRAINT fk_facility_location FOREIGN KEY ( facility_location ) REFERENCES locations( location_id ),
                              CONSTRAINT un_facility UNIQUE(facility_name, facility_location, facility_type)
@@ -350,10 +350,10 @@ $$
 
 ----
 CREATE  TABLE user_facilities (
-                                  user_id              integer            NOT NULL ,
-                                  facility_id          integer            NOT NULL ,
-                                  date_from            timestamp          NOT NULL ,
-                                  date_to              timestamp   ,
+                                  user_id              integer            NOT NULL,
+                                  facility_id          integer            NOT NULL,
+                                  date_from            timestamp          NOT NULL,
+                                  date_to              timestamp,
                                   description          varchar(100),
                                   CONSTRAINT pk_user_facility PRIMARY KEY ( user_id, facility_id, date_from ),
                                   CONSTRAINT fk_user_facility_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -433,10 +433,11 @@ CREATE FUNCTION get_user_friend(
                  email                varchar(254),
                  relationship_status  relationshipstatus,
                  gender               genders ,
-                 user_password 		 varchar(50),
-                 user_location_id  	 integer,
-                 picture_url 		 varchar(255),
-                 user_id              integer) AS
+                 user_password 		  varchar(50),
+                 user_location_id  	  integer,
+                 picture_url 		  varchar(255),
+                 user_id              integer
+) AS
 $$
 BEGIN
     RETURN QUERY (SELECT * FROM users WHERE (id, users.user_id) IN (SELECT friend1, friend2 FROM friendship));

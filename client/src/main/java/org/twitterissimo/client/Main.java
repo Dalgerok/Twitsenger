@@ -271,6 +271,22 @@ public class Main extends Application{
             System.exit(0);
         }
         startSceneController = startLoader.getController();
+        startSceneController.loginEmail.setOnKeyTyped(event -> {
+            String string = startSceneController.loginEmail.getText();
+
+            if (string.length() > 100) {
+                startSceneController.loginEmail.setText(string.substring(0, 100));
+                startSceneController.loginEmail.positionCaret(string.length());
+            }
+        });
+        startSceneController.loginPassword.setOnKeyTyped(event -> {
+            String string = startSceneController.loginPassword.getText();
+
+            if (string.length() > 64) {
+                startSceneController.loginPassword.setText(string.substring(0, 64));
+                startSceneController.loginPassword.positionCaret(string.length());
+            }
+        });
 
         startSceneController.loginButton.setOnKeyPressed(ke -> {
             if (ke.getCode().equals(KeyCode.ENTER)) {
@@ -295,6 +311,39 @@ public class Main extends Application{
             System.exit(0);
         }
         registerSceneController = registerLoader.getController();
+        registerSceneController.firstNameField.setOnKeyTyped(event -> {
+            String string = registerSceneController.firstNameField.getText();
+
+            if (string.length() > 100) {
+                registerSceneController.firstNameField.setText(string.substring(0, 100));
+                registerSceneController.firstNameField.positionCaret(string.length());
+            }
+        });
+        registerSceneController.lastNameField.setOnKeyTyped(event -> {
+            String string = registerSceneController.lastNameField.getText();
+
+            if (string.length() > 100) {
+                registerSceneController.lastNameField.setText(string.substring(0, 100));
+                registerSceneController.lastNameField.positionCaret(string.length());
+            }
+        });
+        registerSceneController.registerEmail.setOnKeyTyped(event -> {
+            String string = registerSceneController.registerEmail.getText();
+
+            if (string.length() > 100) {
+                registerSceneController.registerEmail.setText(string.substring(0, 100));
+                registerSceneController.registerEmail.positionCaret(string.length());
+            }
+        });
+        registerSceneController.registerPassword.setOnKeyTyped(event -> {
+            String string = registerSceneController.registerPassword.getText();
+
+            if (string.length() > 64) {
+                registerSceneController.registerPassword.setText(string.substring(0, 64));
+                registerSceneController.registerPassword.positionCaret(string.length());
+            }
+        });
+
         registerScene = new Scene(registerPane);
     }
     private static void initMainScene(){

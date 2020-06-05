@@ -18,10 +18,6 @@ public class PostsSceneController {
     @FXML public VBox postsVBox;
     @FXML public TextArea enterMessage;
 
-    public void refreshButtonHandler(MouseEvent mouseEvent) {
-        Main.askForUpdatePostsScene();
-    }
-
     public static class PostPane extends VBox implements Serializable {
         public PostPane(){
             super();
