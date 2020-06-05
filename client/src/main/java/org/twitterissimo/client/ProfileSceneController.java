@@ -52,7 +52,7 @@ public class ProfileSceneController {
         profileGender.setText("Gender: " + pi.gender);
         profileBirthday.setText("Birthday: " + pi.birthday.toString());
         profileRelationship.setText("Relationship status: " + pi.relationship_status);
-        System.out.println(pi.location);
+        System.out.println("LOCATION " + pi.location);
         if (pi.location != null)profileLocation.setText(pi.location.makeString());
         profileNumFriend.setText("Friends: " + pi.numFriends);
         profileNumPost.setText("Posts: " + pi.numPosts);

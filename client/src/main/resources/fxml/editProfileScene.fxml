@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
@@ -17,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="editProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.EditProfileSceneController">
+<AnchorPane fx:id="editProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.EditProfileSceneController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="82.0" layoutY="32.0" prefHeight="714.0" prefWidth="436.0" style="-fx-spacing: 10;">
          <children>
@@ -159,6 +165,6 @@
             <Insets />
          </opaqueInsets>
       </VBox>
-      <AnchorPane layoutX="100.0" layoutY="120.0" prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10 10 10 10;" />
+      <AnchorPane layoutX="100.0" layoutY="120.0" prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10 10 10 10;"/>
    </children>
 </AnchorPane>

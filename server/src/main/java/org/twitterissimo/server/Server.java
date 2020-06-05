@@ -280,10 +280,10 @@ public class Server {
                             }
                         } else if ("ch_user_birthday".equals(s)) {
                             sendObject(ConnectionMessage.BAD_BIRTHDAY);
-                            return;
+                            //return;
                         } else {
                             sendObject(ConnectionMessage.BAD_EMAIL);
-                            return;
+                            //return;
                         }
                     }else if (obj instanceof SearchProfileFilter){
                         SearchProfileFilter spf = (SearchProfileFilter)obj;
@@ -347,9 +347,11 @@ public class Server {
             }
         }
 
-        public synchronized void sendObject(Object o) throws IOException {
+        public void sendObject(Object o) throws IOException {
             System.out.println("Something sent " + o);
-            out.writeObject(o);
+            synchronized (out) {
+                out.writeObject(o);
+            }
         }
 
         public Object readObject() throws IOException {

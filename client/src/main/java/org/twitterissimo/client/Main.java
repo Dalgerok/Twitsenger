@@ -176,23 +176,30 @@ public class Main extends Application{
 
     public static <T extends Serializable> boolean sendObject(T o) {
         System.out.println("Send object " + o);
-        if (clientSocket == null || out == null)return false;
+        if (clientSocket == null || out == null){
+            System.out.println("client socket or out is null");
+            connect();
+        }
         try{
-            out.writeObject(o);
+            synchronized (out) {
+                out.writeObject(o);
+            }
             return true;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
     }
-    public static synchronized Object getObject() {
+    public static Object getObject() {
         System.out.println("STREAM ONE " + (in == null));
         if (clientSocket == null || in == null)return null;
         System.out.println("STREAM TWO " + (in == null));
         try{
             Object o;
             System.out.println("IM HERE");
-            o = in.readObject();
+            synchronized (in) {
+                o = in.readObject();
+            }
             System.out.println("READ " + o);
             return o;
         } catch (IOException | ClassNotFoundException e) {
@@ -219,6 +226,7 @@ public class Main extends Application{
         }
     }
     public static void disconnect() {
+        Platform.runLater(Main::setStartScene);
         stopRead();
         try{
             in = null;
@@ -246,7 +254,7 @@ public class Main extends Application{
 
         primaryStage.setHeight(800);
         primaryStage.setWidth(800);
-        //primaryStage.setResizable(false);
+        primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
         primaryStage.setScene(startScene);
         primaryStage.show();
@@ -530,13 +538,17 @@ public class Main extends Application{
                             continue;
                         }
                         else if (obj.equals(ConnectionMessage.BAD_BIRTHDAY)){
-                            editProfileSceneController.errorText.setText("You must be at least 13 years old to register");
-                            editProfileSceneController.errorText.setVisible(true);
+                            Platform.runLater(() -> {
+                                editProfileSceneController.errorText.setText("You must be at least 13 years old to register");
+                                editProfileSceneController.errorText.setVisible(true);
+                            });
                             continue;
                         }
                         else if (obj.equals(ConnectionMessage.BAD_PASSWORD)){
-                            editProfileSceneController.errorText.setText("This email is already taken");
-                            editProfileSceneController.errorText.setVisible(true);
+                            Platform.runLater(() -> {
+                                editProfileSceneController.errorText.setText("This email is already taken");
+                                editProfileSceneController.errorText.setVisible(true);
+                            });
                             continue;
                         }
                     }
