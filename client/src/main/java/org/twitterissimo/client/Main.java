@@ -64,6 +64,8 @@ public class Main extends Application{
         mainSceneController.mainPane.getChildren().setAll(editProfileSceneController.editProfilePane);
 
         editProfileSceneController.errorText.setVisible(false);
+        editProfileSceneController.passwordLabel.setText("");
+        editProfileSceneController.passwordConfirmLabel.setText("");
 
         clientPlace = ClientPlace.EDIT_PROFILE_SCENE;
         askForProfileInfo(id);

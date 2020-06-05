@@ -250,7 +250,7 @@ public class Server {
                         if (info.getUpdate()) {
                             System.out.println("kek");
                             s = sqlUpdQuery("UPDATE users SET first_name = " + compose(info.getFirstName()) +
-                                    ", last_name = " + compose(info.getLastName()) + ", birthday = " + compose(info.getBirthday()) +
+                                    ", last_name = " + compose(info.getLastName()) + ", user_password = " + compose(info.getPassword()) + ", birthday = " + compose(info.getBirthday()) +
                                     ", relationship_status = " + compose(info.getRelationship()) + ", gender = " + compose(info.getGender()) +
                                     "WHERE email = " + compose(email) + ";");
                             System.out.println(s);

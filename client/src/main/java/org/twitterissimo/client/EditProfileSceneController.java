@@ -19,8 +19,8 @@ public class EditProfileSceneController {
     @FXML public RadioButton maleGender;
     @FXML public RadioButton femaleGender;
     @FXML public RadioButton unspecifiedGender;
-    @FXML public TextField passwordLabel;
-    @FXML public TextField passwordConfirmLabel;
+    @FXML public PasswordField passwordLabel;
+    @FXML public PasswordField passwordConfirmLabel;
     @FXML public ToggleGroup genderToggle;
 
 
@@ -56,11 +56,18 @@ public class EditProfileSceneController {
             errorText.setVisible(true);
             return;
         }
+        if (!passwordLabel.getText().equals("")){
+            if (!passwordConfirmLabel.getText().equals(passwordLabel.getText())){
+                errorText.setText("Passwords don't match");
+                errorText.setVisible(true);
+                return;
+            }
+        }
         Main.editProfileUpdate(new RegisterInfo(firstNameLabel.getText(), lastNameLabel.getText(), birthdayDate.getValue(),
                 Main.user.email,
                 relationshipPicker.getValue(),
                 ((RadioButton)genderToggle.getSelectedToggle()).getText(),
-                Main.user.user_password, true));
+                (passwordLabel.getText().equals("") ? Main.user.user_password : passwordLabel.getText()), true));
     }
 
 }
