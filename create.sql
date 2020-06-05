@@ -445,6 +445,29 @@ END;
 $$
 LANGUAGE plpgsql;
 
+CREATE FUNCTION check_facility_filter(
+    _facility record,
+    facName varchar,
+    facType varchar
+) RETURNS boolean AS
+$$
+BEGIN
+    IF (lower(_facility.facility_name) LIKE '%'||lower(facName)||'%') THEN NULL;ELSE RETURN FALSE;END IF;
+    IF (_facility.facility_type = facType::facility_types) THEN NULL;ELSE RETURN FALSE;END IF;
+    RETURN TRUE;
+END;
+$$
+LANGUAGE plpgsql;
+
+INSERT INTO locations(country, city) VALUES ('Poland', 'Krakow');
+INSERT INTO locations(country, city) VALUES ('Ukraine', 'Kremenchuk');
+
+INSERT INTO facilities(facility_name, facility_location, facility_type) VALUES ('Jagiellonian University', 1, 'University');
+INSERT INTO facilities(facility_name, facility_location, facility_type) VALUES ('Lyceum Polit', 2, 'School');
+INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (1, 1, '2019-10-1', 'student');
+INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (2, 1, '2019-10-1', 'student');
+INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (3, 1, '2019-10-1', 'student');
+
 /*INSERT INTO friendship VALUES (1, 2);
 INSERT INTO friendship VALUES (1, 2);
 INSERT INTO friendship VALUES (2, 1);

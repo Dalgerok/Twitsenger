@@ -14,4 +14,9 @@ public class Facility implements Serializable {
         this.type = type;
         this.facility_id = facility_id;
     }
+
+    public Facility() {
+
+    }
+
 }

@@ -70,6 +70,8 @@ public class Main extends Application{
         editProfileSceneController.errorText.setVisible(false);
         editProfileSceneController.passwordLabel.setText("");
         editProfileSceneController.passwordConfirmLabel.setText("");
+        editProfileSceneController.facilitiesBox.setVisible(false);
+        editProfileSceneController.facilityAddingPane.setVisible(false);
 
         clientPlace = ClientPlace.EDIT_PROFILE_SCENE;
         askForProfileInfo(id);
@@ -490,6 +492,10 @@ public class Main extends Application{
         askForUpdatePostsScene();
     }
 
+    public static void UserToFacility(UserFacility userFacility){
+        sendObject(userFacility);
+    }
+
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -555,6 +561,7 @@ public class Main extends Application{
                     if (obj instanceof ArrayList){
                         Object o = ((ArrayList) obj).get(0);
                         ((ArrayList) obj).remove(0);
+                        if (o instanceof Facility) Platform.runLater(() -> editProfileSceneController.updateSearchResult((ArrayList<Facility>)obj));
                         if (o instanceof Post)Platform.runLater(() -> updatePostsScene((ArrayList<Post>)obj));
                         if (o instanceof ServerUser) System.out.println(((ServerUser) o).first_name);
                         if (o instanceof ServerUser && ((ServerUser) o).first_name.equals("search"))Platform.runLater(() -> searchSceneController.updateSearchResults((ArrayList<ServerUser>)obj));

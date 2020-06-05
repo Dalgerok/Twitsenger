@@ -321,6 +321,17 @@ public class Server {
                                 conn.sendObject(arr);
                             }
                         }
+                    } else if (obj instanceof FacilitySearcher) {
+                        FacilitySearcher facilitySearcher = (FacilitySearcher)obj;
+                        ArrayList<Facility> arr = getSearchFacilities(facilitySearcher);
+                        arr.add(0, new Facility());
+                        sendObject(arr);
+                    } else if (obj instanceof UserFacility) {
+                        UserFacility userFacility = (UserFacility)obj;
+                        if (userFacility.add)
+                            addUserFacility(userFacility);
+                        else
+                            delUserFacility(userFacility);
                     }
                 }
             } catch (IOException e) {
@@ -539,6 +550,36 @@ public class Server {
             }
             return new Facility("", new Location("", "", 0), "", facility_id);
         }
+
+        private ArrayList<Facility> getSearchFacilities(FacilitySearcher searcher){
+            String SQL = "SELECT facility_name, facility_location, facility_id FROM facilities WHERE check_facility_filter(facilities, " + compose(searcher.facility_name, searcher.facility_type) + ") = TRUE;";
+            ResultSet rs = sqlGetQuery(SQL);
+            if (rs == null){
+                System.out.println("VERY VERY BAD (IMOPOSSIBLE)");
+                System.exit(0);
+            }
+            ArrayList<Facility> facilities = new ArrayList<>();
+            try {
+                ArrayList<String> facNames = new ArrayList<>();
+                ArrayList<Integer> locIds = new ArrayList<>();
+                ArrayList<Integer> facIds = new ArrayList<>();
+                while(rs.next()){
+                    facNames.add(rs.getString(1));
+                    locIds.add(rs.getInt(2));
+                    facIds.add(rs.getInt(3));
+                }
+                for (int i = 0; i < facNames.size(); i++){
+                    String name = facNames.get(i);
+                    int location_id = locIds.get(i);
+                    int facility_id = facIds.get(i);
+                    facilities.add(new Facility(name, getLocation(location_id), searcher.facility_type, facility_id));
+                }
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+            return facilities;
+        }
+
         private ArrayList<ServerUser> getUsersByFilter(SearchProfileFilter filter){
             String SQL = "SELECT * FROM users WHERE check_user_filter(users, " + compose(   filter.firstName, filter.lastName, filter.country, filter.city) +
                     ")  = TRUE;";
@@ -560,6 +601,25 @@ public class Server {
             }
             return users;
         }
+
+        private void addUserFacility(UserFacility facility){
+            String SQL;
+            if (facility.date_to == null){
+                SQL = "INSERT INTO user_facilities (user_id, facility_id, date_from, description) " +
+                        "VALUES (" + compose(Integer.toString(facility.userId), Integer.toString(facility.facilityId), facility.date_from.toString(), facility.description) + ");";
+            }
+            else {
+                SQL = "INSERT INTO user_facilities (user_id, facility_id, date_from, date_to, description) " +
+                        "VALUES (" + compose(Integer.toString(facility.userId), Integer.toString(facility.facilityId), facility.date_from.toString(), facility.date_to.toString(), facility.description) + ");";
+            }
+            sqlUpdQuery(SQL);
+        }
+
+        private void delUserFacility(UserFacility facility) {
+            sqlUpdQuery("DELETE FROM user_facilities WHERE user_id=" + compose(Integer.toString(facility.userId)) +
+                    " AND facility_id=" + compose(Integer.toString(facility.facilityId)) + " AND date_from=" + compose(facility.date_from.toString()) + ";");
+        }
+
     }
     static String compose(String... args){
         StringBuilder s = new StringBuilder();

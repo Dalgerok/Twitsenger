@@ -14,6 +14,12 @@ public class Location implements Serializable {
     }
 
     public String makeString() {
-        return country + "," + city;
+        if ((country == null || country.length() == 0) && (city == null || city.length() == 0))
+            return "";
+        if (country == null || country.length() == 0)
+            return city;
+        if (city == null || city.length() == 0)
+            return country;
+        return country + ", " + city;
     }
 }

@@ -38,9 +38,9 @@ public class ProfileSceneController {
     @FXML public StackPane circleAvatar;
     @FXML public Text firstNameAvatar;
     @FXML public Text lastNameAvatar;
-
     @FXML public Button friendRequestButton;
     @FXML public Button sendMessageButton;
+
     public int profileId;
     ProfileInfo profileInfo;
 
@@ -84,10 +84,13 @@ public class ProfileSceneController {
             posts.add(new PostsSceneController.PostPane(post, Main.user.user_id));
         }
         profilePosts.setItems(posts);
-        boolean badUrl = pi.picture_url == null || pi.picture_url.length() == 0;
+        boolean badUrl = false;
         Image p = null;
-        if (!badUrl)
+        try {
             p = new Image(pi.picture_url);
+        } catch (Exception e){
+            badUrl = true;
+        }
         if (!badUrl && p.getWidth() > 0) {
             profileImage.setImage(p);
             profileImage.setVisible(true);
