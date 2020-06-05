@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
@@ -314,16 +315,16 @@ public class Main extends Application{
         registerSceneController.firstNameField.setOnKeyTyped(event -> {
             String string = registerSceneController.firstNameField.getText();
 
-            if (string.length() > 100) {
-                registerSceneController.firstNameField.setText(string.substring(0, 100));
+            if (string.length() > 42) {
+                registerSceneController.firstNameField.setText(string.substring(0, 42));
                 registerSceneController.firstNameField.positionCaret(string.length());
             }
         });
         registerSceneController.lastNameField.setOnKeyTyped(event -> {
             String string = registerSceneController.lastNameField.getText();
 
-            if (string.length() > 100) {
-                registerSceneController.lastNameField.setText(string.substring(0, 100));
+            if (string.length() > 42) {
+                registerSceneController.lastNameField.setText(string.substring(0, 42));
                 registerSceneController.lastNameField.positionCaret(string.length());
             }
         });
@@ -593,7 +594,9 @@ public class Main extends Application{
             lName = new Text("Second Name");
             goToProfile = new Button("Go to profile");
             requestFriend = new Button("Friend request");
-            getChildren().addAll(fName, lName, goToProfile, requestFriend);
+            Separator s = new Separator();
+            s.setVisible(false);
+            getChildren().addAll(fName, s, lName, goToProfile, requestFriend);
         }
         public FriendBox(ServerUser us){
             this();

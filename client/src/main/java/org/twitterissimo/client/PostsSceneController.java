@@ -1,6 +1,8 @@
 package org.twitterissimo.client;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -24,7 +26,8 @@ public class PostsSceneController {
 
             HBox user = new HBox();
             ImageView userIcon = new ImageView();
-            Text userName = new Text("Name Surname");
+            Hyperlink userName = new Hyperlink();
+
             user.getChildren().addAll(userIcon, userName);
 
 
@@ -46,7 +49,10 @@ public class PostsSceneController {
             System.out.println("NEW POST_PANE " + first_name + " " + last_name);
             HBox user = new HBox();
             ImageView userIcon = new ImageView(); // TODO: 02.06.2020 add picture_url
-            Text userName = new Text(first_name + " " + last_name);
+            Hyperlink userName = new Hyperlink(first_name + " " + last_name);
+            userName.setOnMouseClicked(mouseEvent -> {
+                Main.setProfileScene(user_id);
+            });
             user.getChildren().addAll(userIcon, userName);
             user.setVisible(true);
 
@@ -69,7 +75,10 @@ public class PostsSceneController {
             System.out.println("NEW POST_PANE " + p.first_name + " " + p.last_name + " " + user_id);
             HBox user = new HBox();
             ImageView userIcon = new ImageView(); // TODO: 02.06.2020 add picture_url
-            Text userName = new Text(p.first_name + " " + p.last_name);
+            Hyperlink userName = new Hyperlink(p.first_name + " " + p.last_name);
+            userName.setOnMouseClicked(mouseEvent -> {
+                Main.setProfileScene(p.user_id);
+            });
             user.getChildren().addAll(userIcon, userName);
             user.setVisible(true);
 
