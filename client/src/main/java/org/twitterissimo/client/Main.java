@@ -502,6 +502,7 @@ public class Main extends Application{
                             friends.addAll((ArrayList<ServerUser>)obj);
                             if (clientPlace.equals(ClientPlace.PROFILE_SCENE)){
                                 Platform.runLater(() -> profileSceneController.updateButtons());
+                                askForProfileInfo(profileSceneController.profileId);
                             }
                             if (clientPlace.equals(ClientPlace.FRIENDS_SCENE)){
                                 Platform.runLater(() -> friendsSceneController.updateButtons());
