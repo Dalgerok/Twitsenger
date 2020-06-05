@@ -13,6 +13,10 @@ public class Post implements Serializable {
     public String first_name;
     public String last_name;
     public String user_picture_url;
+    public Post repost;
+    public Post(int post_id){
+        this.post_id = post_id;
+    }
     public Post(int user_id, String post_text, Timestamp post_time, int reposted_from, int post_id, String first_name, String last_name, String user_picture_url) {
         this.user_id = user_id;
         this.post_text = post_text;

@@ -41,8 +41,8 @@ CREATE TYPE relationshipstatus AS ENUM (
 
 ----
 CREATE  TABLE users (
-                        first_name           varchar(42)           NOT NULL ,
-                        last_name            varchar(42)           NOT NULL ,
+                        first_name           varchar(32)           NOT NULL ,
+                        last_name            varchar(32)           NOT NULL ,
                         birthday             date                   NOT NULL ,
                         email                varchar(100)           NOT NULL ,
                         relationship_status  relationshipstatus     NOT NULL ,

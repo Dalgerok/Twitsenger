@@ -17,22 +17,22 @@
    <children>
       <AnchorPane layoutY="156.0" prefHeight="132.0" prefWidth="600.0">
          <children>
-            <Label fx:id="profileName" layoutX="10.0" prefHeight="27.0" prefWidth="341.0" text="Aser Namyadsadgyy">
+            <Label fx:id="profileName" layoutX="10.0" prefHeight="27.0" prefWidth="586.0" text="Aser Namyadsadgyy">
                <font>
-                  <Font name="System Bold" size="18.0" />
+                  <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Button fx:id="friendRequestButton" layoutX="10.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#friendRequestButtonHandler" prefHeight="25.0" text="Friend request">
+            <Button fx:id="friendRequestButton" layoutX="10.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#friendRequestButtonHandler" prefHeight="30.0" prefWidth="110.0" text="Friend request">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button layoutX="10.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#friendsButtonHandler" prefHeight="30.0" prefWidth="109.0" text="Friends">
+            <Button layoutX="10.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#friendsButtonHandler" prefHeight="30.0" prefWidth="110.0" text="Friends">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="sendMessageButton" layoutX="10.0" layoutY="94.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="109.0" text="Send message">
+            <Button fx:id="sendMessageButton" layoutX="10.0" layoutY="94.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" text="Send message">
                <font>
                   <Font size="14.0" />
                </font>

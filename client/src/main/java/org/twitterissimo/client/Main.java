@@ -325,16 +325,16 @@ public class Main extends Application{
         registerSceneController.firstNameField.setOnKeyTyped(event -> {
             String string = registerSceneController.firstNameField.getText();
 
-            if (string.length() > 42) {
-                registerSceneController.firstNameField.setText(string.substring(0, 42));
+            if (string.length() > 32) {
+                registerSceneController.firstNameField.setText(string.substring(0, 32));
                 registerSceneController.firstNameField.positionCaret(string.length());
             }
         });
         registerSceneController.lastNameField.setOnKeyTyped(event -> {
             String string = registerSceneController.lastNameField.getText();
 
-            if (string.length() > 42) {
-                registerSceneController.lastNameField.setText(string.substring(0, 42));
+            if (string.length() > 32) {
+                registerSceneController.lastNameField.setText(string.substring(0, 32));
                 registerSceneController.lastNameField.positionCaret(string.length());
             }
         });
