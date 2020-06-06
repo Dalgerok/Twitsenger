@@ -56,6 +56,20 @@ CREATE  TABLE users (
                         CONSTRAINT fk_user_location FOREIGN KEY ( user_location_id ) REFERENCES locations( location_id ) ON DELETE SET NULL ON UPDATE CASCADE,
                         CONSTRAINT ch_user_birthday CHECK ((now() - (birthday)::timestamp with time zone) >= '13 years'::interval year)
 );
+CREATE OR REPLACE FUNCTION no_update_user_id()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+    IF NEW.user_id != OLD.user_id THEN
+        NEW.user_id = OLD.user_id;
+    END IF;
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+CREATE TRIGGER no_update_user_id BEFORE UPDATE ON users
+    FOR EACH ROW EXECUTE PROCEDURE no_update_user_id();
+
 CREATE FUNCTION check_password(
     _email varchar,
     _user_password varchar
@@ -137,7 +151,11 @@ CREATE TRIGGER check_insert_friendship AFTER INSERT ON friendship
 CREATE FUNCTION get_number_of_user_friends(id integer) RETURNS integer AS
 $$
 BEGIN
-    RETURN (SELECT COUNT(*) FROM friendship WHERE friend1 = id);
+    RETURN (
+        SELECT COUNT(*)
+        FROM friendship
+        WHERE friend1 = id
+    );
 END;
 $$
     LANGUAGE plpgsql;
@@ -160,15 +178,18 @@ CREATE OR REPLACE FUNCTION check_friend_request()
 $$
 BEGIN
     IF EXISTS
-        (
-            SELECT * FROM friendship kek
-            WHERE (NEW.from_whom =  kek.friend1 AND NEW.to_whom = kek.friend2)
-        )
-        OR EXISTS
-        (
-            SELECT * FROM friend_request fr
-            WHERE NEW.from_whom = fr.from_whom AND NEW.to_whom = fr.to_whom
-        )THEN
+           (
+               SELECT *
+               FROM friendship f
+               WHERE NEW.from_whom =  f.friend1 AND NEW.to_whom = f.friend2
+           )
+    OR EXISTS
+           (
+               SELECT *
+               FROM friend_request fr
+               WHERE NEW.from_whom = fr.from_whom AND NEW.to_whom = fr.to_whom
+           )
+    THEN
         NEW = NULL;
     END IF;
     RETURN NEW;
@@ -185,9 +206,9 @@ $$
 BEGIN
     IF EXISTS
         (
-            SELECT * FROM friend_request kek
-            WHERE NEW.from_whom = kek.to_whom
-              AND NEW.to_whom = kek.from_whom
+            SELECT *
+            FROM friend_request kek
+            WHERE NEW.from_whom = kek.to_whom AND NEW.to_whom = kek.from_whom
         ) THEN
         DELETE FROM friend_request kek
         WHERE NEW.from_whom = kek.to_whom AND NEW.to_whom = kek.from_whom;
@@ -204,17 +225,21 @@ CREATE TRIGGER insert_friend_request BEFORE INSERT ON friend_request
 ----
 
 ----
-CREATE  TABLE message (
-                          user_from            integer                             NOT NULL ,
-                          user_to              integer                             NOT NULL ,
-                          message_text         varchar(250)                        NOT NULL ,
-                          message_date         timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
-                          message_id           SERIAL ,
-                          CONSTRAINT pk_message_id PRIMARY KEY ( message_id ),
-                          CONSTRAINT fk_message_user1 FOREIGN KEY ( user_from ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
-                          CONSTRAINT fk_message_user2 FOREIGN KEY ( user_to ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
-                          CONSTRAINT ch_message CHECK (user_from <> user_to)
+CREATE  TABLE messages (
+                           user_from            integer                             NOT NULL ,
+                           user_to              integer                             NOT NULL ,
+                           message_text         varchar(250)                        NOT NULL ,
+                           message_date         timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
+                           message_id           SERIAL ,
+                           CONSTRAINT pk_message_id PRIMARY KEY ( message_id ),
+                           CONSTRAINT fk_message_user1 FOREIGN KEY ( user_from ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
+                           CONSTRAINT fk_message_user2 FOREIGN KEY ( user_to ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
+                           CONSTRAINT ch_message CHECK (user_from <> user_to)
 );
+CREATE RULE no_update_message AS ON UPDATE TO messages
+    DO INSTEAD NOTHING;
+CREATE RULE no_delete_message AS ON DELETE TO messages
+    DO INSTEAD NOTHING;
 ----
 
 ----
@@ -228,8 +253,14 @@ CREATE  TABLE posts (
                         CONSTRAINT fk_repost FOREIGN KEY ( reposted_from ) REFERENCES posts( post_id ) ON DELETE SET NULL ON UPDATE CASCADE,
                         CONSTRAINT fk_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE
 );
+CREATE RULE no_update_post AS ON UPDATE TO posts
+    DO INSTEAD NOTHING;
 
-CREATE FUNCTION get_number_of_user_posts(id integer) RETURNS integer AS
+CREATE FUNCTION get_number_of_user_posts(
+    id integer
+)
+    RETURNS integer
+AS
 $$
 BEGIN
     RETURN (SELECT COUNT(*) FROM posts WHERE user_id = id);
@@ -250,7 +281,11 @@ CREATE FUNCTION get_user_posts(
 AS
 $$
 BEGIN
-    RETURN QUERY (SELECT * FROM posts WHERE posts.user_id = id);
+    RETURN QUERY (
+        SELECT *
+        FROM posts
+        WHERE posts.user_id = id
+    );
 END;
 $$
     LANGUAGE plpgsql;
@@ -262,7 +297,11 @@ CREATE FUNCTION get_number_of_reposts_on_post(
 AS
 $$
 BEGIN
-    RETURN (SELECT COUNT(*) FROM posts WHERE reposted_from = id);
+    RETURN (
+        SELECT COUNT(*)
+        FROM posts
+        WHERE reposted_from = id
+    );
 END;
 $$
     LANGUAGE plpgsql;
@@ -274,7 +313,11 @@ CREATE FUNCTION get_number_of_likes_on_post(
 AS
 $$
 BEGIN
-    RETURN (SELECT COUNT(*) FROM like_sign WHERE post_id = id);
+    RETURN (
+        SELECT COUNT(*)
+        FROM like_sign
+        WHERE post_id = id
+    );
 END;
 $$
     LANGUAGE plpgsql;
@@ -305,6 +348,8 @@ CREATE  TABLE like_sign (
                             CONSTRAINT fk_like_sign_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE ON UPDATE CASCADE,
                             CONSTRAINT fk_like_sign_post_id FOREIGN KEY ( post_id ) REFERENCES posts( post_id ) ON DELETE CASCADE ON UPDATE CASCADE
 );
+--TODO
+
 ----
 
 ----
@@ -388,21 +433,6 @@ $$
     LANGUAGE plpgsql;
 ----
 
-INSERT INTO users
-VALUES ('Andrii', 'Orap', '12-12-2001', 'a', 'Single', 'Male', 'a');
-INSERT INTO users
-VALUES ('Nazarii', 'Denha', '10-10-2002', 'b', 'Single', 'Male', 'b');
-INSERT INTO users
-VALUES ('Maxym', 'Zub', '10-10-2002', 'c', 'Single', 'Male', 'c');
-
--- PERFECT TABLE :3 --
-
-INSERT INTO friendship VALUES (1, 2);
-
-DELETE FROM friendship f WHERE f.friend1 = 1 AND f.friend2 = 2;
-SELECT * FROM friendship;
--- PERFECT TABLE :3 --
-
 CREATE FUNCTION check_user_filter(
     _user record,
     fName varchar,
@@ -412,18 +442,30 @@ CREATE FUNCTION check_user_filter(
 ) RETURNS boolean AS
 $$
 BEGIN
-    IF (_country IS NOT NULL AND _country != '')THEN
-        IF NOT EXISTS (SELECT * FROM locations WHERE location_id = _user.user_location_id AND lower(country) LIKE '%'||lower(_country)||'%')THEN RETURN FALSE;END IF;
+    IF (_country IS NOT NULL AND _country != '') THEN
+        IF NOT EXISTS (
+            SELECT *
+            FROM locations
+            WHERE location_id = _user.user_location_id AND lower(country) LIKE '%'||lower(_country)||'%'
+        )THEN
+            RETURN FALSE;
+        END IF;
     END IF;
-    IF (_city IS NOT NULL AND _city != '')THEN
-        IF NOT EXISTS(SELECT * FROM locations WHERE location_id = _user.user_location_id AND lower(city) LIKE '%'||lower(_city)||'%')THEN RETURN FALSE;END IF;
+    IF (_city IS NOT NULL AND _city != '') THEN
+        IF NOT EXISTS(
+            SELECT *
+            FROM locations
+            WHERE location_id = _user.user_location_id AND lower(city) LIKE '%'||lower(_city)||'%'
+        ) THEN
+            RETURN FALSE;
+        END IF;
     END IF;
     IF (lower(_user.first_name) LIKE '%'||lower(fName)||'%')THEN NULL;ELSE RETURN FALSE;END IF;
     IF (lower(_user.last_name) LIKE '%'||lower(lName)||'%')THEN NULL;ELSE RETURN FALSE;END IF;
     RETURN TRUE;
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 
 CREATE FUNCTION get_user_friend(
     id integer
@@ -437,13 +479,16 @@ CREATE FUNCTION get_user_friend(
                  user_location_id  	  integer,
                  picture_url 		  varchar(255),
                  user_id              integer
-) AS
+                ) AS
 $$
 BEGIN
-    RETURN QUERY (SELECT * FROM users WHERE (id, users.user_id) IN (SELECT friend1, friend2 FROM friendship));
+    RETURN QUERY (
+        SELECT *
+        FROM users
+        WHERE (id, users.user_id) IN (SELECT friend1, friend2 FROM friendship));
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
 
 CREATE FUNCTION check_facility_filter(
     _facility record,
@@ -457,7 +502,20 @@ BEGIN
     RETURN TRUE;
 END;
 $$
-LANGUAGE plpgsql;
+    LANGUAGE plpgsql;
+
+
+INSERT INTO users
+VALUES ('Andrii', 'Orap', '12-12-2001', 'a', 'Single', 'Male', 'a');
+INSERT INTO users
+VALUES ('Nazarii', 'Denha', '10-10-2002', 'b', 'Single', 'Male', 'b');
+INSERT INTO users
+VALUES ('Maxym', 'Zub', '10-10-2002', 'c', 'Single', 'Male', 'c');
+
+INSERT INTO friendship VALUES (1, 2);
+
+DELETE FROM friendship f WHERE f.friend1 = 1 AND f.friend2 = 2;
+SELECT * FROM friendship;
 
 INSERT INTO locations(country, city) VALUES ('Poland', 'Krakow');
 INSERT INTO locations(country, city) VALUES ('Ukraine', 'Kremenchuk');
@@ -468,6 +526,11 @@ INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUE
 INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (2, 1, '2019-10-1', 'student');
 INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (3, 1, '2019-10-1', 'student');
 
+INSERT INTO posts
+VALUES (1, 'kek');
+
+UPDATE users SET user_id=4 WHERE user_id=1;
+SELECT * FROM posts;
 /*INSERT INTO friendship VALUES (1, 2);
 INSERT INTO friendship VALUES (1, 2);
 INSERT INTO friendship VALUES (2, 1);
