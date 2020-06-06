@@ -256,7 +256,7 @@ public class Main extends Application{
 
         primaryStage.setHeight(820);
         primaryStage.setWidth(820);
-        primaryStage.setResizable(false);
+        //primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
         primaryStage.setScene(startScene);
         primaryStage.show();
@@ -492,8 +492,17 @@ public class Main extends Application{
         askForUpdatePostsScene();
     }
 
+    public static void getIdByLocation(String s){
+        sendObject(ConnectionMessage.ID_BY_LOCATION);
+        sendObject(s);
+    }
+
     public static void UserToFacility(UserFacility userFacility){
         sendObject(userFacility);
+    }
+
+    public static void addFacility(Facility facility) {
+        sendObject(facility);
     }
 
 
@@ -581,11 +590,21 @@ public class Main extends Application{
                             }
                         }
                     }
-                    if (obj instanceof ProfileInfo){
+                    if (obj instanceof ProfileInfo) {
                         if (clientPlace.equals(ClientPlace.PROFILE_SCENE))
                             Platform.runLater(() -> updateProfileScene((ProfileInfo)obj));
                         if (clientPlace.equals(ClientPlace.EDIT_PROFILE_SCENE))
                             Platform.runLater(() -> updateEditProfileScene((ProfileInfo)obj));
+                    }
+                    if (obj instanceof Integer) {
+                        int x = (Integer)obj;
+                        if (clientPlace.equals(ClientPlace.EDIT_PROFILE_SCENE)){
+                            if (x % 2 == 0)
+                                editProfileSceneController.locationId = x/2;
+                            else {
+                                editProfileSceneController.facilityId = x/2;
+                            }
+                        }
                     }
                 } catch (Exception e) {
                     System.out.println("SERVER DOWN");

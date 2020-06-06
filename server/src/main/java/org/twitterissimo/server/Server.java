@@ -241,6 +241,15 @@ public class Server {
                                 System.out.println("BAD DEL POST!!!");
                             }
                             sendAll(ConnectionMessage.UPDATE_POSTS);
+                        } else if (ConnectionMessage.ID_BY_LOCATION.equals(obj)){
+                            obj = readObject();
+                            if (obj instanceof String) {
+                                System.out.println("ID BY LOC");
+                                int kol = getIdByLocation((String)obj);
+                                sendObject(kol);
+                            } else {
+                                System.out.println("BAD ID BY LOC");
+                            }
                         }
                     } else if (obj instanceof ProfileRequest) {
                         ProfileRequest pr = (ProfileRequest) obj;
@@ -332,6 +341,9 @@ public class Server {
                             addUserFacility(userFacility);
                         else
                             delUserFacility(userFacility);
+                    } else if (obj instanceof Facility) {
+                        int id = addFacility((Facility)obj);
+                        sendObject(id);
                     }
                 }
             } catch (IOException e) {
@@ -602,6 +614,27 @@ public class Server {
             return users;
         }
 
+        private int addFacility(Facility facility) {
+            String SQL = "INSERT INTO facilities(facility_name, facility_location, facility_type)" +
+                    " VALUES (" + compose(facility.name, Integer.toString(facility.location.location_id), facility.type) + ");";
+            sqlUpdQuery(SQL);
+            SQL = "SELECT facility_id from facilities WHERE facility_name = " + compose(facility.name) + " AND facility_location = " +
+                    compose(Integer.toString(facility.location.location_id)) + " AND facility_type = " + compose(facility.type) + ";";
+            ResultSet rs = sqlGetQuery(SQL);
+            try {
+                if (rs == null || !rs.next()) {
+                    return -1;
+                }
+                else
+                    return rs.getInt(1)*2+1;
+            } catch(SQLException e) {
+                e.printStackTrace();;
+                return -1;
+            }
+
+
+        }
+
         private void addUserFacility(UserFacility facility){
             String SQL;
             if (facility.date_to == null){
@@ -618,6 +651,21 @@ public class Server {
         private void delUserFacility(UserFacility facility) {
             sqlUpdQuery("DELETE FROM user_facilities WHERE user_id=" + compose(Integer.toString(facility.userId)) +
                     " AND facility_id=" + compose(Integer.toString(facility.facilityId)) + " AND date_from=" + compose(facility.date_from.toString()) + ";");
+        }
+
+        private int getIdByLocation(String location) {
+            String[] arr = location.split(":");
+            String country = arr[0], city = arr[1];
+            String SQL = "SELECT location_id FROM locations WHERE country = " + compose(country) + " AND city = " + compose(city) + ";";
+            ResultSet rs = sqlGetQuery(SQL);
+            try {
+                if (rs == null || !rs.next())
+                    return -1;
+                else return rs.getInt(1)*2;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return -1;
+            }
         }
 
     }

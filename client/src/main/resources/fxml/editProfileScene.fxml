@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="editProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.EditProfileSceneController">
+<AnchorPane fx:id="editProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.EditProfileSceneController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="82.0" layoutY="32.0" prefHeight="714.0" prefWidth="436.0" style="-fx-spacing: 10;">
          <children>
@@ -175,7 +175,7 @@
                   <Label fx:id="searchForLabel" alignment="CENTER" layoutX="115.0" layoutY="164.0" prefHeight="16.0" prefWidth="171.0" text="Search for " />
                   <Label fx:id="addYourOwnLabel" alignment="CENTER" layoutX="108.0" layoutY="463.0" prefHeight="16.0" prefWidth="191.0" text="or add your own" />
                   <Button layoutX="332.0" layoutY="23.0" mnemonicParsing="false" onAction="#closeFacilitySearchButton" text="Close" />
-                  <TextField fx:id="addYourOwnLocation" layoutX="49.0" layoutY="571.0" />
+                  <TextField fx:id="addYourOwnLocation" layoutX="49.0" layoutY="571.0" prefHeight="26.0" prefWidth="171.0" promptText="Country:City" />
                   <Button layoutX="260.0" layoutY="510.0" mnemonicParsing="false" onAction="#addAndSelectButton" text="add and select" />
                   <DatePicker fx:id="dateFromPicker" layoutX="128.0" layoutY="36.0" prefHeight="26.0" prefWidth="146.0" />
                   <DatePicker fx:id="dateToPicker" layoutX="128.0" layoutY="78.0" prefHeight="26.0" prefWidth="146.0" />

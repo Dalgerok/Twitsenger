@@ -48,6 +48,9 @@ public class EditProfileSceneController {
 
     public String currentSearchType;
 
+    public int locationId;
+    public int facilityId;
+
     public void updateProfile(ProfileInfo pi){
         firstNameLabel.setText(pi.first_name);
         lastNameLabel.setText(pi.last_name);
@@ -142,7 +145,35 @@ public class EditProfileSceneController {
     }
     @FXML
     public void addAndSelectButton() {
+        String[] arr = addYourOwnLocation.getText().split(":");
+        if (arr.length != 2)
+            return;
+        locationId = 0;
+        Main.getIdByLocation(addYourOwnLocation.getText());
+        while(locationId == 0) {
 
+        }
+        System.out.println(locationId);
+        facilityId = 0;
+        Main.addFacility(new Facility(addYourOwnTextField.getText(), new Location(arr[0], arr[1], locationId), currentSearchType, 0));
+        while(facilityId == 0) {
+
+        }
+
+        LocalDate localDate = dateFromPicker.getValue();
+        Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
+        Date dateFrom = Date.from(instant);
+        Date dateTo = null;
+        if (dateToPicker.getValue() != null){
+            localDate = dateToPicker.getValue();
+            instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
+            dateTo = Date.from(instant);
+        }
+        UserFacility sendObj = new UserFacility(Main.user.user_id, facilityId, dateFrom, dateTo, descriptionTextField.getText());
+        sendObj.setAdd(true);
+        Main.UserToFacility(sendObj);
+        Main.askForProfileInfo(Main.user.user_id);
+        facilityAddingPane.setVisible(false);
     }
     @FXML
     public void searchButton() {
