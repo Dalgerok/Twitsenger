@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="messagesPane" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.MessagesSceneController">
+   <children>
+      <ImageView fx:id="profileImage" fitHeight="150.0" fitWidth="150.0" layoutX="225.0" pickOnBounds="true" preserveRatio="true" />
+      <StackPane fx:id="circleAvatar" layoutX="225.0" prefHeight="150.0" prefWidth="150.0">
+         <children>
+            <Circle fill="#23a7f7" radius="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <HBox alignment="CENTER" prefHeight="146.0" prefWidth="148.0">
+               <children>
+                  <Text fx:id="firstNameAvatar" fill="WHITE" stroke="#2f2a2a" strokeType="OUTSIDE" strokeWidth="0.0" text="U">
+                     <font>
+                        <Font size="45.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="lastNameAvatar" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="N">
+                     <font>
+                        <Font size="45.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+      <Hyperlink fx:id="nameMessages" alignment="CENTER" layoutY="150.0" onMouseClicked="#hyperlinkHandler" prefWidth="600.0" text="Aser Namyadsadgyy">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Hyperlink>
+      <ListView fx:id="messagesView" layoutY="179.0" prefHeight="570.0" prefWidth="600.0" />
+      <TextArea fx:id="enterMessage" layoutY="750.0" prefHeight="50.0" prefWidth="600.0" wrapText="true" />
+   </children>
+</AnchorPane>
