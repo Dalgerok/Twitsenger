@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -453,7 +455,12 @@ public class Main extends Application{
     }
     public static void askForUpdatePostsScene(){
         System.out.println("ASK FOR UPDATE POSTS SCENE");
-        sendObject(ConnectionMessage.GET_POSTS);
+        if(((RadioButton) postsSceneController.TOGGLE_GROUP.getSelectedToggle()).getText().equals("All posts")){
+            sendObject(ConnectionMessage.GET_ALL_POSTS);
+        }
+        else{
+            sendObject(ConnectionMessage.GET_FRIENDS_POSTS);
+        }
     }
     public static void updatePostsScene(ArrayList<Post> list){
         System.out.println("UPDATE POSTS SCENE");
@@ -491,12 +498,10 @@ public class Main extends Application{
         sendObject(p);
         askForUpdatePostsScene();
     }
-    public static void goToPost(Post p) {
-        System.out.println("GOTO " + p.row);
-        postsSceneController.postView.scrollTo(postsSceneController.postView.getItems().size() - p.row - 1);
-    }
     public static void likePost(Post p){
-        // TODO: 07.06.2020  
+        sendObject(ConnectionMessage.NEW_LIKE);
+        sendObject(p);
+        askForUpdatePostsScene();
     }
     public static void delMessage(Post p) {
         System.out.println("DEL MESSAGE " + p);

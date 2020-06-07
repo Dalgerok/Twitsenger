@@ -113,6 +113,36 @@ public class Server {
 
             return conn;
         }
+        private void sendAll(Object o) {
+            for (ConnectionThread connectionThread : connections) {
+                try {
+                    connectionThread.sendObject(o);
+                } catch (IOException e) {
+                    //e.printStackTrace();
+                }
+            }
+        }
+
+        public void sendObject(Object o) throws IOException {
+            System.out.println("Something sent " + o);
+            synchronized (out) {
+                out.writeObject(o);
+            }
+        }
+
+        public Object readObject() throws IOException {
+            try {
+                synchronized (in){
+                    return in.readObject();
+                }
+            } catch (IOException e) {
+                throw e;
+            } catch (ClassNotFoundException e) {
+                System.out.println("bad class impossible");
+                e.printStackTrace();
+                return null;
+            }
+        }
 
         String email = null;
 
@@ -215,9 +245,14 @@ public class Server {
                 while (true) {
                     obj = readObject();
                     System.out.println("received " + obj);
-                    if (ConnectionMessage.GET_POSTS.equals(obj)) {
+                    if (ConnectionMessage.GET_ALL_POSTS.equals(obj)) {
                         System.out.println("I WANNA TO SEND POSTS!!!");
-                        ArrayList<Post> arr = getPosts(null);
+                        ArrayList<Post> arr = getAllPosts();
+                        arr.add(0, new Post());
+                        sendObject(arr);
+                    } else if(ConnectionMessage.GET_FRIENDS_POSTS.equals(obj)){
+                        System.out.println("I WANNA TO SEND FRIENDS POST!!!" + user.user_id);
+                        ArrayList<Post> arr = getFriendsPosts(user.user_id);
                         arr.add(0, new Post());
                         sendObject(arr);
                     } else if (obj instanceof ConnectionMessage) {
@@ -248,6 +283,15 @@ public class Server {
                                 System.out.println("BAD DEL POST!!!");
                             }
                             sendAll(ConnectionMessage.UPDATE_POSTS);
+                        } else if (ConnectionMessage.NEW_LIKE.equals(obj)){
+                            obj = readObject();
+                            if(obj instanceof Post){
+                                System.out.println("NEW LIKE " + obj);
+                                Post p = (Post) obj;
+                                sqlUpdQuery("INSERT INTO like_sign VALUES(" + compose(String.valueOf(p.post_id), String.valueOf(user.user_id)) + ");");
+                            } else {
+                                System.out.println("BAD NEW LIKE!!!");
+                            }
                         } else if (ConnectionMessage.ID_BY_LOCATION.equals(obj)){
                             obj = readObject();
                             if (obj instanceof String) {
@@ -375,44 +419,19 @@ public class Server {
             }
         }
 
-        private void sendAll(Object o) {
-            for (ConnectionThread connectionThread : connections) {
-                try {
-                    connectionThread.sendObject(o);
-                } catch (IOException e) {
-                    //e.printStackTrace();
-                }
-            }
-        }
-
-        public void sendObject(Object o) throws IOException {
-            System.out.println("Something sent " + o);
-            synchronized (out) {
-                out.writeObject(o);
-            }
-        }
-
-        public Object readObject() throws IOException {
-            try {
-                synchronized (in){
-                    return in.readObject();
-                }
-            } catch (IOException e) {
-                throw e;
-            } catch (ClassNotFoundException e) {
-                System.out.println("bad class impossible");
-                e.printStackTrace();
-                return null;
-            }
-        }
 
         private ArrayList<Post> getPosts(Integer user_id) {
             ResultSet rs;
             ArrayList<Post> posts = new ArrayList<>();
-            String SQL = "SELECT * FROM posts pp JOIN users kek ON pp.user_id = kek.user_id " +
-                    "LEFT JOIN posts p ON pp.reposted_from = p.post_id LEFT JOIN users us ON p.user_id = us.user_id ";
+            String SQL = "SELECT *, get_number_of_likes_on_post(pp.post_id) as post_likes, " +
+                    "get_number_of_likes_on_post(p.post_id) as repost_likes " +
+                    "FROM posts pp JOIN users kek ON pp.user_id = kek.user_id " +
+                    "LEFT JOIN posts p ON pp.reposted_from = p.post_id " +
+                    "LEFT JOIN users us ON p.user_id = us.user_id ";
             if (user_id != null) SQL = SQL + "WHERE pp.user_id = " + user_id + " ";
-            SQL = SQL + "ORDER BY pp.post_date;";
+            SQL = SQL + "ORDER BY pp.post_date DESC;";
+
+
 
             rs = sqlGetQuery(SQL);
             if (rs != null) {
@@ -428,13 +447,131 @@ public class Server {
                         String first_name = rs.getString("first_name");
                         String last_name = rs.getString("last_name");
                         String user_picture_url = rs.getString("picture_url");
+                        int post_number_of_likes = rs.getInt("post_likes");
                         // TODO: 02.06.2020 ADD NUMBER OF LIKES AND REPOSTS
                         if(reposted_from == 0) {
                             posts.add(new Post(
                                     user_id, post_text, post_time,
                                     reposted_from, post_id, first_name,
-                                    last_name, user_picture_url, posts.size() + 1));
-                            System.out.println("ADD POST " + posts.get(posts.size() - 1).post_id + posts.get(posts.size() - 1).row);
+                                    last_name, user_picture_url, post_number_of_likes));
+                            System.out.println("ADD POST " + posts.get(posts.size() - 1).post_id);
+                        }
+                        else{
+                            int rep_user_id = rs.getInt(16);
+                            String rep_post_text = rs.getString(17);
+                            Timestamp rep_post_time = rs.getTimestamp(18);
+                            int rep_reposted_from = rs.getInt(19);
+                            int rep_post_id = rs.getInt(20);
+                            String rep_first_name = rs.getString(21);
+                            String rep_last_name = rs.getString(22);
+                            String rep_user_picture_url = rs.getString(29);
+                            int repost_number_of_likes = rs.getInt(32);
+                            Post repost = new Post(
+                                    rep_user_id, rep_post_text, rep_post_time,
+                                    rep_reposted_from, rep_post_id, rep_first_name,
+                                    rep_last_name, rep_user_picture_url, repost_number_of_likes);
+                            System.out.println("WTF " + repost.post_id);
+                            posts.add(new Post(
+                                    user_id, post_text, post_time,
+                                    reposted_from, post_id, first_name,
+                                    last_name, user_picture_url, repost, post_number_of_likes));
+                            System.out.println("ADD POST_REPOST " + posts.get(posts.size() - 1).post_id + " " + posts.get(posts.size() - 1));
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return posts;
+        }
+        private ArrayList<Post> getAllPosts() {
+            ResultSet rs;
+            ArrayList<Post> posts = new ArrayList<>();
+            String SQL = "SELECT * FROM get_refactored_all_posts;";
+
+            rs = sqlGetQuery(SQL);
+            if (rs != null) {
+                try {
+                    ResultSetMetaData rsmd = rs.getMetaData();
+                    System.out.println("HAHA BRO " + rsmd.getColumnName(16));
+                    while (rs.next()) {
+                        int user_id = rs.getInt("user_id");
+                        String post_text = rs.getString("post_text");
+                        Timestamp post_time = rs.getTimestamp("post_date");
+                        int reposted_from = rs.getInt("reposted_from");
+                        int post_id = rs.getInt("post_id");
+                        String first_name = rs.getString("first_name");
+                        String last_name = rs.getString("last_name");
+                        String user_picture_url = rs.getString("picture_url");
+                        int post_number_of_likes = rs.getInt("post_likes");
+                        // TODO: 02.06.2020 ADD NUMBER OF LIKES AND REPOSTS
+                        if(reposted_from == 0) {
+                            posts.add(new Post(
+                                    user_id, post_text, post_time,
+                                    reposted_from, post_id, first_name,
+                                    last_name, user_picture_url, post_number_of_likes));
+                            System.out.println("ADD POST " + posts.get(posts.size() - 1).post_id);
+                        }
+                        else{
+                            int rep_user_id = rs.getInt(16);
+                            String rep_post_text = rs.getString(17);
+                            Timestamp rep_post_time = rs.getTimestamp(18);
+                            int rep_reposted_from = rs.getInt(19);
+                            int rep_post_id = rs.getInt(20);
+                            String rep_first_name = rs.getString(21);
+                            String rep_last_name = rs.getString(22);
+                            String rep_user_picture_url = rs.getString(29);
+                            int repost_number_of_likes = rs.getInt("repost_likes");
+                            Post repost = new Post(
+                                    rep_user_id, rep_post_text, rep_post_time,
+                                    rep_reposted_from, rep_post_id, rep_first_name,
+                                    rep_last_name, rep_user_picture_url, repost_number_of_likes);
+                            System.out.println("WTF " + repost.post_id);
+                            posts.add(new Post(
+                                    user_id, post_text, post_time,
+                                    reposted_from, post_id, first_name,
+                                    last_name, user_picture_url, repost, post_number_of_likes));
+                            System.out.println("ADD POST_REPOST " + posts.get(posts.size() - 1).post_id + " " + posts.get(posts.size() - 1));
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return posts;
+        }
+        private ArrayList<Post> getFriendsPosts(Integer user_id) {
+            ResultSet rs;
+            ArrayList<Post> posts = new ArrayList<>();
+            String SQL = "SELECT *, get_number_of_likes_on_post(pp.post_id) as post_likes, " +
+                    "get_number_of_likes_on_post(p.post_id) as repost_likes" +
+                    "  FROM posts pp " +
+                    "JOIN get_user_friends_with_user(" + user_id + ") kek ON pp.user_id = kek.user_id " +
+                    "LEFT JOIN posts p ON pp.reposted_from = p.post_id LEFT JOIN users us ON p.user_id = us.user_id ";
+            SQL = SQL + "ORDER BY pp.post_date DESC;";
+
+            rs = sqlGetQuery(SQL);
+            if (rs != null) {
+                try {
+                    ResultSetMetaData rsmd = rs.getMetaData();
+                    System.out.println("HAHA BRO " + rsmd.getColumnName(16));
+                    while (rs.next()) {
+                        user_id = rs.getInt("user_id");
+                        String post_text = rs.getString("post_text");
+                        Timestamp post_time = rs.getTimestamp("post_date");
+                        int reposted_from = rs.getInt("reposted_from");
+                        int post_id = rs.getInt("post_id");
+                        String first_name = rs.getString("first_name");
+                        String last_name = rs.getString("last_name");
+                        String user_picture_url = rs.getString("picture_url");
+                        int post_number_of_likes = rs.getInt("post_likes");
+                        // TODO: 02.06.2020 ADD NUMBER OF LIKES AND REPOSTS
+                        if(reposted_from == 0) {
+                            posts.add(new Post(
+                                    user_id, post_text, post_time,
+                                    reposted_from, post_id, first_name,
+                                    last_name, user_picture_url, post_number_of_likes));
+                            System.out.println("ADD POST " + posts.get(posts.size() - 1).post_id);
                         }
                         else{
                             Integer rep_user_id = rs.getInt(16);
@@ -445,36 +582,30 @@ public class Server {
                             String rep_first_name = rs.getString(21);
                             String rep_last_name = rs.getString(22);
                             String rep_user_picture_url = rs.getString(29);
+                            int repost_number_of_likes = rs.getInt(32);
                             Post repost = new Post(
                                     rep_user_id, rep_post_text, rep_post_time,
                                     rep_reposted_from, rep_post_id, rep_first_name,
-                                    rep_last_name, rep_user_picture_url);
-                            for(Post p : posts){
-                                if(p.post_id == rep_post_id){
-                                    repost.row = posts.indexOf(p);
-                                    break;
-                                }
-                            }
-                            System.out.println("WTF " + repost.post_id + " " + repost.row);
+                                    rep_last_name, rep_user_picture_url, repost_number_of_likes);
+                            System.out.println("WTF " + repost.post_id);
                             posts.add(new Post(
                                     user_id, post_text, post_time,
                                     reposted_from, post_id, first_name,
-                                    last_name, user_picture_url, repost, posts.size() + 1));
-                            System.out.println("ADD POST_REPOST " + posts.get(posts.size() - 1).post_id + " " + posts.get(posts.size() - 1).row);
+                                    last_name, user_picture_url, repost, post_number_of_likes));
+                            System.out.println("ADD POST_REPOST " + posts.get(posts.size() - 1).post_id + " " + posts.get(posts.size() - 1));
                         }
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-            Collections.reverse(posts);
             return posts;
         }
 
         private ProfileInfo getUserInfo(int user_id) {
             ResultSet rs = sqlGetQuery("SELECT * FROM users WHERE users.user_id = " + user_id + ";");
             if (rs == null) {
-                System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+                System.out.println("PROBLEMS WITH SQL");
                 System.exit(0);
             }
             try {
@@ -535,10 +666,10 @@ public class Server {
             return 0;
         }
         private ArrayList<ServerUser> getUserFriends(int user_id){
-            String SQL = "SELECT * FROM get_user_friend(" + user_id + ");";
+            String SQL = "SELECT * FROM get_user_friends(" + user_id + ");";
             ResultSet rs = sqlGetQuery(SQL);
             if (rs == null){
-                System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+                System.out.println("PROBLEMS WITH SQL");
                 System.exit(0);
             }
             ArrayList<ServerUser> users = new ArrayList<>();
