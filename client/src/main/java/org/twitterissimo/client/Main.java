@@ -37,6 +37,7 @@ public class Main extends Application{
     static SearchSceneController searchSceneController;
     static FriendsSceneController friendsSceneController;
     static MessagesSceneController messagesSceneController;
+    static ChatsSceneController chatsSceneController;
 
     static Scene startScene;
     static Scene registerScene;
@@ -115,6 +116,19 @@ public class Main extends Application{
 
         clientPlace = ClientPlace.MESSAGES_SCENE; //in MessagesSceneController.updateMessages
     }
+    public static void setChatsScene() {
+        setMainScene();
+        askForChats();
+        chatsSceneController.clearChats();
+        System.out.println("SET CHATS SCENE");
+        mainSceneController.mainPane.getChildren().setAll(chatsSceneController.chatsPane);
+
+        clientPlace = ClientPlace.CHATS_SCENE; //in MessagesSceneController.updateMessages
+    }
+
+    private static void askForChats() {
+    }
+
     public static void setPostsScene() {
         setMainScene();
         askForUpdatePostsScene();
@@ -281,6 +295,7 @@ public class Main extends Application{
         initSearchScene();
         initFriendsScene();
         initMessagesScene();
+        initChatsScene();
     }
     private void initStartScene() {
         FXMLLoader startLoader = new FXMLLoader(getClass().getResource("/fxml/startScene.fxml"));
@@ -441,6 +456,18 @@ public class Main extends Application{
         }
         messagesSceneController = mainLoader.getController();
         messagesSceneController.initScene();
+    }
+    private static void initChatsScene(){
+        FXMLLoader mainLoader = new FXMLLoader(Main.class.getResource("/fxml/chatsScene.fxml"));
+        Pane chatsPane = null;
+        try {
+            chatsPane = mainLoader.load();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            System.out.println("Can't load chatsScene");
+            System.exit(0);
+        }
+        chatsSceneController = mainLoader.getController();
     }
     private static void initPostsScene(){
         FXMLLoader postsLoader = new FXMLLoader(Main.class.getResource("/fxml/postsScene.fxml"));

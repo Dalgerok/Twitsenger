@@ -97,6 +97,7 @@ public class MessagesSceneController {
 
     public static class MessageBox extends HBox{
         MessageBox(Message message){
+            super();
             Label time = new Label(message.timestamp.toString().substring(0, 16));
             TextField mLabel = new TextField(message.text);
             mLabel.setEditable(false);
