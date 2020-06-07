@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -21,8 +22,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.net.Socket;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Main extends Application{
@@ -37,6 +38,8 @@ public class Main extends Application{
     static EditProfileSceneController editProfileSceneController;
     static SearchSceneController searchSceneController;
     static FriendsSceneController friendsSceneController;
+    static MessagesSceneController messagesSceneController;
+    static ChatsSceneController chatsSceneController;
 
     static Scene startScene;
     static Scene registerScene;
@@ -106,6 +109,28 @@ public class Main extends Application{
 
         clientPlace = ClientPlace.FRIENDS_SCENE;
     }
+    public static void setMessagesScene(int id) {
+        setMainScene();
+        askForMessages(id);
+        messagesSceneController.clearMessages();
+        System.out.println("SET MESSAGES SCENE");
+        mainSceneController.mainPane.getChildren().setAll(messagesSceneController.messagesPane);
+
+        clientPlace = ClientPlace.MESSAGES_SCENE; //in MessagesSceneController.updateMessages
+    }
+    public static void setChatsScene() {
+        setMainScene();
+        askForChats();
+        chatsSceneController.clearChats();
+        System.out.println("SET CHATS SCENE");
+        mainSceneController.mainPane.getChildren().setAll(chatsSceneController.chatsPane);
+
+        clientPlace = ClientPlace.CHATS_SCENE; //in MessagesSceneController.updateMessages
+    }
+
+    private static void askForChats() {
+    }
+
     public static void setPostsScene() {
         setMainScene();
         askForUpdatePostsScene();
@@ -250,7 +275,6 @@ public class Main extends Application{
     }
 
 
-
     @Override
     public void start(Stage primaryStage) {
         Main.primaryStage = primaryStage;
@@ -272,6 +296,8 @@ public class Main extends Application{
         initEditProfileScene();
         initSearchScene();
         initFriendsScene();
+        initMessagesScene();
+        initChatsScene();
     }
     private void initStartScene() {
         FXMLLoader startLoader = new FXMLLoader(getClass().getResource("/fxml/startScene.fxml"));
@@ -420,6 +446,31 @@ public class Main extends Application{
         }
         friendsSceneController = mainLoader.getController();
     }
+    private static void initMessagesScene(){
+        FXMLLoader mainLoader = new FXMLLoader(Main.class.getResource("/fxml/messagesScene.fxml"));
+        Pane messagesPane = null;
+        try {
+            messagesPane = mainLoader.load();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            System.out.println("Can't load messagesScene");
+            System.exit(0);
+        }
+        messagesSceneController = mainLoader.getController();
+        messagesSceneController.initScene();
+    }
+    private static void initChatsScene(){
+        FXMLLoader mainLoader = new FXMLLoader(Main.class.getResource("/fxml/chatsScene.fxml"));
+        Pane chatsPane = null;
+        try {
+            chatsPane = mainLoader.load();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            System.out.println("Can't load chatsScene");
+            System.exit(0);
+        }
+        chatsSceneController = mainLoader.getController();
+    }
     private static void initPostsScene(){
         FXMLLoader postsLoader = new FXMLLoader(Main.class.getResource("/fxml/postsScene.fxml"));
         VBox kek = null;
@@ -445,7 +496,7 @@ public class Main extends Application{
                 String s = postsSceneController.enterMessage.getText();
                 s = s.substring(0, s.length() - 1);
                 if(!s.isEmpty()){
-                    sendMessage(s);
+                    sendPost(s);
                 }
                 postsSceneController.enterMessage.clear();
             }
@@ -453,7 +504,12 @@ public class Main extends Application{
     }
     public static void askForUpdatePostsScene(){
         System.out.println("ASK FOR UPDATE POSTS SCENE");
-        sendObject(ConnectionMessage.GET_POSTS);
+        if(((RadioButton) postsSceneController.TOGGLE_GROUP.getSelectedToggle()).getText().equals("All posts")){
+            sendObject(ConnectionMessage.GET_ALL_POSTS);
+        }
+        else{
+            sendObject(ConnectionMessage.GET_FRIENDS_POSTS);
+        }
     }
     public static void updatePostsScene(ArrayList<Post> list){
         System.out.println("UPDATE POSTS SCENE");
@@ -471,34 +527,35 @@ public class Main extends Application{
         editProfileSceneController.updateProfile(pi);
     }
     public static void askForProfileInfo(int id){
-        System.out.println("ASK FOR USER INFO");
+        System.out.println("ASK FOR USER INFO OF " + id);
         sendObject(new ProfileRequest(id));
     }
     public static void askForFriends(int id){
-        System.out.println("ASK FOR USER INFO");
+        System.out.println("ASK FOR FRIENDS OF " + id);
         sendObject(new GetUserFriends(id));
     }
 
-    public static void sendMessage(String s) {
+    public static void askForMessages(int id){
+        System.out.println("ASK FOR MESSAGES FROM " + id);
+        sendObject(new UserMessages(user.user_id, id));
+    }
+
+    public static void sendPost(String s) {
         System.out.println("SEND MESSAGE " + s);
         sendObject(ConnectionMessage.NEW_POST);
         sendObject(new Post(s));
-        askForUpdatePostsScene();
+        //askForUpdatePostsScene();
     }
     public static void sendRepost(Post p){
         System.out.println("SEND REPOST " + p.post_text + " " + p.reposted_from);
         sendObject(ConnectionMessage.NEW_POST);
         sendObject(p);
-        askForUpdatePostsScene();
-    }
-    public static void goToPost(Post p) {
-        System.out.println("GOTO " + p.row);
-        postsSceneController.postView.scrollTo(postsSceneController.postView.getItems().size() - p.row - 1);
+        //askForUpdatePostsScene();
     }
     public static void likePost(Post p){
         sendObject(ConnectionMessage.NEW_LIKE);
         sendObject(p);
-        askForUpdatePostsScene();
+        //askForUpdatePostsScene();
         // TODO: 07.06.2020
     }
     public static void delMessage(Post p) {
@@ -507,7 +564,10 @@ public class Main extends Application{
         sendObject(p);
 
         sendObject(new ProfileRequest(user.user_id));
-        askForUpdatePostsScene();
+        //askForUpdatePostsScene();
+    }
+    public static void newRepost(Post p) {
+
     }
 
     public static void getIdByLocation(String s){
@@ -617,6 +677,9 @@ public class Main extends Application{
                             Platform.runLater(() -> updateProfileScene((ProfileInfo)obj));
                         if (clientPlace.equals(ClientPlace.EDIT_PROFILE_SCENE))
                             Platform.runLater(() -> updateEditProfileScene((ProfileInfo)obj));
+                    }
+                    if (obj instanceof UserMessages){
+                        Platform.runLater(() -> messagesSceneController.updateMessages((UserMessages)obj));
                     }
                     if (obj instanceof Integer) {
                         int x = (Integer)obj;

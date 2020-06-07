@@ -51,7 +51,7 @@ CREATE  TABLE users (
             gender               genders                NOT NULL ,
             user_password 		 varchar(64)            NOT NULL ,
             user_location_id  	 integer DEFAULT NULL,
-            picture_url 		 varchar(500) ,
+            picture_url 		 varchar(500) DEFAULT NULL,
             user_id              SERIAL ,
             CONSTRAINT pk_user PRIMARY KEY ( user_id ),
             CONSTRAINT un_email UNIQUE ( email ),
@@ -160,9 +160,6 @@ $$
 CREATE TRIGGER check_insert_friendship AFTER INSERT ON friendship
     FOR EACH ROW EXECUTE PROCEDURE check_insert_friendship();
 
-----
-
-
 CREATE FUNCTION get_number_of_user_friends(id integer)
 RETURNS integer
 AS
@@ -176,6 +173,7 @@ BEGIN
 END;
 $$
     LANGUAGE plpgsql;
+----
 
 ----
 CREATE  TABLE friend_request (
@@ -370,21 +368,27 @@ $$
     LANGUAGE plpgsql;
 
 
+DROP VIEW IF EXISTS get_refactored_all_posts;
+CREATE VIEW get_refactored_all_posts
+AS SELECT pp.*, kek.first_name, kek.last_name, kek.birthday,
+          kek.email, kek.relationship_status, kek.gender,
+          kek.user_password, kek.user_location_id, kek.picture_url, kek.user_id as "kek.user_id",
+          p.user_id as "p.user_id", p.post_text as "p.post_text",
+          p.post_date as "p.post_date", p.reposted_from as "p.reposted_from", p.post_id as "p.post_id",
+          us.first_name as "us.first_name", us.last_name as "us.lastname",
+          us.birthday as "us.birthday", us.email as "us.email",
+          us.relationship_status as "us.relationship_status",
+          us.gender as "us.gender", us.user_password as "us.user_password",
+          us.user_location_id as "us.user_location_id", us.picture_url as "us.picture_url",
+          get_number_of_likes_on_post(pp.post_id) as post_likes,
+          get_number_of_likes_on_post(p.post_id) as repost_likes
+          FROM posts pp
+          JOIN users kek ON pp.user_id = kek.user_id
+          LEFT JOIN posts p ON pp.reposted_from = p.post_id
+          LEFT JOIN users us ON p.user_id = us.user_id
+          ORDER BY pp.post_date DESC;
+SELECT * FROM get_refactored_all_posts;
 
-CREATE VIEW get_all_posts_sort_by_date
-AS SELECT *, get_number_of_likes_on_post(post_id) as likes, get_number_of_reposts_on_post(post_id) as reposts
-   FROM posts
-   ORDER BY post_date DESC;
-
-CREATE VIEW get_all_posts_sort_by_likes
-AS SELECT *, get_number_of_likes_on_post(post_id) as likes, get_number_of_reposts_on_post(post_id) as reposts
-   FROM posts
-   ORDER BY likes, post_date DESC;
-
-CREATE VIEW get_all_posts_sort_by_reposts
-AS SELECT *, get_number_of_likes_on_post(post_id) as likes, get_number_of_reposts_on_post(post_id) as reposts
-   FROM posts
-   ORDER BY reposts, post_date DESC;
 ----
 
 ----
@@ -451,7 +455,7 @@ CREATE  TABLE user_facilities (
             user_id              integer            NOT NULL,
             facility_id          integer            NOT NULL,
             date_from            timestamp          NOT NULL,
-            date_to              timestamp,
+            date_to              timestamp DEFAULT NULL,
             description          varchar(100),
             CONSTRAINT pk_user_facility PRIMARY KEY ( user_id, facility_id, date_from ),
             CONSTRAINT fk_user_facility_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE,
@@ -523,7 +527,7 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE FUNCTION get_user_friend(
+CREATE FUNCTION get_user_friends(
     id integer
 ) RETURNS TABLE (
         first_name           varchar(100),
@@ -544,6 +548,33 @@ BEGIN
         SELECT *
         FROM users
         WHERE (id, users.user_id) IN (SELECT friend1, friend2 FROM friendship));
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE FUNCTION get_user_friends_with_user(
+    id integer
+) RETURNS TABLE (
+                    first_name           varchar(100),
+                    last_name            varchar(100),
+                    birthday             date,
+                    email                varchar(254),
+                    relationship_status  relationshipstatus,
+                    gender               genders ,
+                    user_password 		 varchar(50),
+                    user_location_id  	 integer,
+                    picture_url 		 varchar(255),
+                    user_id              integer
+                )
+AS
+$$
+BEGIN
+    RETURN QUERY (
+        SELECT *
+        FROM users
+        WHERE (id, users.user_id) IN (SELECT friend1, friend2 FROM friendship)
+           OR users.user_id = id
+    );
 END;
 $$
     LANGUAGE plpgsql;
@@ -586,13 +617,14 @@ INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUE
 INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (2, 1, '2019-10-1', 'student');
 INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (3, 1, '2019-10-1', 'student');
 
-SELECT *
-FROM posts
-JOIN users ON posts.user_id = users.user_id
-LEFT JOIN posts p ON posts.reposted_from = p.post_id
-LEFT JOIN users us ON p.user_id = us.user_id;
+SELECT * FROM get_user_friends_with_user(2);
 
-SELECT * FROM posts;
+SELECT * FROM posts pp JOIN get_user_friends_with_user(2) kek
+    ON pp.user_id = kek.user_id
+    LEFT JOIN posts p ON pp.reposted_from = p.post_id
+    LEFT JOIN users us ON p.user_id = us.user_id
+WHERE pp.user_id = 2 ORDER BY pp.post_date DESC;
+
 /*INSERT INTO friendship VALUES (1, 2);
 INSERT INTO friendship VALUES (1, 2);
 INSERT INTO friendship VALUES (2, 1);
@@ -616,3 +648,6 @@ INSERT INTO friend_request VALUES (1, 3);
 SELECT * FROM friend_request;
 SELECT * FROM friendship;*/
 --SELECT * FROM get_user_friend(1);
+SELECT * FROM messages;
+
+SELECT * FROM get_refactored_all_posts;
