@@ -53,7 +53,7 @@
                         <Insets right="15.0" />
                      </HBox.margin>
                   </Label>
-                  <DatePicker fx:id="birthdayDate" prefHeight="35.0" />
+                  <DatePicker fx:id="birthdayDate" prefHeight="35.0" editable="false" />
                </children>
             </HBox>
             <ComboBox fx:id="relationshipPicker" prefHeight="35.0" prefWidth="191.0">
@@ -187,8 +187,8 @@
                   <Button layoutX="332.0" layoutY="23.0" mnemonicParsing="false" onAction="#closeFacilitySearchButton" text="Close" />
                   <TextField fx:id="addYourOwnLocation" layoutX="49.0" layoutY="571.0" prefHeight="26.0" prefWidth="171.0" promptText="Country:City" />
                   <Button layoutX="260.0" layoutY="510.0" mnemonicParsing="false" onAction="#addAndSelectButton" text="add and select" />
-                  <DatePicker fx:id="dateFromPicker" layoutX="128.0" layoutY="36.0" prefHeight="26.0" prefWidth="146.0" />
-                  <DatePicker fx:id="dateToPicker" layoutX="128.0" layoutY="78.0" prefHeight="26.0" prefWidth="146.0" />
+                  <DatePicker fx:id="dateFromPicker" layoutX="128.0" layoutY="36.0" prefHeight="26.0" prefWidth="146.0" editable="false" />
+                  <DatePicker fx:id="dateToPicker" layoutX="128.0" layoutY="78.0" prefHeight="26.0" prefWidth="146.0" editable="false" />
                   <TextField fx:id="descriptionTextField" layoutX="130.0" layoutY="124.0" prefHeight="26.0" prefWidth="146.0" />
                   <Label layoutX="43.0" layoutY="41.0" text="Date from" />
                   <Label layoutX="42.0" layoutY="83.0" text="Date to" />

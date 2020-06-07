@@ -55,6 +55,9 @@ public class PostsSceneController {
             HBox buttons = new HBox();
             Button like = new Button("like");
             Button repost = new Button("repost");
+            repost.setOnMouseClicked(mouseEvent -> {
+                // TODO: 07.06.2020  
+            });
             buttons.getChildren().addAll(like, repost);
             if(p.user_id == user_id) {
                 Button delete = new Button("delete");

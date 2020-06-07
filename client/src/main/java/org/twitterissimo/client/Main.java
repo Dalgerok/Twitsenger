@@ -22,6 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Main extends Application{
@@ -477,10 +478,16 @@ public class Main extends Application{
         sendObject(new GetUserFriends(id));
     }
 
-    private static void sendMessage(String s) {
+    public static void sendMessage(String s) {
         System.out.println("SEND MESSAGE " + s);
         sendObject(ConnectionMessage.NEW_POST);
         sendObject(new Post(s));
+        askForUpdatePostsScene();
+    }
+    public static void sendMessage(Post p){
+        System.out.println("SEND REPOST " + p.post_text + " " + p.reposted_from);
+        sendObject(ConnectionMessage.NEW_POST);
+        sendObject(p);
         askForUpdatePostsScene();
     }
     public static void delMessage(Post p) {
@@ -490,6 +497,9 @@ public class Main extends Application{
 
         sendObject(new ProfileRequest(user.user_id));
         askForUpdatePostsScene();
+    }
+    public static void newRepost(Post p) {
+
     }
 
     public static void getIdByLocation(String s){
