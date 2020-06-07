@@ -544,18 +544,18 @@ public class Main extends Application{
         System.out.println("SEND MESSAGE " + s);
         sendObject(ConnectionMessage.NEW_POST);
         sendObject(new Post(s));
-        askForUpdatePostsScene();
+        //askForUpdatePostsScene();
     }
     public static void sendRepost(Post p){
         System.out.println("SEND REPOST " + p.post_text + " " + p.reposted_from);
         sendObject(ConnectionMessage.NEW_POST);
         sendObject(p);
-        askForUpdatePostsScene();
+        //askForUpdatePostsScene();
     }
     public static void likePost(Post p){
         sendObject(ConnectionMessage.NEW_LIKE);
         sendObject(p);
-        askForUpdatePostsScene();
+        //askForUpdatePostsScene();
         // TODO: 07.06.2020
     }
     public static void delMessage(Post p) {
@@ -564,7 +564,7 @@ public class Main extends Application{
         sendObject(p);
 
         sendObject(new ProfileRequest(user.user_id));
-        askForUpdatePostsScene();
+        //askForUpdatePostsScene();
     }
     public static void newRepost(Post p) {
 

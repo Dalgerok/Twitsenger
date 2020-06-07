@@ -649,3 +649,5 @@ SELECT * FROM friend_request;
 SELECT * FROM friendship;*/
 --SELECT * FROM get_user_friend(1);
 SELECT * FROM messages;
+
+SELECT * FROM get_refactored_all_posts;

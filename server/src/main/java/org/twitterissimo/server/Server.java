@@ -289,6 +289,7 @@ public class Server {
                                 System.out.println("NEW LIKE " + obj);
                                 Post p = (Post) obj;
                                 sqlUpdQuery("INSERT INTO like_sign VALUES(" + compose(String.valueOf(p.post_id), String.valueOf(user.user_id)) + ");");
+                                sendAll(ConnectionMessage.UPDATE_POSTS);
                             } else {
                                 System.out.println("BAD NEW LIKE!!!");
                             }
