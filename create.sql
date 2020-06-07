@@ -269,7 +269,7 @@ CREATE  TABLE posts (
             user_id 			 integer                             NOT NULL,
             post_text         	 varchar(250)                        NOT NULL ,
             post_date            timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
-            reposted_from        integer   ,
+            reposted_from        integer   DEFAULT NULL,
             post_id              SERIAL ,
             CONSTRAINT pk_post_id PRIMARY KEY ( post_id ),
             CONSTRAINT fk_repost FOREIGN KEY ( reposted_from ) REFERENCES posts( post_id ) ON DELETE CASCADE,
@@ -586,10 +586,12 @@ INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUE
 INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (2, 1, '2019-10-1', 'student');
 INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (3, 1, '2019-10-1', 'student');
 
-INSERT INTO posts
-VALUES (1, 'kek');
-INSERT INTO posts
-VALUES (2, 'Lol', '2019-10-1', 1);
+SELECT *
+FROM posts
+JOIN users ON posts.user_id = users.user_id
+LEFT JOIN posts p ON posts.reposted_from = p.post_id
+LEFT JOIN users us ON p.user_id = us.user_id;
+
 SELECT * FROM posts;
 /*INSERT INTO friendship VALUES (1, 2);
 INSERT INTO friendship VALUES (1, 2);

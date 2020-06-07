@@ -37,26 +37,45 @@ public class PostsSceneController {
             user.getChildren().addAll(userIcon, userName);
             user.setVisible(true);
 
-            HBox texts = new HBox();
+            VBox texts = new VBox();
             Text postText = new Text(p.post_text);
             postText.setWrappingWidth(600.0);
             texts.getChildren().add(postText);
             if(p.repost != null){
-                if(p.reposted_from == 0){
-                    System.out.println("IMPOSSIBLE BRO, REPOST BUT NOT REPOSTED FROM");
+                if(p.reposted_from != p.repost.post_id){
+                    System.out.println("IMPOSSIBLE BRO, REPOST NOT EQUALS REPOSTED FROM");
                     System.exit(0);
                 }
-                Text repostedText = new Text(p.repost.post_text); // TODO: 06.06.2020 WHOLE POST, NOT ONLY TEXT
-                repostedText.setFont(Font.font(3));
-                texts.getChildren().add(repostedText);
+                PostPane repost = new PostPane(p.repost);
+                repost.setStyle("-fx-border-color: blue; -fx-border-width: 4;");
+                repost.setPrefWidth(500);
+                texts.getChildren().add(repost);
             }
 
 
             HBox buttons = new HBox();
+            buttons.setPrefWidth(600);
+            buttons.setPrefHeight(100);
             Button like = new Button("like");
+            like.setOnMouseClicked(mouseEvent -> {
+                Main.likePost(p); // TODO: 07.06.2020
+            });
             Button repost = new Button("repost");
+            TextArea repostEnterMessage = new TextArea();
+            repostEnterMessage.setPrefWidth(600);
+            repostEnterMessage.setPrefHeight(50);
+            repostEnterMessage.setWrapText(true);
+            repostEnterMessage.setPrefRowCount(2);
+            repostEnterMessage.setOnKeyTyped(event -> {
+                String string = repostEnterMessage.getText();
+
+                if (string.length() > 250) {
+                    repostEnterMessage.setText(string.substring(0, 250));
+                    repostEnterMessage.positionCaret(string.length());
+                }
+            });
             repost.setOnMouseClicked(mouseEvent -> {
-                // TODO: 07.06.2020  
+                Main.sendRepost(new Post(repostEnterMessage.getText(), p.post_id));
             });
             buttons.getChildren().addAll(like, repost);
             if(p.user_id == user_id) {
@@ -67,7 +86,33 @@ public class PostsSceneController {
                 buttons.getChildren().add(delete);
             }
             Separator separator = new Separator();
-            getChildren().addAll(user, texts, buttons, separator);
+            getChildren().addAll(user, texts, buttons, repostEnterMessage);
+        }
+
+        public PostPane(Post p) {
+            super();
+            System.out.println("NEW REPOST POST_PANE " + p.first_name + " " + p.last_name + " " + p.user_id);
+            HBox user = new HBox();
+            ImageView userIcon = new ImageView(); // TODO: 02.06.2020 ADD PICTURE_URL ???
+            Hyperlink userName = new Hyperlink(p.first_name + " " + p.last_name);
+            userName.setOnMouseClicked(mouseEvent -> {
+                Main.setProfileScene(p.user_id);
+            });
+
+            user.getChildren().addAll(userIcon, userName);
+            user.setVisible(true);
+
+            VBox texts = new VBox();
+            Text postText = new Text(p.post_text);
+            postText.setWrappingWidth(500.0);
+            texts.getChildren().add(postText);
+
+            Separator separator = new Separator();
+            Button go_to_post = new Button("Go to post");
+            go_to_post.setOnMouseClicked(mouseEvent -> {
+                Main.goToPost(p);
+            });
+            getChildren().addAll(user, texts, separator, go_to_post);
         }
     }
 }

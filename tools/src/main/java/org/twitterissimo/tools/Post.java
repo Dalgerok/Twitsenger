@@ -14,8 +14,20 @@ public class Post implements Serializable {
     public String last_name;
     public String user_picture_url;
     public Post repost;
+    public int row;
     public Post(int post_id){
         this.post_id = post_id;
+    }
+    public Post(int user_id, String post_text, Timestamp post_time, int reposted_from, int post_id, String first_name, String last_name, String user_picture_url, int row) {
+        this.user_id = user_id;
+        this.post_text = post_text;
+        this.post_time = post_time;
+        this.reposted_from = reposted_from;
+        this.post_id = post_id;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.user_picture_url = user_picture_url;
+        this.row = row;
     }
     public Post(int user_id, String post_text, Timestamp post_time, int reposted_from, int post_id, String first_name, String last_name, String user_picture_url) {
         this.user_id = user_id;
@@ -31,8 +43,25 @@ public class Post implements Serializable {
     public Post(String s) {
         this.post_text = s;
     }
+    public Post(String s, int reposted_from){
+        this.post_text = s;
+        this.reposted_from = reposted_from;
+    }
 
     public Post() {
 
+    }
+
+    public Post(Integer user_id, String post_text, Timestamp post_time, int reposted_from, int post_id, String first_name, String last_name, String user_picture_url, Post repost, int row) {
+        this.user_id = user_id;
+        this.post_text = post_text;
+        this.post_time = post_time;
+        this.reposted_from = reposted_from;
+        this.post_id = post_id;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.user_picture_url = user_picture_url;
+        this.repost = repost;
+        this.row = row;
     }
 }

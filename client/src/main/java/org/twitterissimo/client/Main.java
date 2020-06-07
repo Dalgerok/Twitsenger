@@ -250,6 +250,7 @@ public class Main extends Application{
     }
 
 
+
     @Override
     public void start(Stage primaryStage) {
         Main.primaryStage = primaryStage;
@@ -484,11 +485,18 @@ public class Main extends Application{
         sendObject(new Post(s));
         askForUpdatePostsScene();
     }
-    public static void sendMessage(Post p){
+    public static void sendRepost(Post p){
         System.out.println("SEND REPOST " + p.post_text + " " + p.reposted_from);
         sendObject(ConnectionMessage.NEW_POST);
         sendObject(p);
         askForUpdatePostsScene();
+    }
+    public static void goToPost(Post p) {
+        System.out.println("GOTO " + p.row);
+        postsSceneController.postView.scrollTo(postsSceneController.postView.getItems().size() - p.row - 1);
+    }
+    public static void likePost(Post p){
+        // TODO: 07.06.2020  
     }
     public static void delMessage(Post p) {
         System.out.println("DEL MESSAGE " + p);
@@ -497,9 +505,6 @@ public class Main extends Application{
 
         sendObject(new ProfileRequest(user.user_id));
         askForUpdatePostsScene();
-    }
-    public static void newRepost(Post p) {
-
     }
 
     public static void getIdByLocation(String s){
