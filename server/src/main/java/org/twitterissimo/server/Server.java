@@ -402,6 +402,24 @@ public class Server {
                     } else if (obj instanceof Location) {
                         int id = addLocation((Location)obj);
                         sendObject(id);
+                    }else if (obj instanceof Message){
+                        Message message = (Message)obj;
+                        sqlUpdQuery("INSERT INTO messages VALUES(" + compose(message.from.user_id+"", message.to.user_id+"", message.text) + ");");
+                        UserMessages um = getMessages(message.from.user_id, message.to.user_id);
+                        um.reason = "just update";
+                        for (ConnectionThread conn : connections){
+                            if (conn.user.user_id == message.from.user_id)conn.sendObject(um);
+                        }
+                        um = getMessages(message.to.user_id, message.from.user_id);
+                        um.reason = "just update";
+                        for (ConnectionThread conn : connections){
+                            if (conn.user.user_id == message.to.user_id)conn.sendObject(um);
+                        }
+                    }else if (obj instanceof UserMessages){
+                        UserMessages um = (UserMessages)obj;
+                        UserMessages answer = getMessages(um.myId, um.otherId);
+                        answer.reason = "you asked";
+                        sendObject(answer);
                     }
                 }
             } catch (IOException e) {
@@ -600,6 +618,35 @@ public class Server {
                 }
             }
             return posts;
+        }
+
+        private UserMessages getMessages(int id1, int id2) {
+            UserMessages um = new UserMessages();
+            um.me = getUserInfo(id1);
+            um.other = getUserInfo(id2);
+            um.myId = id1;
+            um.otherId = id2;
+            String SQL = "SELECT * FROM messages WHERE (user_from = " + id1 + " AND user_to = " + id2 + ") OR (user_from = " + id2 + " AND user_to = " + id1 + ")" +
+                    " ORDER BY message_date;";
+            ResultSet rs = sqlGetQuery(SQL);
+            if (rs == null){
+                System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+                System.exit(0);
+            }
+            ArrayList<Message> messages = new ArrayList<>();
+            try{
+                while (rs.next()){
+                    if (rs.getInt("user_from") == id1) {
+                        messages.add(new Message(um.me, um.other, rs.getString("message_text"), rs.getTimestamp("message_date")));
+                    }else {
+                        messages.add(new Message(um.other, um.me, rs.getString("message_text"), rs.getTimestamp("message_date")));
+                    }
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            um.messages = messages;
+            return um;
         }
 
         private ProfileInfo getUserInfo(int user_id) {

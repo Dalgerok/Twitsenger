@@ -143,4 +143,8 @@ public class ProfileSceneController {
             }
         }
     }
+
+    public void sendMessageButtonHandler(MouseEvent event) {
+        Main.setMessagesScene(profileId);
+    }
 }
