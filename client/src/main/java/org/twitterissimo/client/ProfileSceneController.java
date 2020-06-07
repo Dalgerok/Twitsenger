@@ -53,7 +53,12 @@ public class ProfileSceneController {
         profileBirthday.setText("Birthday: " + pi.birthday.toString());
         profileRelationship.setText("Relationship status: " + pi.relationship_status);
         System.out.println("LOCATION " + pi.location);
-        if (pi.location != null)profileLocation.setText(pi.location.makeString());
+        if (pi.location != null){
+            profileLocation.setText(pi.location.makeString());
+        }
+        else {
+            profileLocation.setText("Not specified");
+        }
         profileNumFriend.setText("Friends: " + pi.numFriends);
         profileNumPost.setText("Posts: " + pi.numPosts);
 

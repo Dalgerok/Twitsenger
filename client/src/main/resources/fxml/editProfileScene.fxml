@@ -93,6 +93,16 @@
                   <TextField fx:id="pictureUrlLabel" prefHeight="35.0" prefWidth="218.0" />
                </children>
             </HBox>
+            <HBox alignment="CENTER" prefHeight="49.0" prefWidth="294.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="97.0" text="Location in format Country:City" textAlignment="CENTER" wrapText="true">
+                     <HBox.margin>
+                        <Insets right="15.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="locationTextField" prefHeight="35.0" prefWidth="218.0" />
+               </children>
+            </HBox>
             <Button mnemonicParsing="false" onAction="#editFacilitiesButton" text="Edit schools, universities, jobs">
                <VBox.margin>
                   <Insets bottom="10.0" />
@@ -115,7 +125,7 @@
             <Insets />
          </opaqueInsets>
       </VBox>
-      <AnchorPane fx:id="facilitiesBox" layoutX="58.0" layoutY="79.0" prefHeight="667.0" prefWidth="485.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10 10 10 10;">
+      <AnchorPane fx:id="facilitiesBox" layoutX="58.0" layoutY="79.0" prefHeight="667.0" prefWidth="485.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10 10 10 10;" visible="false">
          <children>
             <VBox alignment="CENTER" layoutX="88.0" layoutY="94.0" prefHeight="479.0" prefWidth="310.0" style="-fx-spacing: 10;">
                <children>
@@ -167,7 +177,7 @@
                </children>
             </VBox>
             <Button layoutX="216.0" layoutY="608.0" mnemonicParsing="false" onAction="#closeFacilitiesButton" text="Done" />
-            <AnchorPane fx:id="facilityAddingPane" layoutX="43.0" layoutY="10.0" prefHeight="624.0" prefWidth="400.0" style="-fx-background-color: white; -fx-border-color: black; -fx-background-radius: 10 10 10 10; -fx-border-radius: 10 10 10 10;">
+            <AnchorPane fx:id="facilityAddingPane" layoutX="43.0" layoutY="10.0" prefHeight="624.0" prefWidth="400.0" style="-fx-background-color: white; -fx-border-color: black; -fx-background-radius: 10 10 10 10; -fx-border-radius: 10 10 10 10;" visible="false">
                <children>
                   <ListView fx:id="facilitySearchList" layoutX="60.0" layoutY="252.0" prefHeight="200.0" prefWidth="280.0" />
                   <TextField fx:id="searchFacilityLabel" layoutX="43.0" layoutY="197.0" />

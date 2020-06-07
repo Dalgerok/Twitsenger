@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class EditProfileSceneController {
     @FXML public Label errorText;
@@ -45,19 +46,28 @@ public class EditProfileSceneController {
     @FXML public DatePicker dateToPicker;
     @FXML public TextField descriptionTextField;
     @FXML public TextField addYourOwnLocation;
+    @FXML public TextField locationTextField;
 
     public String currentSearchType;
 
-    public int locationId;
-    public int facilityId;
+    //public volatile int locationId;
+    public AtomicInteger locationId = new AtomicInteger();
+    public AtomicInteger facilityId = new AtomicInteger();
 
     public void updateProfile(ProfileInfo pi){
         firstNameLabel.setText(pi.first_name);
         lastNameLabel.setText(pi.last_name);
         System.out.println(pi.birthday.toString());
         birthdayDate.setValue(LocalDate.parse(pi.birthday.toString()));
-        pictureUrlLabel.setText(pi.picture_url);
+        if (!pi.picture_url.equals("null"))
+            pictureUrlLabel.setText(pi.picture_url);
+        else
+            pictureUrlLabel.setText("");
         relationshipPicker.setValue(pi.relationship_status);
+        if (pi.location != null)
+            locationTextField.setText(pi.location.country + ":" + pi.location.city);
+        else
+            locationTextField.setText("");
         if (pi.gender.equals("Male"))
             maleGender.fire();
         else if (pi.gender.equals("Female"))
@@ -109,11 +119,40 @@ public class EditProfileSceneController {
                 return;
             }
         }
-        Main.editProfileUpdate(new RegisterInfo(firstNameLabel.getText(), lastNameLabel.getText(), birthdayDate.getValue(),
+        if (!locationTextField.getText().equals("")) {
+            String[] arr = locationTextField.getText().split(":");
+            if (arr.length != 2) {
+                errorText.setText("Wrong location format");
+                errorText.setVisible(true);
+                return;
+            }
+        }
+        locationId.set(-1);
+        if (!locationTextField.getText().equals("")) {
+            Main.getIdByLocation(locationTextField.getText());
+            locationId.set(0);
+            while(locationId.get() == 0) {
+
+            }
+            if (locationId.get() == -1) {
+                String[] arr = locationTextField.getText().split(":");
+                Main.addLocation(new Location(arr[0], arr[1], 0));
+                locationId.set(0);
+                while(locationId.get() == 0) {
+
+                }
+            }
+        }
+
+
+        RegisterInfo registerInfo = new RegisterInfo(firstNameLabel.getText(), lastNameLabel.getText(), birthdayDate.getValue(),
                 Main.user.email,
                 relationshipPicker.getValue(),
                 ((RadioButton)genderToggle.getSelectedToggle()).getText(), pictureUrlLabel.getText(),
-                (passwordLabel.getText().equals("") ? Main.user.user_password : passwordLabel.getText()), true));
+                (passwordLabel.getText().equals("") ? Main.user.user_password : passwordLabel.getText()), true);
+        registerInfo.setLocation_id(locationId.get());
+
+        Main.editProfileUpdate(registerInfo);
     }
 
     @FXML
@@ -148,15 +187,22 @@ public class EditProfileSceneController {
         String[] arr = addYourOwnLocation.getText().split(":");
         if (arr.length != 2)
             return;
-        locationId = 0;
+        locationId.set(0);
         Main.getIdByLocation(addYourOwnLocation.getText());
-        while(locationId == 0) {
+        while(locationId.get() == 0) {
 
         }
+        if (locationId.get() == -1){
+            Main.addLocation(new Location(arr[0], arr[1], 0));
+            locationId.set(0);
+            while(locationId.get() == 0) {
+
+            }
+        }
         System.out.println(locationId);
-        facilityId = 0;
-        Main.addFacility(new Facility(addYourOwnTextField.getText(), new Location(arr[0], arr[1], locationId), currentSearchType, 0));
-        while(facilityId == 0) {
+        facilityId.set(0);
+        Main.addFacility(new Facility(addYourOwnTextField.getText(), new Location(arr[0], arr[1], locationId.get()), currentSearchType, 0));
+        while(facilityId.get() == 0) {
 
         }
 
@@ -169,7 +215,7 @@ public class EditProfileSceneController {
             instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
             dateTo = Date.from(instant);
         }
-        UserFacility sendObj = new UserFacility(Main.user.user_id, facilityId, dateFrom, dateTo, descriptionTextField.getText());
+        UserFacility sendObj = new UserFacility(Main.user.user_id, facilityId.get(), dateFrom, dateTo, descriptionTextField.getText());
         sendObj.setAdd(true);
         Main.UserToFacility(sendObj);
         Main.askForProfileInfo(Main.user.user_id);

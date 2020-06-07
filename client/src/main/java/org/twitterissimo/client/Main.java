@@ -505,6 +505,10 @@ public class Main extends Application{
         sendObject(facility);
     }
 
+    public static void addLocation(Location location) {
+        sendObject(location);
+    }
+
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -599,11 +603,11 @@ public class Main extends Application{
                     if (obj instanceof Integer) {
                         int x = (Integer)obj;
                         if (clientPlace.equals(ClientPlace.EDIT_PROFILE_SCENE)){
+                            System.out.println("kek " + x/2);
                             if (x % 2 == 0)
-                                editProfileSceneController.locationId = x/2;
-                            else {
-                                editProfileSceneController.facilityId = x/2;
-                            }
+                                editProfileSceneController.locationId.set(x/2);
+                            else
+                                editProfileSceneController.facilityId.set(x/2);
                         }
                     }
                 } catch (Exception e) {

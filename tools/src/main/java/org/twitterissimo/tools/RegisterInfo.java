@@ -13,6 +13,7 @@ public class RegisterInfo implements Serializable {
     private final String pictureURL;
     private final String password;
     private final boolean update;
+    private String location_id = null;
 
     public RegisterInfo(String firstName, String lastName, LocalDate birthday, String email, String relationship, String gender, String pictureURL, String password, boolean update) {
         this.firstName = firstName;
@@ -61,6 +62,14 @@ public class RegisterInfo implements Serializable {
 
     public boolean getUpdate() {
         return update;
+    }
+
+    public void setLocation_id(int location_id) {
+        this.location_id = Integer.toString(location_id);
+    }
+
+    public String getLocation_id() {
+        return location_id;
     }
 
 }

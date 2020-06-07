@@ -261,9 +261,13 @@ public class Server {
                         String s;
                         if (info.getUpdate()) {
                             System.out.println("kek");
+                            String location = "null";
+                            if (!info.getLocation_id().equals("-1")) {
+                                location = compose(info.getLocation_id());
+                            }
                             s = sqlUpdQuery("UPDATE users SET first_name = " + compose(info.getFirstName()) +
                                     ", last_name = " + compose(info.getLastName()) + ", user_password = " + compose(info.getPassword()) + ", birthday = " + compose(info.getBirthday()) +
-                                    ", relationship_status = " + compose(info.getRelationship()) + ", gender = " + compose(info.getGender()) + ", picture_url = " + compose(info.getPictureURL()) +
+                                    ", relationship_status = " + compose(info.getRelationship()) + ", gender = " + compose(info.getGender()) + ", picture_url = " + compose(info.getPictureURL()) + ", user_location_id = " + location +
                                     " WHERE email = " + compose(email) + ";");
                             System.out.println(s);
                         }
@@ -343,6 +347,9 @@ public class Server {
                             delUserFacility(userFacility);
                     } else if (obj instanceof Facility) {
                         int id = addFacility((Facility)obj);
+                        sendObject(id);
+                    } else if (obj instanceof Location) {
+                        int id = addLocation((Location)obj);
                         sendObject(id);
                     }
                 }
@@ -623,16 +630,33 @@ public class Server {
             ResultSet rs = sqlGetQuery(SQL);
             try {
                 if (rs == null || !rs.next()) {
-                    return -1;
+                    return -2;
                 }
                 else
                     return rs.getInt(1)*2+1;
             } catch(SQLException e) {
                 e.printStackTrace();;
-                return -1;
+                return -2;
             }
+        }
 
 
+        private int addLocation(Location location) {
+            String SQL = "INSERT INTO locations(country, city)" +
+                    " VALUES (" + compose(location.country,  location.city) + ");";
+            sqlUpdQuery(SQL);
+            SQL = "SELECT location_id from locations WHERE country = " + compose(location.country) + "AND city = " + compose(location.city) + ";";
+            ResultSet rs = sqlGetQuery(SQL);
+            try {
+                if (rs == null || !rs.next()) {
+                    return -2;
+                }
+                else
+                    return rs.getInt(1)*2;
+            } catch(SQLException e) {
+                e.printStackTrace();;
+                return -2;
+            }
         }
 
         private void addUserFacility(UserFacility facility){
@@ -660,11 +684,11 @@ public class Server {
             ResultSet rs = sqlGetQuery(SQL);
             try {
                 if (rs == null || !rs.next())
-                    return -1;
+                    return -2;
                 else return rs.getInt(1)*2;
             } catch (SQLException e) {
                 e.printStackTrace();
-                return -1;
+                return -2;
             }
         }
 
