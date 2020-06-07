@@ -22,11 +22,27 @@ public class PostsSceneController {
     @FXML public ListView<PostPane> postView;
     @FXML public VBox postsVBox;
     @FXML public TextArea enterMessage;
+    @FXML public ToggleGroup TOGGLE_GROUP;
+    @FXML public RadioButton allPostsButton;
+    public RadioButton friendsPostsButton;
+
+    public void allPostsButtonHandler(MouseEvent mouseEvent) {
+        TOGGLE_GROUP.selectToggle(allPostsButton);
+        Main.askForUpdatePostsScene();
+    }
+
+    public void friendsPostsButtonHandler(MouseEvent mouseEvent) {
+        TOGGLE_GROUP.selectToggle(friendsPostsButton);
+        Main.askForUpdatePostsScene();
+    }
+
 
     public static class PostPane extends VBox implements Serializable {
+        int post_id;
         public PostPane(Post p, int user_id) {
             super();
-            System.out.println("NEW POST_PANE " + p.first_name + " " + p.last_name + " " + user_id);
+            System.out.println("NEW POST_PANE " + p.first_name + " " + p.last_name + " " + p.post_id);
+            post_id = p.post_id;
             HBox user = new HBox();
             ImageView userIcon = new ImageView(); // TODO: 02.06.2020 ADD PICTURE_URL ???
             Hyperlink userName = new Hyperlink(p.first_name + " " + p.last_name);
@@ -55,7 +71,7 @@ public class PostsSceneController {
 
             HBox buttons = new HBox();
             buttons.setPrefWidth(600);
-            buttons.setPrefHeight(100);
+            buttons.setPrefHeight(20);
             Button like = new Button("like");
             like.setOnMouseClicked(mouseEvent -> {
                 Main.likePost(p); // TODO: 07.06.2020
@@ -74,9 +90,7 @@ public class PostsSceneController {
                     repostEnterMessage.positionCaret(string.length());
                 }
             });
-            repost.setOnMouseClicked(mouseEvent -> {
-                Main.sendRepost(new Post(repostEnterMessage.getText(), p.post_id));
-            });
+            repost.setOnMouseClicked(mouseEvent -> Main.sendRepost(new Post(repostEnterMessage.getText(), p.post_id)));
             buttons.getChildren().addAll(like, repost);
             if(p.user_id == user_id) {
                 Button delete = new Button("delete");
@@ -86,11 +100,13 @@ public class PostsSceneController {
                 buttons.getChildren().add(delete);
             }
             Separator separator = new Separator();
-            getChildren().addAll(user, texts, buttons, repostEnterMessage);
+            Label likes = new Label("Likes: " + String.valueOf(p.number_of_likes));
+            getChildren().addAll(user, texts, buttons, likes, repostEnterMessage);
         }
 
         public PostPane(Post p) {
             super();
+            post_id = p.post_id;
             System.out.println("NEW REPOST POST_PANE " + p.first_name + " " + p.last_name + " " + p.user_id);
             HBox user = new HBox();
             ImageView userIcon = new ImageView(); // TODO: 02.06.2020 ADD PICTURE_URL ???
@@ -108,11 +124,7 @@ public class PostsSceneController {
             texts.getChildren().add(postText);
 
             Separator separator = new Separator();
-            Button go_to_post = new Button("Go to post");
-            go_to_post.setOnMouseClicked(mouseEvent -> {
-                Main.goToPost(p);
-            });
-            getChildren().addAll(user, texts, separator, go_to_post);
+            getChildren().addAll(user, texts, separator);
         }
     }
 }

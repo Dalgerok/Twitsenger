@@ -616,4 +616,3 @@ INSERT INTO friend_request VALUES (1, 3);
 SELECT * FROM friend_request;
 SELECT * FROM friendship;*/
 --SELECT * FROM get_user_friend(1);
-SELECT * FROM messages;
