@@ -31,7 +31,9 @@ public class SearchSceneController {
     public void updateSearchResults(ArrayList<ServerUser> list) {
         ObservableList<Main.FriendBox> results = FXCollections.observableArrayList();
         for (ServerUser su : list){
-            results.add(new Main.FriendBox(su));
+            if(su.user_id != Main.user.user_id) {
+                results.add(new Main.FriendBox(su));
+            }
         }
         searchResults.setItems(results);
     }
