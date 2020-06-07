@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane fx:id="friendsPane" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.FriendsSceneController">
+<AnchorPane fx:id="friendsPane" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.FriendsSceneController">
    <children>
-      <ListView fx:id="friendsView" prefHeight="800.0" prefWidth="600.0" />
+      <ListView fx:id="friendsView" layoutY="33.0" prefHeight="767.0" prefWidth="600.0" />
+      <TitledPane fx:id="friendRequestPane" layoutX="14.0" layoutY="3.0" prefHeight="27.0" prefWidth="450.0" text="Friends request">
+        <content>
+          <AnchorPane maxHeight="250.0" maxWidth="450.0" minHeight="250.0" minWidth="450.0" prefHeight="250.0" prefWidth="450.0">
+               <children>
+                  <ListView fx:id="friendRequestList" prefHeight="250.0" prefWidth="450.0" />
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
    </children>
 </AnchorPane>

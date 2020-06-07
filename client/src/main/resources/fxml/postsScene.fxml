@@ -11,15 +11,15 @@
 
 <VBox fx:id="postsVBox" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.PostsSceneController">
    <children>
-      <HBox prefHeight="6.0" prefWidth="180.0">
+      <HBox prefHeight="18.0" prefWidth="241.0">
          <children>
-            <RadioButton fx:id="allPostsButton" onMouseClicked="#allPostsButtonHandler" mnemonicParsing="false" selected="true" text="All posts">
+            <RadioButton fx:id="allPostsButton" mnemonicParsing="false" onMouseClicked="#allPostsButtonHandler" prefHeight="18.0" prefWidth="116.0" selected="true" text="All posts">
                <toggleGroup>
                   <ToggleGroup fx:id="TOGGLE_GROUP" />
                </toggleGroup>
             </RadioButton>
             <Separator prefWidth="20.0" />
-            <RadioButton fx:id="friendsPostsButton" onMouseClicked="#friendsPostsButtonHandler" mnemonicParsing="false" text="Friends Posts" toggleGroup="$TOGGLE_GROUP" />
+            <RadioButton fx:id="friendsPostsButton" mnemonicParsing="false" onMouseClicked="#friendsPostsButtonHandler" prefHeight="18.0" prefWidth="162.0" text="Friends Posts" toggleGroup="$TOGGLE_GROUP" />
          </children>
       </HBox>
       <TextArea fx:id="enterMessage" prefHeight="100.0" prefRowCount="2" prefWidth="600.0" wrapText="true">

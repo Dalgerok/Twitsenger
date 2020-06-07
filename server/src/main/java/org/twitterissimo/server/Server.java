@@ -2,6 +2,7 @@ package org.twitterissimo.server;
 
 import org.twitterissimo.tools.*;
 
+import javax.print.DocFlavor;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -363,12 +364,19 @@ public class Server {
                         arr.add(0, new ServerUser());
                         arr.get(0).first_name = "friends";
                         sendObject(arr);
-                    }else if (obj instanceof FriendStatusChange){
+                    } else if (obj instanceof GetUserFriendRequests) {
+                        GetUserFriendRequests getUFR = (GetUserFriendRequests)obj;
+                        ArrayList<UserRequest> arr = getUserFriendRequests(getUFR.id);
+                        arr.add(0, new UserRequest());
+                        sendObject(arr);
+                    } else if (obj instanceof FriendStatusChange){
                         FriendStatusChange fsc = (FriendStatusChange)obj;
                         if (fsc.query == FriendStatusChange.FriendQuery.ADD){
                             sqlUpdQuery("INSERT INTO friend_request VALUES (" + fsc.from.user_id + ", " + fsc.to.user_id + ");");
                         }else if (fsc.query == FriendStatusChange.FriendQuery.REMOVE){
                             sqlUpdQuery("DELETE FROM friendship f WHERE f.friend1 = " + fsc.from.user_id + "AND f.friend2 = " + fsc.to.user_id + ";");
+                        } else if (fsc.query == FriendStatusChange.FriendQuery.REMOVE_REQUEST) {
+                            sqlUpdQuery("DELETE FROM friend_request WHERE from_whom = " + fsc.from.user_id + " AND to_whom = " + fsc.to.user_id + ";");
                         }
 
                         ArrayList<ServerUser> arr;
@@ -733,6 +741,30 @@ public class Server {
             }
             return users;
         }
+        private ArrayList<UserRequest> getUserFriendRequests(int user_id) {
+            String SQL = "SELECT from_whom, request_date FROM friend_request WHERE to_whom = " + user_id + ";";
+            ResultSet rs = sqlGetQuery(SQL);
+            if (rs == null) {
+                return new ArrayList<>();
+            }
+            ArrayList<UserRequest> userRequests = new ArrayList<>();
+            try {
+                ArrayList<Integer> arrUserId = new ArrayList<>();
+                ArrayList<Date> arrDate = new ArrayList<>();
+                while(rs.next()) {
+                    arrUserId.add(rs.getInt(1));
+                    arrDate.add(rs.getDate(2));
+                }
+                for (int i = 0; i < arrUserId.size(); i++) {
+                    ProfileInfo profileInfo = getProfileInfo(arrUserId.get(i));
+                    userRequests.add(new UserRequest(profileInfo, arrDate.get(i)));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return userRequests;
+        }
+
         private int getNumberOfUserPosts(int user_id){
             String SQL = "SELECT get_number_of_user_posts(" + user_id + ");";
             ResultSet rs = sqlGetQuery(SQL);

@@ -100,12 +100,18 @@ public class Main extends Application{
         clientPlace = ClientPlace.SEARCH_SCENE;
         // TODO: 02.06.2020
     }
+
     public static void setFriendsScene(int id) {
+        setFriendsScene(id, false);
+    }
+    public static void setFriendsScene(int id, boolean expanded) {
         setMainScene();
         askForFriends(id);
+        askForFriendRequests(id);
         friendsSceneController.clearResults();
         System.out.println("SET FRIENDS SCENE");
         mainSceneController.mainPane.getChildren().setAll(friendsSceneController.friendsPane);
+        friendsSceneController.friendRequestPane.setExpanded(expanded);
 
         clientPlace = ClientPlace.FRIENDS_SCENE;
     }
@@ -535,6 +541,11 @@ public class Main extends Application{
         sendObject(new GetUserFriends(id));
     }
 
+    public static void askForFriendRequests(int id) {
+        System.out.println("ASK FOR FRIEND REQUESTS FOR " + id);
+        sendObject(new GetUserFriendRequests(id));
+    }
+
     public static void askForMessages(int id){
         System.out.println("ASK FOR MESSAGES FROM " + id);
         sendObject(new UserMessages(user.user_id, id));
@@ -670,6 +681,9 @@ public class Main extends Application{
                             if (clientPlace.equals(ClientPlace.SEARCH_SCENE)){
                                 Platform.runLater(() -> searchSceneController.updateButtons());
                             }
+                        }
+                        if (o instanceof UserRequest) {
+                            Platform.runLater(() -> friendsSceneController.updateFriendsRequests((ArrayList<UserRequest>) obj));
                         }
                     }
                     if (obj instanceof ProfileInfo) {

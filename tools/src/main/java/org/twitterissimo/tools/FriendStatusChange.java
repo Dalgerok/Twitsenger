@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class FriendStatusChange implements Serializable {
     public enum FriendQuery{
-        ADD, REMOVE
+        ADD, REMOVE, REMOVE_REQUEST
     }
     public ServerUser from;
     public ServerUser to;

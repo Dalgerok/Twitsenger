@@ -59,7 +59,7 @@ public class EditProfileSceneController {
         lastNameLabel.setText(pi.last_name);
         System.out.println(pi.birthday.toString());
         birthdayDate.setValue(LocalDate.parse(pi.birthday.toString()));
-        if (!pi.picture_url.equals("null"))
+        if (pi.picture_url != null && !pi.picture_url.equals("null"))
             pictureUrlLabel.setText(pi.picture_url);
         else
             pictureUrlLabel.setText("");
