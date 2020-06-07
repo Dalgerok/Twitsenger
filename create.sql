@@ -4,11 +4,11 @@ ALTER USER postgres WITH PASSWORD '1321'; --and this
 
 ----
 CREATE  TABLE locations (
-            country              varchar(100)   ,
-            city                 varchar(100)   ,
-            location_id          SERIAL	   ,
-            CONSTRAINT pk_location PRIMARY KEY ( location_id ),
-            CONSTRAINT un_location UNIQUE (country, city)
+                            country              varchar(100)   ,
+                            city                 varchar(100)   ,
+                            location_id          SERIAL	   ,
+                            CONSTRAINT pk_location PRIMARY KEY ( location_id ),
+                            CONSTRAINT un_location UNIQUE (country, city)
 );
 --CREATE INDEX locations_index_location ON locations(country, city);
 
@@ -43,20 +43,20 @@ CREATE TYPE relationshipstatus AS ENUM (
 
 ----
 CREATE  TABLE users (
-            first_name           varchar(32)            NOT NULL ,
-            last_name            varchar(32)            NOT NULL ,
-            birthday             date                   NOT NULL ,
-            email                varchar(100)           NOT NULL ,
-            relationship_status  relationshipstatus     NOT NULL ,
-            gender               genders                NOT NULL ,
-            user_password 		 varchar(64)            NOT NULL ,
-            user_location_id  	 integer DEFAULT NULL,
-            picture_url 		 varchar(500) ,
-            user_id              SERIAL ,
-            CONSTRAINT pk_user PRIMARY KEY ( user_id ),
-            CONSTRAINT un_email UNIQUE ( email ),
-            CONSTRAINT fk_user_location FOREIGN KEY ( user_location_id ) REFERENCES locations( location_id ),
-            CONSTRAINT ch_user_birthday CHECK ((now() - (birthday)::timestamp with time zone) >= '13 years'::interval year)
+                        first_name           varchar(32)            NOT NULL ,
+                        last_name            varchar(32)            NOT NULL ,
+                        birthday             date                   NOT NULL ,
+                        email                varchar(100)           NOT NULL ,
+                        relationship_status  relationshipstatus     NOT NULL ,
+                        gender               genders                NOT NULL ,
+                        user_password 		 varchar(64)            NOT NULL ,
+                        user_location_id  	 integer DEFAULT NULL,
+                        picture_url 		 varchar(500) ,
+                        user_id              SERIAL ,
+                        CONSTRAINT pk_user PRIMARY KEY ( user_id ),
+                        CONSTRAINT un_email UNIQUE ( email ),
+                        CONSTRAINT fk_user_location FOREIGN KEY ( user_location_id ) REFERENCES locations( location_id ),
+                        CONSTRAINT ch_user_birthday CHECK ((now() - (birthday)::timestamp with time zone) >= '13 years'::interval year)
 );
 --CREATE INDEX users_index_name ON users(first_name, last_name);
 --CREATE INDEX users_index_user_location_id ON users(user_location_id);
@@ -83,10 +83,10 @@ CREATE FUNCTION check_password(
 $$
 BEGIN
     RETURN EXISTS (
-        SELECT *
-        FROM users
-        WHERE users.email = _email AND users.user_password = _user_password
-    );
+            SELECT *
+            FROM users
+            WHERE users.email = _email AND users.user_password = _user_password
+        );
 END;
 $$
     LANGUAGE plpgsql;
@@ -98,10 +98,10 @@ CREATE FUNCTION check_email(
 $$
 BEGIN
     RETURN EXISTS (
-        SELECT *
-        FROM users
-        WHERE users.email = _email
-    );
+            SELECT *
+            FROM users
+            WHERE users.email = _email
+        );
 END;
 $$
     LANGUAGE plpgsql;
@@ -109,13 +109,13 @@ $$
 
 ----
 CREATE  TABLE friendship (
-            friend1              integer                             NOT NULL ,
-            friend2              integer                             NOT NULL ,
-            date_from            timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
-            CONSTRAINT pk_friendship PRIMARY KEY ( friend1, friend2 ),
-            CONSTRAINT fk_friendship_user1 FOREIGN KEY ( friend1 ) REFERENCES users( user_id ) ON DELETE CASCADE,
-            CONSTRAINT fk_friendship_user2 FOREIGN KEY ( friend2 ) REFERENCES users( user_id ) ON DELETE CASCADE,
-            CONSTRAINT ch_friendship CHECK (friend1 <> friend2)
+                             friend1              integer                             NOT NULL ,
+                             friend2              integer                             NOT NULL ,
+                             date_from            timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
+                             CONSTRAINT pk_friendship PRIMARY KEY ( friend1, friend2 ),
+                             CONSTRAINT fk_friendship_user1 FOREIGN KEY ( friend1 ) REFERENCES users( user_id ) ON DELETE CASCADE,
+                             CONSTRAINT fk_friendship_user2 FOREIGN KEY ( friend2 ) REFERENCES users( user_id ) ON DELETE CASCADE,
+                             CONSTRAINT ch_friendship CHECK (friend1 <> friend2)
 );
 --CREATE INDEX friendship_index_friend1 ON friendship(friend1);
 
@@ -130,7 +130,7 @@ BEGIN
             SELECT *
             FROM friendship f
             WHERE f.friend1 = OLD.friend2 AND f.friend2 = OLD.friend1
-    ) THEN
+        ) THEN
         DELETE FROM friendship f WHERE f.friend1 = OLD.friend2 AND f.friend2 = OLD.friend1;
     END IF;
     RETURN NULL;
@@ -149,7 +149,7 @@ BEGIN
             SELECT *
             FROM friendship f
             WHERE NEW.friend1 = f.friend2 AND NEW.friend2 = f.friend1
-    ) THEN
+        ) THEN
         INSERT INTO friendship VALUES (NEW.friend2, NEW.friend1, NEW.date_from);
     END IF;
     RETURN NULL;
@@ -164,7 +164,7 @@ CREATE TRIGGER check_insert_friendship AFTER INSERT ON friendship
 
 
 CREATE FUNCTION get_number_of_user_friends(id integer)
-RETURNS integer
+    RETURNS integer
 AS
 $$
 BEGIN
@@ -179,13 +179,13 @@ $$
 
 ----
 CREATE  TABLE friend_request (
-            from_whom            integer                             NOT NULL ,
-            to_whom              integer                             NOT NULL ,
-            request_date         timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
-            CONSTRAINT pk_friendrequest PRIMARY KEY ( from_whom, to_whom ),
-            CONSTRAINT fk_friendrequest_user1 FOREIGN KEY ( from_whom ) REFERENCES users( user_id ) ON DELETE CASCADE,
-            CONSTRAINT fk_friendrequest_user2 FOREIGN KEY ( to_whom ) REFERENCES users( user_id ) ON DELETE CASCADE,
-            CONSTRAINT ch_friendrequest CHECK (from_whom <> to_whom)
+                                 from_whom            integer                             NOT NULL ,
+                                 to_whom              integer                             NOT NULL ,
+                                 request_date         timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
+                                 CONSTRAINT pk_friendrequest PRIMARY KEY ( from_whom, to_whom ),
+                                 CONSTRAINT fk_friendrequest_user1 FOREIGN KEY ( from_whom ) REFERENCES users( user_id ) ON DELETE CASCADE,
+                                 CONSTRAINT fk_friendrequest_user2 FOREIGN KEY ( to_whom ) REFERENCES users( user_id ) ON DELETE CASCADE,
+                                 CONSTRAINT ch_friendrequest CHECK (from_whom <> to_whom)
 );
 --CREATE INDEX friend_request_from_whom ON friend_request(from_whom);
 
@@ -245,15 +245,15 @@ CREATE TRIGGER check_insert_friend_request BEFORE INSERT ON friend_request
 
 ----
 CREATE  TABLE messages (
-            user_from            integer                             NOT NULL ,
-            user_to              integer                             NOT NULL ,
-            message_text         varchar(250)                        NOT NULL ,
-            message_date         timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
-            message_id           SERIAL ,
-            CONSTRAINT pk_message_id PRIMARY KEY ( message_id ),
-            CONSTRAINT fk_message_user1 FOREIGN KEY ( user_from ) REFERENCES users( user_id ) ON DELETE CASCADE,
-            CONSTRAINT fk_message_user2 FOREIGN KEY ( user_to ) REFERENCES users( user_id ) ON DELETE CASCADE,
-            CONSTRAINT ch_message CHECK (user_from <> user_to)
+                           user_from            integer                             NOT NULL ,
+                           user_to              integer                             NOT NULL ,
+                           message_text         varchar(250)                        NOT NULL ,
+                           message_date         timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
+                           message_id           SERIAL ,
+                           CONSTRAINT pk_message_id PRIMARY KEY ( message_id ),
+                           CONSTRAINT fk_message_user1 FOREIGN KEY ( user_from ) REFERENCES users( user_id ) ON DELETE CASCADE,
+                           CONSTRAINT fk_message_user2 FOREIGN KEY ( user_to ) REFERENCES users( user_id ) ON DELETE CASCADE,
+                           CONSTRAINT ch_message CHECK (user_from <> user_to)
 );
 --CREATE INDEX messages_index_user_to ON messages(user_to);
 --CREATE INDEX messages_index_user_from ON messages(user_from);
@@ -266,14 +266,14 @@ CREATE RULE no_delete_message AS ON DELETE TO messages
 
 ----
 CREATE  TABLE posts (
-            user_id 			 integer                             NOT NULL,
-            post_text         	 varchar(250)                        NOT NULL ,
-            post_date            timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
-            reposted_from        integer   ,
-            post_id              SERIAL ,
-            CONSTRAINT pk_post_id PRIMARY KEY ( post_id ),
-            CONSTRAINT fk_repost FOREIGN KEY ( reposted_from ) REFERENCES posts( post_id ) ON DELETE CASCADE,
-            CONSTRAINT fk_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE
+                        user_id 			 integer                             NOT NULL,
+                        post_text         	 varchar(250)                        NOT NULL ,
+                        post_date            timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
+                        reposted_from        integer   ,
+                        post_id              SERIAL ,
+                        CONSTRAINT pk_post_id PRIMARY KEY ( post_id ),
+                        CONSTRAINT fk_repost FOREIGN KEY ( reposted_from ) REFERENCES posts( post_id ) ON DELETE CASCADE,
+                        CONSTRAINT fk_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE
 );
 --CREATE INDEX posts_index_user_id ON posts(user_id);
 
@@ -285,10 +285,10 @@ CREATE OR REPLACE FUNCTION check_insert_post_date()
 $$
 BEGIN
     IF NEW.reposted_from IS NOT NULL AND (
-        SELECT posts.post_date
-        FROM posts
-        WHERE posts.post_id = NEW.reposted_from
-    ) > NEW.post_date THEN
+                                             SELECT posts.post_date
+                                             FROM posts
+                                             WHERE posts.post_id = NEW.reposted_from
+                                         ) > NEW.post_date THEN
         NEW = NULL;
     END IF;
     RETURN NEW;
@@ -318,13 +318,13 @@ $$
 CREATE FUNCTION get_user_posts(
     id integer
 )
-RETURNS TABLE(
-        user_id integer,
-        post_text varchar(250),
-        post_date timestamp,
-        reposted_from integer,
-        post_id integer
-)
+    RETURNS TABLE(
+                     user_id integer,
+                     post_text varchar(250),
+                     post_date timestamp,
+                     reposted_from integer,
+                     post_id integer
+                 )
 AS
 $$
 BEGIN
@@ -389,11 +389,11 @@ AS SELECT *, get_number_of_likes_on_post(post_id) as likes, get_number_of_repost
 
 ----
 CREATE  TABLE like_sign (
-            post_id              integer                NOT NULL ,
-            user_id              integer                NOT NULL ,
-            CONSTRAINT pk_like_sign PRIMARY KEY ( post_id, user_id ),
-            CONSTRAINT fk_like_sign_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE,
-            CONSTRAINT fk_like_sign_post_id FOREIGN KEY ( post_id ) REFERENCES posts( post_id ) ON DELETE CASCADE
+                            post_id              integer                NOT NULL ,
+                            user_id              integer                NOT NULL ,
+                            CONSTRAINT pk_like_sign PRIMARY KEY ( post_id, user_id ),
+                            CONSTRAINT fk_like_sign_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE,
+                            CONSTRAINT fk_like_sign_post_id FOREIGN KEY ( post_id ) REFERENCES posts( post_id ) ON DELETE CASCADE
 );
 --CREATE INDEX like_sign_index_post_id ON like_sign(post_id);
 
@@ -412,13 +412,13 @@ CREATE TYPE facility_types AS ENUM (
 
 ----
 CREATE  TABLE facilities (
-            facility_name        varchar(100)           NOT NULL,
-            facility_location    integer                NOT NULL,
-            facility_type	     facility_types         NOT NULL,
-            facility_id          SERIAL,
-            CONSTRAINT pk_facility_id PRIMARY KEY ( facility_id ),
-            CONSTRAINT fk_facility_location FOREIGN KEY ( facility_location ) REFERENCES locations( location_id ),
-            CONSTRAINT un_facility UNIQUE(facility_name, facility_location, facility_type)
+                             facility_name        varchar(100)           NOT NULL,
+                             facility_location    integer                NOT NULL,
+                             facility_type	     facility_types         NOT NULL,
+                             facility_id          SERIAL,
+                             CONSTRAINT pk_facility_id PRIMARY KEY ( facility_id ),
+                             CONSTRAINT fk_facility_location FOREIGN KEY ( facility_location ) REFERENCES locations( location_id ),
+                             CONSTRAINT un_facility UNIQUE(facility_name, facility_location, facility_type)
 );
 --CREATE INDEX facilities_index_facility_type ON facilities(facility_type);
 --CREATE INDEX facilities_index_facility_name ON facilities(facility_location);
@@ -427,12 +427,12 @@ CREATE  TABLE facilities (
 CREATE FUNCTION get_facilities_by_type(
     type facility_types
 )
-RETURNS TABLE(
-        facility_name       varchar(100),
-        facility_location   integer,
-        facility_type       facility_types,
-        facility_id         integer
-)
+    RETURNS TABLE(
+                     facility_name       varchar(100),
+                     facility_location   integer,
+                     facility_type       facility_types,
+                     facility_id         integer
+                 )
 AS
 $$
 BEGIN
@@ -448,30 +448,30 @@ $$
 
 ----
 CREATE  TABLE user_facilities (
-            user_id              integer            NOT NULL,
-            facility_id          integer            NOT NULL,
-            date_from            timestamp          NOT NULL,
-            date_to              timestamp,
-            description          varchar(100),
-            CONSTRAINT pk_user_facility PRIMARY KEY ( user_id, facility_id, date_from ),
-            CONSTRAINT fk_user_facility_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE,
-            CONSTRAINT fk_user_facility_facility_id FOREIGN KEY ( facility_id ) REFERENCES facilities( facility_id ),
-            CONSTRAINT ch_date CHECK ((date_to IS NULL) OR (date_to >= date_from))
+                                  user_id              integer            NOT NULL,
+                                  facility_id          integer            NOT NULL,
+                                  date_from            timestamp          NOT NULL,
+                                  date_to              timestamp,
+                                  description          varchar(100),
+                                  CONSTRAINT pk_user_facility PRIMARY KEY ( user_id, facility_id, date_from ),
+                                  CONSTRAINT fk_user_facility_user_id FOREIGN KEY ( user_id ) REFERENCES users( user_id ) ON DELETE CASCADE,
+                                  CONSTRAINT fk_user_facility_facility_id FOREIGN KEY ( facility_id ) REFERENCES facilities( facility_id ),
+                                  CONSTRAINT ch_date CHECK ((date_to IS NULL) OR (date_to >= date_from))
 );
 --CREATE INDEX user_facilities_user_id ON user_facilities(user_id);
 
 CREATE FUNCTION get_user_facilities(
     id integer
 )
-RETURNS TABLE(
-        facility_name       integer,
-        facility_type       facility_types,
-        facility_country    varchar(100),
-        facility_city       varchar(100),
-        date_from           timestamp,
-        date_to             timestamp,
-        description         varchar(100)
-)
+    RETURNS TABLE(
+                     facility_name       integer,
+                     facility_type       facility_types,
+                     facility_country    varchar(100),
+                     facility_city       varchar(100),
+                     date_from           timestamp,
+                     date_to             timestamp,
+                     description         varchar(100)
+                 )
 AS
 $$
 BEGIN
@@ -494,7 +494,7 @@ CREATE FUNCTION check_user_filter(
     _country varchar,
     _city    varchar
 )
-RETURNS boolean
+    RETURNS boolean
 AS
 $$
 BEGIN
@@ -503,7 +503,7 @@ BEGIN
                 SELECT *
                 FROM locations
                 WHERE location_id = _user.user_location_id AND lower(country) LIKE '%'||lower(_country)||'%'
-        )THEN
+            )THEN
             RETURN FALSE;
         END IF;
     END IF;
@@ -512,7 +512,7 @@ BEGIN
                 SELECT *
                 FROM locations
                 WHERE location_id = _user.user_location_id AND lower(city) LIKE '%'||lower(_city)||'%'
-        ) THEN
+            ) THEN
             RETURN FALSE;
         END IF;
     END IF;
@@ -526,17 +526,17 @@ $$
 CREATE FUNCTION get_user_friend(
     id integer
 ) RETURNS TABLE (
-        first_name           varchar(100),
-        last_name            varchar(100),
-        birthday             date,
-        email                varchar(254),
-        relationship_status  relationshipstatus,
-        gender               genders ,
-        user_password 		 varchar(50),
-        user_location_id  	 integer,
-        picture_url 		 varchar(255),
-        user_id              integer
-)
+                    first_name           varchar(100),
+                    last_name            varchar(100),
+                    birthday             date,
+                    email                varchar(254),
+                    relationship_status  relationshipstatus,
+                    gender               genders ,
+                    user_password 		 varchar(50),
+                    user_location_id  	 integer,
+                    picture_url 		 varchar(255),
+                    user_id              integer
+                )
 AS
 $$
 BEGIN
@@ -549,11 +549,11 @@ $$
     LANGUAGE plpgsql;
 
 CREATE FUNCTION check_facility_filter(
-        _facility record,
-        facName varchar,
-        facType varchar
+    _facility record,
+    facName varchar,
+    facType varchar
 )
-RETURNS boolean
+    RETURNS boolean
 AS
 $$
 BEGIN
@@ -594,10 +594,8 @@ SELECT * FROM posts;
 /*INSERT INTO friendship VALUES (1, 2);
 INSERT INTO friendship VALUES (1, 2);
 INSERT INTO friendship VALUES (2, 1);
-
 INSERT INTO  friend_request VALUES (1, 2);
 INSERT INTO friend_request VALUES (1, 2);
-
 INSERT INTO friend_request VALUES (2, 3);
 INSERT INTO friend_request VALUES (2, 3);
 INSERT INTO friend_request VALUES (3, 2);
@@ -605,12 +603,10 @@ INSERT INTO friend_request VALUES (3, 2);
 INSERT INTO friend_request VALUES (3, 2);
 INSERT INTO friend_request VALUES (3, 2);
 INSERT INTO friend_request VALUES (3, 2);
-
 INSERT INTO friend_request VALUES (1, 3);
 INSERT INTO friend_request VALUES (1, 3);
 INSERT INTO friend_request VALUES (1, 3);
 INSERT INTO friend_request VALUES (1, 3);
-
 SELECT * FROM friend_request;
 SELECT * FROM friendship;*/
 --SELECT * FROM get_user_friend(1);
