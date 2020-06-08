@@ -135,6 +135,7 @@ public class Main extends Application{
     }
 
     private static void askForChats() {
+        sendObject(new ChatItem(user));
     }
 
     public static void setPostsScene() {
@@ -286,8 +287,8 @@ public class Main extends Application{
         Main.primaryStage = primaryStage;
         createContent();
 
-        primaryStage.setHeight(820);
-        primaryStage.setWidth(820);
+        //primaryStage.setHeight(820);
+        //primaryStage.setWidth(820);
         //primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
         primaryStage.setScene(startScene);
@@ -668,6 +669,7 @@ public class Main extends Application{
                         if (o instanceof ServerUser) System.out.println(((ServerUser) o).first_name);
                         if (o instanceof ServerUser && ((ServerUser) o).first_name.equals("search"))Platform.runLater(() -> searchSceneController.updateSearchResults((ArrayList<ServerUser>)obj));
                         if (o instanceof ServerUser && ((ServerUser) o).first_name.equals("friends"))Platform.runLater(() -> friendsSceneController.updateFriends((ArrayList<ServerUser>)obj));
+                        if (o instanceof ChatItem)Platform.runLater(() -> chatsSceneController.updateChats((ArrayList<ChatItem>)obj));
                         if (o instanceof ServerUser && ((ServerUser) o).first_name.equals("myFriends")){
                             friends.clear();
                             friends.addAll((ArrayList<ServerUser>)obj);

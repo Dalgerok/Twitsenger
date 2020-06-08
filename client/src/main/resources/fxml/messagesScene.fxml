@@ -37,6 +37,6 @@
          </font>
       </Hyperlink>
       <ListView fx:id="messagesView" layoutY="179.0" prefHeight="570.0" prefWidth="600.0" />
-      <TextArea fx:id="enterMessage" layoutY="750.0" prefHeight="50.0" prefWidth="600.0" wrapText="true" />
+      <TextArea fx:id="enterMessage" layoutY="750.0" prefHeight="47.0" prefWidth="600.0" wrapText="true" />
    </children>
 </AnchorPane>

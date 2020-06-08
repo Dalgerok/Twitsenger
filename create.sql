@@ -260,6 +260,18 @@ CREATE RULE no_update_message AS ON UPDATE TO messages
     DO INSTEAD NOTHING;
 CREATE RULE no_delete_message AS ON DELETE TO messages
     DO INSTEAD NOTHING;
+
+
+
+CREATE FUNCTION get_latest_message(id1 integer, id2 integer) RETURNS integer AS
+$$
+BEGIN
+    RETURN (SELECT ms.message_id FROM messages ms
+            WHERE (ms.user_from = id1 AND ms.user_to = id2) OR (ms.user_from = id2 AND ms.user_to = id1) ORDER BY ms.message_date DESC LIMIT 1);
+END;
+$$
+    LANGUAGE plpgsql;
+
 ----
 
 ----
@@ -648,6 +660,6 @@ INSERT INTO friend_request VALUES (1, 3);
 SELECT * FROM friend_request;
 SELECT * FROM friendship;*/
 --SELECT * FROM get_user_friend(1);
-SELECT * FROM messages;
+--SELECT * FROM messages;
 
-SELECT * FROM get_refactored_all_posts;
+--SELECT * FROM get_refactored_all_posts;

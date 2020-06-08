@@ -2,7 +2,7 @@ package org.twitterissimo.server;
 
 import org.twitterissimo.tools.*;
 
-import javax.print.DocFlavor;
+import java.awt.image.BandedSampleModel;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,7 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -429,6 +429,11 @@ public class Server {
                         UserMessages answer = getMessages(um.myId, um.otherId);
                         answer.reason = "you asked";
                         sendObject(answer);
+                    }else if (obj instanceof ChatItem){
+                        ChatItem chatItem = (ChatItem)obj;
+                        ArrayList<ChatItem> arr = getChats(chatItem.me.user_id);
+                        arr.add(0, new ChatItem());
+                        sendObject(arr);
                     }
                 }
             } catch (IOException e) {
@@ -656,6 +661,52 @@ public class Server {
             }
             um.messages = messages;
             return um;
+        }
+
+        private ArrayList<ChatItem> getChats(int id){
+            ServerUser me = getUserInfo(id);
+            String SQL = "SELECT get_latest_message(" + id + ", user_id)  from users WHERE get_latest_message(" + id + ", user_id) IS NOT NULL;";
+            ResultSet rs = sqlGetQuery(SQL);
+            if (rs == null){
+                System.out.println("VERY VERY BAD (IMPOSSIBLE)");
+                System.exit(0);
+            }
+            ArrayList<Integer> arr = new ArrayList<>();
+            try{
+                while (rs.next()){
+                    arr.add(rs.getInt(1));
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            ArrayList<ChatItem> answer = new ArrayList<>();
+            for (int i : arr){
+                Message message = getMessage(i);
+                if (message.from.user_id == id)answer.add(new ChatItem(message.from, message.to, message));else
+                    answer.add(new ChatItem(message.to, message.from, message));
+            }
+            answer.sort((o1, o2) -> -o1.message.timestamp.compareTo(o2.message.timestamp));
+            return answer;
+        }
+
+        private Message getMessage(int id){
+            ResultSet rs = sqlGetQuery("SELECT * FROM messages WHERE message_id = " + id + ";");
+            if (rs == null) {
+                System.out.println("PROBLEMS WITH SQL");
+                System.exit(0);
+            }
+            try {
+                rs.next();
+                //System.out.println(rs.getInt("user_location_id"));
+                int id1 = rs.getInt(1);
+                int id2 = rs.getInt(2);
+                String text = rs.getString(3);
+                Timestamp date = rs.getTimestamp(4);
+                return new Message(getUserInfo(id1), getUserInfo(id2), text, date);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
         private ProfileInfo getUserInfo(int user_id) {

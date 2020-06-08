@@ -99,15 +99,18 @@ public class MessagesSceneController {
         MessageBox(Message message){
             super();
             Label time = new Label(message.timestamp.toString().substring(0, 16));
-            TextField mLabel = new TextField(message.text);
+            Separator sep = new Separator();
+            TextArea mLabel = new TextArea(message.text);
+            mLabel.setPrefHeight(50);
             mLabel.setEditable(false);
+            mLabel.setWrapText(true);
 
             if (message.from.user_id == Main.user.user_id){
                 setAlignment(Pos.CENTER_RIGHT);
-                getChildren().addAll(time, mLabel);
+                getChildren().addAll(time, sep, mLabel);
             }else {
                 setAlignment(Pos.CENTER_LEFT);
-                getChildren().addAll(mLabel, time);
+                getChildren().addAll(mLabel, sep, time);
             }
         }
     }

@@ -44,4 +44,8 @@ public class MainSceneController {
         Main.setSearchScene();
         // TODO: 04.06.2020
     }
+
+    public void chatsHandler(MouseEvent event) {
+        Main.setChatsScene();
+    }
 }

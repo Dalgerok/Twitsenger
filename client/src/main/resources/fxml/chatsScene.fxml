@@ -10,7 +10,5 @@
 <AnchorPane fx:id="chatsPane" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.ChatsSceneController">
    <children>
       <ListView fx:id="chatsView" prefHeight="800.0" prefWidth="600.0" />
-      <Label layoutX="335.0" layoutY="185.0" style="-fx-opacity: 1;" styleClass="button" text="Label" />
-      <Text layoutX="435.0" layoutY="329.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="button" text="Text" />
    </children>
 </AnchorPane>

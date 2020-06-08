@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="mainAnchorPane" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.MainSceneController">
+<AnchorPane fx:id="mainAnchorPane" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.MainSceneController">
    <children>
       <VBox prefHeight="800.0" prefWidth="200.0" style=":200px;">
          <children>
@@ -13,6 +16,7 @@
             <Button mnemonicParsing="false" onMouseClicked="#editMyProfileHandler" text="Edit my profile" />
             <Button mnemonicParsing="false" onMouseClicked="#myFriendsHandler" text="My friends" />
             <Button mnemonicParsing="false" onMouseClicked="#postsHandler" text="Posts" />
+            <Button mnemonicParsing="false" onMouseClicked="#chatsHandler" text="Chats" />
             <Button fx:id="findFriendsButton" mnemonicParsing="false" onMouseClicked="#findFriendsHandler" text="Find friends" />
             <Button alignment="TOP_LEFT" mnemonicParsing="false" onMouseClicked="#logoutButtonHandler" text="Log out" />
          </children>
