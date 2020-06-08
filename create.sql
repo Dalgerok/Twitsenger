@@ -258,9 +258,6 @@ CREATE  TABLE messages (
 
 CREATE RULE no_update_message AS ON UPDATE TO messages
     DO INSTEAD NOTHING;
-CREATE RULE no_delete_message AS ON DELETE TO messages
-    DO INSTEAD NOTHING;
-
 
 
 CREATE FUNCTION get_latest_message(id1 integer, id2 integer) RETURNS integer AS
