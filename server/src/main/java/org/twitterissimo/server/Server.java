@@ -244,6 +244,10 @@ public class Server {
                 while (true) {
                     obj = readObject();
                     System.out.println("received " + obj);
+                    if (ConnectionMessage.DELETE_USER.equals(obj)){
+                        sqlUpdQuery("DELETE FROM users WHERE users.user_id=" + user.user_id);
+                        return;
+                    }
                     if (ConnectionMessage.GET_ALL_POSTS.equals(obj)) {
                         System.out.println("I WANNA TO SEND POSTS!!!");
                         ArrayList<Post> arr = getAllPosts();

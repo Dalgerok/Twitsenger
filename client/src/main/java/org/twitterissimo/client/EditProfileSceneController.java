@@ -3,9 +3,9 @@ package org.twitterissimo.client;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -53,6 +53,7 @@ public class EditProfileSceneController {
     //public volatile int locationId;
     public AtomicInteger locationId = new AtomicInteger();
     public AtomicInteger facilityId = new AtomicInteger();
+    public Button deleteUserButton;
 
     public void updateProfile(ProfileInfo pi){
         firstNameLabel.setText(pi.first_name);
@@ -240,6 +241,10 @@ public class EditProfileSceneController {
         descriptionTextField.setText("");
         addYourOwnLocation.setText("");
         facilityAddingPane.setVisible(true);
+    }
+
+    public void deleteUserHandler(MouseEvent mouseEvent) {
+        Main.deleteUser();
     }
 
     public class MyHBox extends HBox {

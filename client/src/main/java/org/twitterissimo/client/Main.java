@@ -567,6 +567,10 @@ public class Main extends Application{
             System.out.println("BROO:(");
         }
     }
+    public static void deleteUser() {
+        sendObject(ConnectionMessage.DELETE_USER);
+        setStartScene();
+    }
     public static void sendPost(String s) {
         System.out.println("SEND MESSAGE " + s);
         sendObject(ConnectionMessage.NEW_POST);
