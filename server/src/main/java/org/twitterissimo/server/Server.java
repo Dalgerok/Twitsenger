@@ -803,7 +803,7 @@ public class Server {
             return users;
         }
         private ArrayList<UserRequest> getUserFriendRequests(int user_id) {
-            String SQL = "SELECT from_whom, request_date FROM friend_request WHERE to_whom = " + user_id + ";";
+            String SQL = "SELECT from_whom  FROM friend_request WHERE to_whom = " + user_id + ";";
             ResultSet rs = sqlGetQuery(SQL);
             if (rs == null) {
                 return new ArrayList<>();
@@ -811,14 +811,12 @@ public class Server {
             ArrayList<UserRequest> userRequests = new ArrayList<>();
             try {
                 ArrayList<Integer> arrUserId = new ArrayList<>();
-                ArrayList<Date> arrDate = new ArrayList<>();
                 while(rs.next()) {
                     arrUserId.add(rs.getInt(1));
-                    arrDate.add(rs.getDate(2));
                 }
                 for (int i = 0; i < arrUserId.size(); i++) {
                     ProfileInfo profileInfo = getProfileInfo(arrUserId.get(i));
-                    userRequests.add(new UserRequest(profileInfo, arrDate.get(i)));
+                    userRequests.add(new UserRequest(profileInfo));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

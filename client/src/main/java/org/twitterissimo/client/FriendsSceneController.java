@@ -59,7 +59,7 @@ public class FriendsSceneController {
         public FriendRequestHBox(UserRequest userRequest) {
 
             ServerUser user =  userRequest.from_whom;
-            txt.setText(user.first_name + " " + user.last_name + " " + dateWTime(userRequest.request_date));
+            txt.setText(user.first_name + " " + user.last_name);
             button.setText("add");
             button.setOnAction(actionEvent -> {
                 Main.sendObject(new FriendStatusChange(Main.user, user, FriendStatusChange.FriendQuery.ADD));
