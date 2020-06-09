@@ -177,7 +177,6 @@ $$
 CREATE  TABLE friend_request (
             from_whom            integer                             NOT NULL ,
             to_whom              integer                             NOT NULL ,
-            request_date         timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL ,
             CONSTRAINT pk_friendrequest PRIMARY KEY ( from_whom, to_whom ),
             CONSTRAINT fk_friendrequest_user1 FOREIGN KEY ( from_whom ) REFERENCES users( user_id ) ON DELETE CASCADE,
             CONSTRAINT fk_friendrequest_user2 FOREIGN KEY ( to_whom ) REFERENCES users( user_id ) ON DELETE CASCADE,
@@ -806,6 +805,7 @@ Michael,White,1994-10-06,michael.white@amail.org,In a civil partnership,Male,VYC
 Luke,Fisher,1978-05-06,luke.fisher@mmail.com,Engaged,Male,O^qmMH*D10I0
 Skylar,Martin,1983-09-16,skylar.martin@bmail.net,Single,Female,SrV%6N5mfPhd
 Anna,Garcia,1985-01-05,anna.garcia@omail.net,It is complicated,Female,&3kbDZwTYZ0
+Maksym,Zub,2002-08-13,max,Single,Male,max
 \.
 COPY friendship (friend1, friend2) FROM stdin(FORMAT CSV);
 85,7

@@ -96,6 +96,10 @@ public class Main extends Application{
         searchSceneController.clearResults();
         System.out.println("SET SEARCH SCENE");
         mainSceneController.mainPane.getChildren().setAll(searchSceneController.searchPane);
+        searchSceneController.city.setText("");
+        searchSceneController.country.setText("");
+        searchSceneController.firstName.setText("");
+        searchSceneController.lastName.setText("");
 
         clientPlace = ClientPlace.SEARCH_SCENE;
         // TODO: 02.06.2020
