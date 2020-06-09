@@ -668,7 +668,10 @@ public class Main extends Application{
                     if (obj instanceof ArrayList){
                         Object o = ((ArrayList) obj).get(0);
                         ((ArrayList) obj).remove(0);
-                        if (o instanceof Facility) Platform.runLater(() -> editProfileSceneController.updateSearchResult((ArrayList<Facility>)obj));
+                        if (o instanceof Facility) {
+                            if (clientPlace.equals(ClientPlace.EDIT_PROFILE_SCENE))Platform.runLater(() -> editProfileSceneController.updateSearchResult((ArrayList<Facility>)obj));
+                            if (clientPlace.equals(ClientPlace.SEARCH_SCENE))Platform.runLater(() -> searchSceneController.updateFacilities((ArrayList<Facility>)obj));
+                        }
                         if (o instanceof Post)Platform.runLater(() -> updatePostsScene((ArrayList<Post>)obj));
                         if (o instanceof ServerUser) System.out.println(((ServerUser) o).first_name);
                         if (o instanceof ServerUser && ((ServerUser) o).first_name.equals("search"))Platform.runLater(() -> searchSceneController.updateSearchResults((ArrayList<ServerUser>)obj));

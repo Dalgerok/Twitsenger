@@ -910,7 +910,11 @@ public class Server {
         }
 
         private ArrayList<ServerUser> getUsersByFilter(SearchProfileFilter filter){
-            String SQL = "SELECT * FROM users WHERE check_user_filter(users, " + compose(   filter.firstName, filter.lastName, filter.country, filter.city) +
+            String SQL = "SELECT * FROM users WHERE check_user_filter(users, " +
+compose(filter.firstName, filter.lastName, filter.country, filter.city, filter.facilityId + "") + ", ";
+            if (filter.dateFrom != null)SQL = SQL + "'" + filter.dateFrom.toString() + "',";else SQL = SQL + "NULL,";
+            if (filter.dateTo != null)SQL = SQL + "'" + filter.dateTo.toString() + "'";else SQL = SQL + "NULL";
+            SQL = SQL +
                     ")  = TRUE;";
             ResultSet rs = sqlGetQuery(SQL);
             if (rs == null){

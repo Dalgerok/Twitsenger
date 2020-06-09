@@ -1,52 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.collections.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import javafx.collections.FXCollections?>
 
 <AnchorPane fx:id="searchPane" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.twitterissimo.client.SearchSceneController">
    <children>
-      <HBox prefHeight="60.0" prefWidth="600.0">
+      <ListView fx:id="searchResults" layoutY="165.0" prefHeight="635.0" prefWidth="600.0" />
+      <VBox alignment="CENTER" prefWidth="600.0" spacing="10.0">
          <children>
-            <VBox prefHeight="200.0" prefWidth="200.0" spacing="10.0">
+            <HBox prefWidth="200.0" spacing="10.0">
                <children>
-                  <TextField fx:id="firstName" promptText="First name">
+                  <TextField fx:id="firstName" prefWidth="200.0" promptText="First name">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </TextField>
-                  <TextField fx:id="lastName" promptText="Last name">
+                  <TextField fx:id="lastName" prefWidth="200.0" promptText="Last name">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </TextField>
                </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="200.0" spacing="10.0">
+            </HBox>
+            <HBox prefWidth="200.0" spacing="10.0">
                <children>
-                  <TextField fx:id="country" promptText="Country">
+                  <TextField fx:id="country" prefWidth="200.0" promptText="Country">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </TextField>
-                  <TextField fx:id="city" promptText="City">
+                  <TextField fx:id="city" prefWidth="200.0" promptText="City">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </TextField>
                </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="200.0" spacing="10.0">
+            </HBox>
+            <HBox prefWidth="200.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onMouseClicked="#searchButtonHandler" prefWidth="200.0" text="Search" />
+                  <TextField fx:id="facilityType" editable="false" prefWidth="200.0" promptText="Facility type">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+                  <TextField fx:id="facilityName" editable="false" prefWidth="200.0" promptText="Facility name">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+                  <Button mnemonicParsing="false" onMouseClicked="#chooseFacilityHandler" text="Choose facility" />
                </children>
-            </VBox>
+            </HBox>
+            <HBox prefWidth="200.0" spacing="10.0">
+               <children>
+                  <DatePicker fx:id="dateFrom" editable="false" prefWidth="200.0" promptText="Date from" />
+                  <DatePicker fx:id="dateTo" editable="false" prefWidth="200.0" promptText="Date to" />
+                  <Button mnemonicParsing="false" onMouseClicked="#clearFacilityHandler" text="Clear facility" />
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" onMouseClicked="#searchButtonHandler" prefWidth="200.0" text="Search" />
          </children>
-      </HBox>
-      <ListView fx:id="searchResults" layoutY="60.0" prefHeight="740.0" prefWidth="600.0" />
+      </VBox>
+      <AnchorPane fx:id="searchFacilityPane" layoutX="100.0" layoutY="20.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: white; -fx-border-color: black; -fx-background-radius: 10 10 10 10; -fx-border-radius: 10 10 10 10;">
+         <children>
+            <VBox alignment="CENTER" layoutX="39.0" layoutY="27.0" spacing="10.0">
+               <children>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label text="Facility type">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="typeChooser" prefWidth="150.0" value="School">
+                        <items>
+                           <FXCollections fx:factory="observableArrayList">
+                              <String fx:value="School" />
+                              <String fx:value="University" />
+                              <String fx:value="Job" />
+                           </FXCollections>
+                        </items>
+                     </ComboBox>
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label text="Facility name">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="facilityNameField" prefWidth="250.0" />
+                     </children>
+                  </HBox>
+                  <Button cancelButton="true" mnemonicParsing="false" onMouseClicked="#searchFacilitiesButtonHandler" text="Search" />
+               </children>
+            </VBox>
+            <ListView fx:id="facilitiesView" layoutX="10.0" layoutY="125.0" prefHeight="265.0" prefWidth="380.0" />
+            <Button layoutX="349.0" layoutY="7.0" mnemonicParsing="false" onMouseClicked="#closeButtonHandler" text="Close" />
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

@@ -502,7 +502,11 @@ CREATE FUNCTION check_user_filter(
     fName    varchar,
     lName    varchar,
     _country varchar,
-    _city    varchar
+    _city    varchar,
+    fac_id integer,
+    datefrom timestamp,
+    dateto timestamp
+
 )
 RETURNS boolean
 AS
@@ -524,6 +528,15 @@ BEGIN
                 WHERE location_id = _user.user_location_id AND lower(city) LIKE '%'||lower(_city)||'%'
         ) THEN
             RETURN FALSE;
+        END IF;
+    END IF;
+    IF (fac_id IS NOT NULL AND fac_id != 0)THEN
+        IF (datefrom IS NULL)THEN
+            IF NOT EXISTS(SELECT * FROM user_facilities WHERE user_id = _user.user_id AND facility_id = fac_id)THEN RETURN FALSE; END IF;
+        ELSE
+            IF (dateto IS NULL)THEN dateto = NOW();END IF;
+            IF NOT EXISTS(SELECT * FROM user_facilities WHERE user_id = _user.user_id AND facility_id = fac_id AND
+                (NOT (date_from IS NOT NULL AND date_from > dateto)) AND (NOT (date_to IS NOT NULL AND date_to < datefrom)))THEN RETURN FALSE; END IF;
         END IF;
     END IF;
     IF (lower(_user.first_name) LIKE '%'||lower(fName)||'%')THEN NULL;ELSE RETURN FALSE;END IF;
@@ -3321,3 +3334,25 @@ University of Rochester,4,University
 Erasmus University Rotterdam,18,University
 "University of Maryland, College Park",26,University
 University of Sydney,37,University
+\.
+
+SELECT * FROM friend_request;
+
+
+INSERT INTO users
+VALUES ('Andrii', 'Orap', '12-12-2001', 'a', 'Single', 'Male', 'a');
+INSERT INTO users
+VALUES ('Nazarii', 'Denha', '10-10-2002', 'b', 'Single', 'Male', 'b');
+INSERT INTO users
+VALUES ('Maxym', 'Zub', '10-10-2002', 'c', 'Single', 'Male', 'c');
+INSERT INTO users
+VALUES ('Test', 'Testovich', '01-01-2000', 'd', 'Single', 'Male', 'd', 5);
+
+INSERT INTO locations(country, city) VALUES ('Poland', 'Krakow');
+INSERT INTO locations(country, city) VALUES ('Ukraine', 'Kremenchuk');
+
+INSERT INTO facilities(facility_name, facility_location, facility_type) VALUES ('Jagiellonian University', 1, 'University');
+INSERT INTO facilities(facility_name, facility_location, facility_type) VALUES ('Lyceum Polit', 2, 'School');
+INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (1, 1, '2019-10-1', 'student');
+INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (2, 1, '2019-10-1', 'student');
+INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (3, 1, '2019-10-1', 'student');
