@@ -1,6 +1,7 @@
-DROP SCHEMA IF EXISTS public CASCADE; --dont forget to comment this lines
-CREATE SCHEMA public; --this
-ALTER USER postgres WITH PASSWORD '1321'; --and this
+--DROP SCHEMA IF EXISTS public CASCADE; --dont forget to comment this lines
+--CREATE SCHEMA public; --this
+--ALTER USER postgres WITH PASSWORD '1321'; --and this
+
 ----
 CREATE  TABLE locations (
             country              varchar(100)   ,
