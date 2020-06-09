@@ -416,13 +416,23 @@ public class Server {
                         sqlUpdQuery("INSERT INTO messages VALUES(" + compose(message.from.user_id+"", message.to.user_id+"", message.text) + ");");
                         UserMessages um = getMessages(message.from.user_id, message.to.user_id);
                         um.reason = "just update";
+                        ArrayList<ChatItem> arr2 = getChats(message.from.user_id);
+                        arr2.add(0, new ChatItem());
                         for (ConnectionThread conn : connections){
-                            if (conn.user.user_id == message.from.user_id)conn.sendObject(um);
+                            if (conn.user.user_id == message.from.user_id){
+                                conn.sendObject(um);
+                                conn.sendObject(arr2);
+                            }
                         }
                         um = getMessages(message.to.user_id, message.from.user_id);
                         um.reason = "just update";
+                        arr2 = getChats(message.to.user_id);
+                        arr2.add(0, new ChatItem());
                         for (ConnectionThread conn : connections){
-                            if (conn.user.user_id == message.to.user_id)conn.sendObject(um);
+                            if (conn.user.user_id == message.to.user_id){
+                                conn.sendObject(um);
+                                conn.sendObject(arr2);
+                            }
                         }
                     }else if (obj instanceof UserMessages){
                         UserMessages um = (UserMessages)obj;
