@@ -717,108 +717,108 @@ Rome	Italy
 Pyongyang	Korea, North
 \.
 
-COPY users(first_name, last_name, birthday, email, relationship_status, gender, user_password) FROM stdin(FORMAT CSV);
-Isaiah,Morris,1983-11-16,isaiah.morris@fmail.com,Single,Male,cIsG5Pg3JM^T&I
-Henry,Nguyen,1981-12-23,henry.nguyen@pmail.org,Separated,Male,yxrcZHCnBXwLQIt
-Charlotte,Morgan,2002-12-03,charlotte.morgan@omail.org,In an open relationship,Female,rgKNlb0hSz31*#
-Christian,Phillips,1987-08-21,christian.phillips@tmail.com,It is complicated,Male,cfZB3zClkMcp$
-Alexander,Thomas,1976-07-10,alexander.thomas@omail.com,Married,Male,G%qtRIheE
-Aria,Peterson,1995-06-28,aria.peterson@vmail.com,In a domestic partnership,Female,DdO6FjquM
-Harper,Allen,1977-01-22,harper.allen@omail.net,Separated,Female,JA0r2Saz&zl
-Gabriel,Howard,1976-01-22,gabriel.howard@zmail.com,In a civil partnership,Male,RISctd6gXg0YrQ
-Violet,Sanders,1976-06-30,violet.sanders@jmail.org,Divorced,Female,dMiWElVvoG4n
-Olivia,Perez,1983-12-11,olivia.perez@hmail.net,Single,Female,p9cmS4lR$PIRX
-Aaliyah,Hill,1978-07-19,aaliyah.hill@amail.com,Divorced,Female,q0H7u*eRBpj7D
-Allison,Gonzalez,2002-01-01,allison.gonzalez@bmail.org,In a civil partnership,Female,yn84njJJ7ps0G2F
-Zoe,Miller,1993-12-16,zoe.miller@lmail.org,Separated,Female,%RZ*cFg$%YSeW
-John,Parker,1998-05-15,john.parker@xmail.com,Single,Male,0j6M7XcK&G1F
-Penelope,Wilson,1997-06-05,penelope.wilson@vmail.org,Single,Female,1K$s6ANy
-Ryan,Foster,1999-10-18,ryan.foster@fmail.org,Single,Male,eV#HJAml$7Ts
-Christopher,Ward,1986-04-22,christopher.ward@rmail.net,It is complicated,Male,8#0B&1dCc
-Aiden,Cox,2000-04-03,aiden.cox@gmail.net,In a domestic partnership,Male,eb%xHMC15rHCm
-Chloe,Cooper,1978-11-28,chloe.cooper@ymail.com,It is complicated,Female,f2Nibd6#K
-Joseph,Lopez,1991-03-21,joseph.lopez@cmail.org,In a civil partnership,Male,G3kJVsTOI
-Lillian,Turner,1983-11-17,lillian.turner@amail.com,In a civil partnership,Female,hvBOBLsz6nlrOfn
-Owen,Scott,1996-08-04,owen.scott@umail.com,In a domestic partnership,Male,gYw5o6OyjdTRC1
-Leah,Brooks,1976-09-03,leah.brooks@email.com,Married,Female,WZ3Z5O*7G7kn
-Elijah,Hughes,2002-03-16,elijah.hughes@dmail.com,In an open relationship,Male,D#sNROpvMJicbP
-Samantha,Rogers,1999-11-05,samantha.rogers@cmail.net,Widowed,Female,qqFok$Owo5S
-Noah,Long,1984-11-30,noah.long@umail.com,Divorced,Male,57htx%jxOF4Hm
-Nora,Bell,1997-06-26,nora.bell@hmail.org,Separated,Female,6Kq2^s*l1w
-Lucas,Collins,2002-02-22,lucas.collins@qmail.net,Divorced,Male,YoUb9uwEf
-Julian,Watson,1989-09-22,julian.watson@smail.org,Engaged,Male,$jMoeIL$1KcQ
-Andrew,Brown,1992-09-03,andrew.brown@bmail.net,In a domestic partnership,Male,a$REmPKsO0E%$
-Audrey,Morales,1990-10-29,audrey.morales@rmail.com,Single,Female,GT7eKjjqn8sW7V5
-Benjamin,Cook,1978-08-13,benjamin.cook@ymail.org,Engaged,Male,s3WkNtZ^
-Elizabeth,Lewis,2001-11-13,elizabeth.lewis@ymail.org,Separated,Female,3yNkwfbc758NEAC
-Mason,King,1993-05-01,mason.king@imail.org,In a civil partnership,Male,OgXu8#1*9Hf%
-Daniel,Clark,1994-10-25,daniel.clark@dmail.com,Divorced,Male,zq^^4^SCGPkS8
-Carter,Kelly,2001-07-11,carter.kelly@vmail.net,In a civil partnership,Male,A9Hn^cu&tGCa
-Addison,Stewart,1991-11-26,addison.stewart@omail.org,Divorced,Female,WWCsdyqqs
-Paisley,Smith,1988-03-07,paisley.smith@fmail.com,Separated,Female,Td5TZYL7&5rv
-Anthony,Young,1987-02-08,anthony.young@mmail.net,Engaged,Male,6Ue%mDpqCQ0Z1MP
-David,Edwards,1990-01-29,david.edwards@wmail.net,In an open relationship,Male,SDthL5teF4q%#
-Avery,Ortiz,1996-12-14,avery.ortiz@mmail.net,It is complicated,Female,KDNl3Ppu1cT&V
-Madison,Roberts,1991-06-29,madison.roberts@kmail.net,It is complicated,Female,Ve$J$p%^I
-Joshua,Adams,1985-01-19,joshua.adams@rmail.org,Widowed,Male,#WdRLZBwyx
-Riley,Moore,2001-07-01,riley.moore@mmail.net,Single,Female,39G**Zb6^L18h
-Hunter,Sanchez,1989-05-07,hunter.sanchez@nmail.com,In an open relationship,Male,t$VL7bA%GYLqM$
-Sofia,Wright,1984-08-10,sofia.wright@smail.com,Married,Female,S$kJw2GH
-Landon,Baker,1999-05-06,landon.baker@ymail.org,In a civil partnership,Male,0zsb#khiNc
-Ethan,Richardson,1976-09-16,ethan.richardson@pmail.com,Divorced,Male,%lBPiXUZ
-Jayden,Reed,1984-09-06,jayden.reed@pmail.net,Single,Male,OfzLVnn&cs2
-Oliver,Ramirez,1987-04-21,oliver.ramirez@imail.com,In a civil partnership,Male,eS7IZAxBLQ1D%N
-Logan,Anderson,1990-10-09,logan.anderson@ymail.com,Married,Male,tPx%&DcL
-Ariana,Powell,1991-11-16,ariana.powell@mmail.net,It is complicated,Female,P$s1WB&l
-Grayson,Nelson,1980-06-25,grayson.nelson@umail.net,In a domestic partnership,Male,zY3taZRWhVqKA
-Samuel,Diaz,1998-12-20,samuel.diaz@cmail.org,In a civil partnership,Male,xfXyAWRXhG&Pjf4
-Scarlett,Myers,1997-06-25,scarlett.myers@ymail.net,Married,Female,WDS7^rf1bRs
-Natalie,Harris,1986-01-25,natalie.harris@qmail.com,Divorced,Female,$D1LSmtL
-Emily,Campbell,1995-07-14,emily.campbell@hmail.net,Divorced,Female,53AMMNiKr4
-Matthew,Gomez,1995-06-11,matthew.gomez@umail.com,It is complicated,Male,EZ49croVtBbx
-Hannah,Price,1999-09-02,hannah.price@nmail.com,Engaged,Female,xLNqyC*q8JEL^$
-Lily,Barnes,1976-03-14,lily.barnes@kmail.org,In a civil partnership,Female,ONWUBeGC6RFI
-Liam,Wood,1983-04-11,liam.wood@amail.org,In a domestic partnership,Male,F%gr%Cs^$^
-Ellie,Rivera,1985-09-28,ellie.rivera@imail.net,In a domestic partnership,Female,ev&4J9e1hUoB^K7
-Emma,Flores,1991-10-21,emma.flores@vmail.com,Separated,Female,nYSWbn*^E8d6Skt
-Victoria,Green,1995-07-01,victoria.green@email.com,Widowed,Female,a%80YQ^Of$Z
-Brooklyn,Davis,2002-07-28,brooklyn.davis@amail.net,In an open relationship,Female,kJ$3$3z&Vzp
-Mia,Bailey,1997-10-21,mia.bailey@wmail.net,Married,Female,bzxwxu1N0^J95
-Amelia,Johnson,1994-04-24,amelia.johnson@vmail.org,Separated,Female,#rmNIJndI
-Jack,Carter,1998-11-05,jack.carter@amail.net,Widowed,Male,AVEJ51LcaE
-Wyatt,Jenkins,1998-05-10,wyatt.jenkins@pmail.org,Married,Male,7N%7Kvow
-Zoey,Evans,1999-03-23,zoey.evans@ymail.org,Separated,Female,6ooirW%yde6t
-Levi,Murphy,1991-08-19,levi.murphy@fmail.net,Divorced,Male,z5cRNfCU1wJR7
-Sophia,Sullivan,1979-09-06,sophia.sullivan@omail.org,Separated,Female,C7FTS3teeP6Hb
-Charles,Mitchell,1979-07-12,charles.mitchell@smail.org,In a domestic partnership,Male,wKzUxOl#Q#k
-Alexa,James,1979-01-22,alexa.james@jmail.org,Widowed,Female,SsFGUzSdo#^sf%X
-Ava,Williams,1994-07-08,ava.williams@tmail.com,In a civil partnership,Female,zPY6tUwMC
-Claire,Hall,1978-05-26,claire.hall@wmail.com,Married,Female,mCkE0RRIj
-Jacob,Thompson,1982-07-23,jacob.thompson@qmail.com,In an open relationship,Male,bTNjOOtASZGdka
-Grace,Jackson,2002-06-25,grace.jackson@jmail.com,In an open relationship,Female,wXO7p#f1pYen2S
-Abigail,Jones,1985-11-16,abigail.jones@umail.org,In an open relationship,Female,85SpcKQG#e
-Savannah,Taylor,1989-04-19,savannah.taylor@pmail.com,Married,Female,i3VtHu%*tjqb#I
-Isaac,Ross,1997-10-09,isaac.ross@omail.net,It is complicated,Male,IBXRH$75gEC%g7Y
-Layla,Torres,1995-08-16,layla.torres@email.org,Single,Female,qpd5XApYqh&hSvq
-Caleb,Hernandez,1979-05-23,caleb.hernandez@tmail.com,Widowed,Male,E1aZny#dnC
-Jonathan,Reyes,1975-03-27,jonathan.reyes@ymail.net,In a domestic partnership,Male,QJIVJzmBsqitOI
-Sebastian,Cruz,1979-06-30,sebastian.cruz@ymail.net,Married,Male,LSFDSFSpl
-James,Bennett,1978-01-12,james.bennett@dmail.org,Divorced,Male,1LyhxsxOjZ
-Camila,Russell,1979-07-02,camila.russell@gmail.com,Divorced,Female,d1^ILPaaJD9
-Jackson,Lee,1987-08-17,jackson.lee@imail.net,In an open relationship,Male,yjj71Hi&$bfAH
-Jaxon,Martinez,1980-03-23,jaxon.martinez@vmail.net,Engaged,Male,4bIIuJJ2
-William,Perry,1979-09-29,william.perry@rmail.net,Separated,Male,tSw&GqdN
-Isabella,Butler,1992-08-08,isabella.butler@omail.org,Single,Female,L4riCdPv5EWuc
-Evelyn,Gray,2002-08-01,evelyn.gray@dmail.net,Separated,Female,FAu^nnU2F6*1fwE
-Nathan,Gutierrez,2002-04-25,nathan.gutierrez@kmail.com,Divorced,Male,%97ytj&OOo
-Aubrey,Robinson,1979-04-04,aubrey.robinson@mmail.com,In a civil partnership,Female,Rb1rg&ZfhiWRbX*
-Dylan,Walker,1983-08-01,dylan.walker@bmail.org,It is complicated,Male,1W*S32fwvJfI*
-Ella,Rodriguez,1998-10-27,ella.rodriguez@pmail.net,It is complicated,Female,limanK5ITLEZTM1
-Michael,White,1994-10-06,michael.white@amail.org,In a civil partnership,Male,VYCjjMX1yiM
-Luke,Fisher,1978-05-06,luke.fisher@mmail.com,Engaged,Male,O^qmMH*D10I0
-Skylar,Martin,1983-09-16,skylar.martin@bmail.net,Single,Female,SrV%6N5mfPhd
-Anna,Garcia,1985-01-05,anna.garcia@omail.net,It is complicated,Female,&3kbDZwTYZ0
-Maksym,Zub,2002-08-13,max,Single,Male,max
+COPY users(first_name, last_name, birthday, email, relationship_status, gender, user_password, user_location_id) FROM stdin(FORMAT CSV);
+Isaiah,Morris,1991-06-21,isaiah.morris@ymail.org,It is complicated,Male,waOlfYpA0h6Uii8,52
+Henry,Nguyen,1989-12-31,henry.nguyen@cmail.com,Single,Male,&v%iUC4jCZo,75
+Charlotte,Morgan,1975-11-22,charlotte.morgan@pmail.net,It is complicated,Female,#Y##fN7D1oiFVB,94
+Christian,Phillips,1996-10-17,christian.phillips@amail.org,In a domestic partnership,Male,Wr1WVNN30%uE,63
+Alexander,Thomas,1992-04-23,alexander.thomas@cmail.net,Widowed,Male,Ld#Nd^FV9,18
+Aria,Peterson,1994-04-05,aria.peterson@cmail.org,Engaged,Female,ANP0KrxpPLk,70
+Harper,Allen,2000-07-09,harper.allen@amail.com,Married,Female,6DTelQ8JfOe0OG1,67
+Gabriel,Howard,1998-01-20,gabriel.howard@jmail.net,Engaged,Male,8bZEFSt81v,4
+Violet,Sanders,1979-06-21,violet.sanders@ymail.org,Married,Female,h0skiEw2G%nZDs,50
+Olivia,Perez,1988-02-09,olivia.perez@bmail.org,In a domestic partnership,Female,Ewki98k&O8P,49
+Aaliyah,Hill,1988-04-03,aaliyah.hill@email.com,Single,Female,hJI3N1vL,53
+Allison,Gonzalez,1986-05-07,allison.gonzalez@ymail.org,Divorced,Female,VyT*VKyuLTDrr,17
+Zoe,Miller,1980-07-19,zoe.miller@fmail.com,In an open relationship,Female,r&#lIc&$FfAH,85
+John,Parker,1988-02-22,john.parker@vmail.org,Single,Male,6FFMrpm&gQqyd,100
+Penelope,Wilson,1997-06-07,penelope.wilson@amail.net,Married,Female,mGYWKZEWx^yY,35
+Ryan,Foster,1994-11-24,ryan.foster@amail.net,Separated,Male,pBCTcABfhG,89
+Christopher,Ward,1976-04-16,christopher.ward@zmail.net,Engaged,Male,xQECE&mtZ1&mn,98
+Aiden,Cox,1996-01-22,aiden.cox@xmail.net,In a civil partnership,Male,p1*QHaBgz$,56
+Chloe,Cooper,1990-03-06,chloe.cooper@rmail.com,It is complicated,Female,7oTF3T58G3vv#,37
+Joseph,Lopez,1979-07-13,joseph.lopez@kmail.org,In an open relationship,Male,iM*H1XH6,72
+Lillian,Turner,2000-04-14,lillian.turner@wmail.com,In a civil partnership,Female,&MyfOq8#dy,50
+Owen,Scott,1976-07-12,owen.scott@ymail.org,In an open relationship,Male,eyM$9SpvLoFC2,88
+Leah,Brooks,1976-05-06,leah.brooks@vmail.net,In an open relationship,Female,fvWHzQ31TU,81
+Elijah,Hughes,1994-10-23,elijah.hughes@nmail.net,Married,Male,e&kJNuWqbj,6
+Samantha,Rogers,2001-10-05,samantha.rogers@gmail.org,Engaged,Female,%gY4#obrrN5,67
+Noah,Long,1985-11-24,noah.long@fmail.com,Married,Male,%2FFwU1s,60
+Nora,Bell,1991-09-09,nora.bell@lmail.org,In an open relationship,Female,RYh7lhbz1i,32
+Lucas,Collins,1998-01-25,lucas.collins@pmail.org,It is complicated,Male,k1KLrMevgD%ou#S,41
+Julian,Watson,2002-09-07,julian.watson@pmail.org,In a domestic partnership,Male,XvhMw$DQNKo1#qe,29
+Andrew,Brown,2002-10-04,andrew.brown@omail.org,Separated,Male,pElvtj261eYu,33
+Audrey,Morales,1985-06-01,audrey.morales@lmail.net,In an open relationship,Female,tGw&URTDZIxn21o,97
+Benjamin,Cook,1991-12-22,benjamin.cook@nmail.net,Separated,Male,D$GgfHf*ak,29
+Elizabeth,Lewis,1984-06-15,elizabeth.lewis@mmail.org,In a civil partnership,Female,G3xsYr8z,11
+Mason,King,1979-10-31,mason.king@bmail.net,Widowed,Male,1k#LjTgFNO,43
+Daniel,Clark,1980-10-03,daniel.clark@wmail.org,Divorced,Male,gPvY&JXw2NdS,3
+Carter,Kelly,1986-10-06,carter.kelly@tmail.com,In an open relationship,Male,4JoA0J%&6J2,93
+Addison,Stewart,1976-07-28,addison.stewart@smail.com,Separated,Female,nOHfrNTQt^F,93
+Paisley,Smith,1979-04-09,paisley.smith@xmail.com,Separated,Female,mJb32W2ot,25
+Anthony,Young,1976-04-01,anthony.young@kmail.net,Single,Male,bQR&MZyd,15
+David,Edwards,1983-01-10,david.edwards@xmail.net,In an open relationship,Male,9EXdzF1mj12l,8
+Avery,Ortiz,1993-05-12,avery.ortiz@mmail.net,In a civil partnership,Female,uvyxjV^16S0wll,76
+Madison,Roberts,1996-10-22,madison.roberts@jmail.net,In a civil partnership,Female,^hC#&XWnX8TD#c,65
+Joshua,Adams,1993-10-18,joshua.adams@omail.com,In an open relationship,Male,dDFd7LZkRgBY0V2,30
+Riley,Moore,1976-02-02,riley.moore@vmail.org,It is complicated,Female,qy3Ggef8JOk2u,88
+Hunter,Sanchez,1997-01-09,hunter.sanchez@lmail.org,Divorced,Male,7npHNH4fM1LA,13
+Sofia,Wright,1987-01-21,sofia.wright@tmail.net,In a civil partnership,Female,*IAYBx8YTNL,4
+Landon,Baker,1998-09-08,landon.baker@bmail.net,Engaged,Male,nQtqpJFoiVs&14N,86
+Ethan,Richardson,1975-09-19,ethan.richardson@gmail.com,Engaged,Male,sS*6%vFGzZJ,37
+Jayden,Reed,2001-11-30,jayden.reed@lmail.net,It is complicated,Male,s5C&4#xksI41^C,46
+Oliver,Ramirez,2001-02-04,oliver.ramirez@nmail.org,It is complicated,Male,yYtjY9HFT&aYsrN,93
+Logan,Anderson,1991-02-05,logan.anderson@smail.net,Separated,Male,PuY9HtZ9q72VH9,11
+Ariana,Powell,2000-11-22,ariana.powell@hmail.net,In a domestic partnership,Female,J1912TeQ$$W#,5
+Grayson,Nelson,1979-10-14,grayson.nelson@dmail.org,Single,Male,gdULtJq00zQM,27
+Samuel,Diaz,1986-07-21,samuel.diaz@dmail.net,In a domestic partnership,Male,YTR%hjjgtV3Ca,5
+Scarlett,Myers,1987-08-02,scarlett.myers@amail.com,Widowed,Female,Gykv6&FG85wK,31
+Natalie,Harris,1982-08-07,natalie.harris@jmail.org,Engaged,Female,3SQVdVaPBF1,86
+Emily,Campbell,1983-04-19,emily.campbell@pmail.net,In an open relationship,Female,pDrpsg1^W,81
+Matthew,Gomez,1993-01-01,matthew.gomez@bmail.org,In an open relationship,Male,PGFiS3Ey$f,59
+Hannah,Price,1989-10-29,hannah.price@kmail.net,Married,Female,JHJVsk1ZyFj,91
+Lily,Barnes,1982-07-11,lily.barnes@zmail.org,Engaged,Female,cO5exvbJPM,25
+Liam,Wood,1990-11-12,liam.wood@vmail.net,Separated,Male,4J8u0BJYQRtDXd,24
+Ellie,Rivera,1992-06-28,ellie.rivera@imail.com,In a civil partnership,Female,fuz7eorChX9,9
+Emma,Flores,2000-09-06,emma.flores@email.org,Divorced,Female,eZbV0cuZ0hGVOA,83
+Victoria,Green,1995-11-05,victoria.green@omail.com,Divorced,Female,2SW^vtDdW7PNzWE,29
+Brooklyn,Davis,1982-11-13,brooklyn.davis@dmail.net,Widowed,Female,riIW1A5obLNctw,27
+Mia,Bailey,1991-12-24,mia.bailey@imail.net,In a domestic partnership,Female,yWyNIiWKxsNfDjJ,43
+Amelia,Johnson,1978-09-26,amelia.johnson@tmail.org,Engaged,Female,va8#jugmhbR229R,60
+Jack,Carter,1997-04-05,jack.carter@kmail.org,Divorced,Male,hGB1%&177nijaL,77
+Wyatt,Jenkins,1984-01-30,wyatt.jenkins@gmail.org,In a domestic partnership,Male,j10H^X0z,51
+Zoey,Evans,1996-08-18,zoey.evans@smail.com,Engaged,Female,2qvifFGfB,43
+Levi,Murphy,1984-11-26,levi.murphy@zmail.com,Divorced,Male,$qZB$SJO,53
+Sophia,Sullivan,1992-01-07,sophia.sullivan@wmail.net,It is complicated,Female,vn&krTJFAh,60
+Charles,Mitchell,1977-11-26,charles.mitchell@rmail.net,Single,Male,rIeFxP1AE,21
+Alexa,James,1987-02-27,alexa.james@bmail.net,In a civil partnership,Female,zeAraD%evVH,59
+Ava,Williams,1976-03-28,ava.williams@zmail.net,Separated,Female,%Oq&uWdQS,53
+Claire,Hall,1990-01-19,claire.hall@mmail.org,Engaged,Female,wkH0Mv4n1Q,22
+Jacob,Thompson,1998-10-01,jacob.thompson@cmail.com,In an open relationship,Male,kWlIHvFVPcK1Si,65
+Grace,Jackson,1979-06-25,grace.jackson@bmail.org,In a domestic partnership,Female,53bLHNsiMWjmwO*,100
+Abigail,Jones,1984-12-28,abigail.jones@mmail.net,Engaged,Female,1xlctcJmZuVj*1r,19
+Savannah,Taylor,2002-08-14,savannah.taylor@amail.net,It is complicated,Female,fTOfCR4Hapy,26
+Isaac,Ross,1980-10-28,isaac.ross@xmail.org,It is complicated,Male,11X61u1L,54
+Layla,Torres,1997-02-08,layla.torres@imail.org,Married,Female,Q#7fG%iFL,58
+Caleb,Hernandez,1994-11-07,caleb.hernandez@umail.com,In an open relationship,Male,vU*g$oYPS,86
+Jonathan,Reyes,1983-11-29,jonathan.reyes@amail.org,Single,Male,8GcssYxr*OM,6
+Sebastian,Cruz,1990-10-14,sebastian.cruz@mmail.com,Engaged,Male,U0uxrguD9,2
+James,Bennett,1994-11-22,james.bennett@rmail.net,In a domestic partnership,Male,6Oq2xI43#u0ZqpM,43
+Camila,Russell,1978-01-07,camila.russell@imail.net,Widowed,Female,1GRXj1Ov,79
+Jackson,Lee,1986-10-08,jackson.lee@lmail.com,Single,Male,z&1#a$w#MR6eMq2,77
+Jaxon,Martinez,1982-03-04,jaxon.martinez@imail.com,Engaged,Male,YWI16CRXOQGCI0,27
+William,Perry,1997-07-06,william.perry@jmail.com,Widowed,Male,0F2R1DbXX#jhLZ6,93
+Isabella,Butler,1983-07-17,isabella.butler@email.com,Separated,Female,Cq1WSgXhQWdihG,64
+Evelyn,Gray,1993-06-02,evelyn.gray@zmail.org,In a domestic partnership,Female,65IaCD#^e,65
+Nathan,Gutierrez,1986-09-11,nathan.gutierrez@amail.net,Married,Male,yqYUF4Efp$C,95
+Aubrey,Robinson,1978-11-24,aubrey.robinson@imail.org,In a civil partnership,Female,FW*Wlcd4nuG,77
+Dylan,Walker,1985-03-28,dylan.walker@pmail.org,Separated,Male,$6Z8RBsc,25
+Ella,Rodriguez,1999-07-27,ella.rodriguez@lmail.com,In an open relationship,Female,Tq%9%MoqzjiK1XE,70
+Michael,White,1997-04-15,michael.white@smail.com,In a domestic partnership,Male,8L1u8pixB&G^r,85
+Luke,Fisher,1980-06-30,luke.fisher@wmail.net,Widowed,Male,&C1TO1R3F1BB,10
+Skylar,Martin,1990-10-03,skylar.martin@cmail.org,In a civil partnership,Female,EC63AmoYTZz,30
+Anna,Garcia,1997-05-29,anna.garcia@ymail.com,In a domestic partnership,Female,3o9T$mvqFJ8xvOp,42
+Maksym,Zub,2002-08-13,max,Single,Male,max, 1
 \.
 COPY friendship (friend1, friend2) FROM stdin(FORMAT CSV);
 85,7
