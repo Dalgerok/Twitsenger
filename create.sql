@@ -3220,3 +3220,104 @@ Enel,39,Work
 Merck,60,Work
 \.
 
+COPY facilities(facility_name, facility_location, facility_type) from stdin(FORMAT CSV);
+Harvard University,82,University
+Massachusetts Institute of Technology,25,University
+Stanford University,18,University
+University of Cambridge,63,University
+University of Oxford,23,University
+Columbia University,53,University
+Princeton University,99,University
+"University of California, Berkeley",39,University
+University of Pennsylvania,98,University
+University of Chicago,41,University
+California Institute of Technology,3,University
+Yale University,27,University
+University of Tokyo,83,University
+Cornell University,51,University
+Northwestern University,83,University
+"University of California, Los Angeles",23,University
+"University of Michigan, Ann Arbor",40,University
+Johns Hopkins University,89,University
+University of Washington - Seattle,93,University
+University of Illinois at Urbana–Champaign,7,University
+Kyoto University,92,University
+University College London,96,University
+Duke University,58,University
+University of Toronto,19,University
+University of Wisconsin–Madison,4,University
+New York University,47,University
+University of California San Diego,84,University
+Imperial College London,90,University
+ETH Zurich,20,University
+McGill University,57,University
+University of Texas at Austin,39,University
+École Polytechnique,59,University
+Seoul National University,4,University
+"University of California, San Francisco",3,University
+Sorbonne University,16,University
+University of North Carolina at Chapel Hill,81,University
+University of Edinburgh,88,University
+University of Minnesota - Twin Cities,2,University
+University of Copenhagen,20,University
+University of Texas Southwestern Medical Center,1,University
+Washington University in St. Louis,65,University
+Karolinska Institute,86,University
+École normale supérieure,90,University
+University of Southern California,86,University
+Brown University,91,University
+Vanderbilt University,74,University
+Pennsylvania State University,55,University
+Rutgers University–New Brunswick,56,University
+Dartmouth College,54,University
+"University of California, Davis",33,University
+Ludwig Maximilian University of Munich,91,University
+University of British Columbia,86,University
+University of Virginia,78,University
+Ohio State University,24,University
+King's College London,41,University
+University of Oslo,19,University
+University of Colorado Boulder,46,University
+Weizmann Institute of Science,34,University
+Peking University,58,University
+University of Manchester,29,University
+Purdue University,62,University
+Hebrew University of Jerusalem,28,University
+University of Pittsburgh,6,University
+University of Melbourne,81,University
+"University of California, Irvine",97,University
+"University of California, Santa Barbara",75,University
+Rockefeller University,54,University
+University of Zurich,6,University
+University of Arizona,50,University
+Tsinghua University,20,University
+Free University of Berlin,83,University
+Heidelberg University,71,University
+Utrecht University,5,University
+Boston University,25,University
+National Taiwan University,68,University
+Technical University of Munich,85,University
+University of Bristol,68,University
+Paris-Sud University,14,University
+École Polytechnique Fédérale de Lausanne,37,University
+Osaka University,90,University
+University of Florida,54,University
+Georgia Institute of Technology,36,University
+University of Utah,66,University
+Carnegie Mellon University,18,University
+National University of Singapore,75,University
+Keio University,59,University
+"Texas A&M University, College Station",28,University
+Paris Diderot University,12,University
+University of Alberta,6,University
+Emory University,73,University
+University of Groningen,93,University
+Leiden University,12,University
+University of Texas MD Anderson Cancer Center,2,University
+Tufts University,8,University
+Aarhus University,93,University
+University of Chinese Academy of Sciences,52,University
+University of Rochester,4,University
+Erasmus University Rotterdam,18,University
+"University of Maryland, College Park",26,University
+University of Sydney,37,University
