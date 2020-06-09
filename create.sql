@@ -3117,3 +3117,106 @@ Chhāgalnāiya High school,43,School
 Hilden High school,94,School
 \.
 
+COPY facilities(facility_name, facility_location, facility_type) FROM stdin(FORMAT CSV);
+ICBC,65,Work
+China Construction Bank,91,Work
+Berkshire Hathaway,6,Work
+JPMorgan Chase,98,Work
+Wells Fargo,61,Work
+Agricultural Bank of China,65,Work
+Bank of America,67,Work
+Bank of China,73,Work
+Apple,62,Work
+Toyota Motor,72,Work
+AT&T,91,Work
+Citigroup,98,Work
+Exxon Mobil,8,Work
+General Electric,37,Work
+Samsung Electronics,32,Work
+Ping An Insurance Group,21,Work
+Wal-Mart Stores,77,Work
+Verizon Communications,74,Work
+Microsoft,92,Work
+Royal Dutch Shell,7,Work
+Allianz,94,Work
+China Mobile,25,Work
+BNP Paribas,44,Work
+Alphabet,98,Work
+China Petroleum & Chemical,86,Work
+Total,58,Work
+AXA Group,16,Work
+Daimler,80,Work
+Volkswagen Group,74,Work
+Mitsubishi UFJ Financial,89,Work
+Comcast,86,Work
+Johnson & Johnson,37,Work
+Banco Santander,65,Work
+Bank of Communications,21,Work
+Nestle,55,Work
+UnitedHealth Group,89,Work
+Nippon Telegraph & Tel,26,Work
+Itaú Unibanco Holding,54,Work
+Softbank,7,Work
+Gazprom,26,Work
+General Motors,89,Work
+China Merchants Bank,100,Work
+IBM,66,Work
+Royal Bank of Canada,96,Work
+Japan Post Holdings,78,Work
+Procter & Gamble,19,Work
+Pfizer,44,Work
+HSBC Holdings,47,Work
+Goldman Sachs Group,23,Work
+Siemens,56,Work
+BMW Group,1,Work
+China Life Insurance,74,Work
+ING Group,3,Work
+Intel,70,Work
+Postal Savings Bank Of China,50,Work
+Sberbank,98,Work
+TD Bank Group,30,Work
+Cisco Systems,26,Work
+Commonwealth Bank,90,Work
+Morgan Stanley,32,Work
+Novartis,47,Work
+Banco Bradesco,82,Work
+Industrial Bank,44,Work
+Ford Motor,19,Work
+Shanghai Pudong Development,58,Work
+CVS Health,51,Work
+Walt Disney,23,Work
+Prudential,55,Work
+Prudential Financial,64,Work
+Oracle,85,Work
+China State Construction Engineering,13,Work
+Citic Pacific,76,Work
+Boeing,34,Work
+Honda Motor,6,Work
+China Minsheng Banking,23,Work
+Westpac Banking Group,11,Work
+Deutsche Telekom,4,Work
+China Citic Bank,81,Work
+Roche Holding,45,Work
+UBS,91,Work
+Bank of Nova Scotia,84,Work
+Rosneft,32,Work
+Amazon.com,68,Work
+PepsiCo,6,Work
+Sumitomo Mitsui Financial,86,Work
+Coca-Cola,29,Work
+United Technologies,46,Work
+Sanofi,40,Work
+Bayer,54,Work
+Mizuho Financial,87,Work
+Zurich Insurance Group,10,Work
+ANZ,5,Work
+BASF,8,Work
+Walgreens Boots Alliance,36,Work
+Nissan Motor,91,Work
+US Bancorp,57,Work
+American Express,81,Work
+Hon Hai Precision,83,Work
+Enel,39,Work
+Merck,60,Work
+\.
+
