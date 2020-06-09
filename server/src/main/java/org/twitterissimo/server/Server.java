@@ -649,7 +649,7 @@ public class Server {
             um.myId = id1;
             um.otherId = id2;
             String SQL = "SELECT * FROM messages WHERE (user_from = " + id1 + " AND user_to = " + id2 + ") OR (user_from = " + id2 + " AND user_to = " + id1 + ")" +
-                    " ORDER BY message_date;";
+                    " ORDER BY message_date, message_id;";
             ResultSet rs = sqlGetQuery(SQL);
             if (rs == null){
                 System.out.println("VERY VERY BAD (IMPOSSIBLE)");
