@@ -555,10 +555,16 @@ public class Main extends Application{
         sendObject(new UserMessages(user.user_id, id));
     }
     public static void goToPost(Post p) {
-        for(PostsSceneController.PostPane postPane : postsSceneController.postView.getItems()){
-            if(p.post_id == postPane.post_id){
-                postsSceneController.postView.scrollTo(postsSceneController.postView.getItems().indexOf(postPane));
+        if(ClientPlace.POST_SCENE.equals(clientPlace) &&
+                postsSceneController.TOGGLE_GROUP.getSelectedToggle().equals(postsSceneController.allPostsButton)) {
+            for (PostsSceneController.PostPane postPane : postsSceneController.postView.getItems()) {
+                if (p.post_id == postPane.post_id) {
+                    postsSceneController.postView.scrollTo(postsSceneController.postView.getItems().indexOf(postPane));
+                }
             }
+        }
+        else{
+            System.out.println("BROO:(");
         }
     }
     public static void sendPost(String s) {
