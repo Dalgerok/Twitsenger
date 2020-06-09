@@ -1,7 +1,6 @@
 DROP SCHEMA IF EXISTS public CASCADE; --dont forget to comment this lines
 CREATE SCHEMA public; --this
 ALTER USER postgres WITH PASSWORD '1321'; --and this
-
 ----
 CREATE  TABLE locations (
             country              varchar(100)   ,
@@ -604,6 +603,108 @@ END;
 $$
     LANGUAGE plpgsql;
 
+COPY locations (city, country) FROM stdin;
+Tokyo	Japan
+New York	United States
+Mexico City	Mexico
+Mumbai	India
+São Paulo	Brazil
+Delhi	India
+Shanghai	China
+Kolkata	India
+Los Angeles	United States
+Dhaka	Bangladesh
+Buenos Aires	Argentina
+Karachi	Pakistan
+Cairo	Egypt
+Rio de Janeiro	Brazil
+Ōsaka	Japan
+Beijing	China
+Manila	Philippines
+Moscow	Russia
+Istanbul	Turkey
+Paris	France
+Seoul	Korea, South
+Lagos	Nigeria
+Jakarta	Indonesia
+Guangzhou	China
+Chicago	United States
+London	United Kingdom
+Lima	Peru
+Tehran	Iran
+Kinshasa	Congo (Kinshasa)
+Bogotá	Colombia
+Shenzhen	China
+Wuhan	China
+Hong Kong	Hong Kong
+Tianjin	China
+Chennai	India
+Taipei	Taiwan
+Bengalūru	India
+Bangkok	Thailand
+Lahore	Pakistan
+Chongqing	China
+Miami	United States
+Hyderabad	India
+Dallas	United States
+Santiago	Chile
+Philadelphia	United States
+Belo Horizonte	Brazil
+Madrid	Spain
+Houston	United States
+Ahmadābād	India
+Ho Chi Minh City	Vietnam
+Washington	United States
+Atlanta	United States
+Toronto	Canada
+Singapore	Singapore
+Luanda	Angola
+Baghdad	Iraq
+Barcelona	Spain
+Hāora	India
+Shenyang	China
+Khartoum	Sudan
+Pune	India
+Boston	United States
+Sydney	Australia
+Saint Petersburg	Russia
+Chittagong	Bangladesh
+Dongguan	China
+Riyadh	Saudi Arabia
+Hanoi	Vietnam
+Guadalajara	Mexico
+Melbourne	Australia
+Alexandria	Egypt
+Chengdu	China
+Rangoon	Burma
+Phoenix	United States
+Xi’an	China
+Porto Alegre	Brazil
+Sūrat	India
+Hechi	China
+Abidjan	Côte D’Ivoire
+Brasília	Brazil
+Ankara	Turkey
+Monterrey	Mexico
+Yokohama	Japan
+Nanjing	China
+Montréal	Canada
+Guiyang	China
+Recife	Brazil
+Seattle	United States
+Harbin	China
+San Francisco	United States
+Fortaleza	Brazil
+Zhangzhou	China
+Detroit	United States
+Salvador	Brazil
+Busan	Korea, South
+Johannesburg	South Africa
+Berlin	Germany
+Algiers	Algeria
+Rome	Italy
+Pyongyang	Korea, North
+\.
 
 INSERT INTO users
 VALUES ('Andrii', 'Orap', '12-12-2001', 'a', 'Single', 'Male', 'a');
@@ -611,11 +712,8 @@ INSERT INTO users
 VALUES ('Nazarii', 'Denha', '10-10-2002', 'b', 'Single', 'Male', 'b');
 INSERT INTO users
 VALUES ('Maxym', 'Zub', '10-10-2002', 'c', 'Single', 'Male', 'c');
-
-INSERT INTO friendship VALUES (1, 2);
-
-DELETE FROM friendship f WHERE f.friend1 = 1 AND f.friend2 = 2;
-SELECT * FROM friendship;
+INSERT INTO users
+VALUES ('Test', 'Testovich', '01-01-2000', 'd', 'Single', 'Male', 'd', 5);
 
 INSERT INTO locations(country, city) VALUES ('Poland', 'Krakow');
 INSERT INTO locations(country, city) VALUES ('Ukraine', 'Kremenchuk');
@@ -625,14 +723,6 @@ INSERT INTO facilities(facility_name, facility_location, facility_type) VALUES (
 INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (1, 1, '2019-10-1', 'student');
 INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (2, 1, '2019-10-1', 'student');
 INSERT INTO user_facilities (user_id, facility_id, date_from, description) VALUES (3, 1, '2019-10-1', 'student');
-
-SELECT * FROM get_user_friends_with_user(2);
-
-SELECT * FROM posts pp JOIN get_user_friends_with_user(2) kek
-    ON pp.user_id = kek.user_id
-    LEFT JOIN posts p ON pp.reposted_from = p.post_id
-    LEFT JOIN users us ON p.user_id = us.user_id
-WHERE pp.user_id = 2 ORDER BY pp.post_date DESC;
 
 /*INSERT INTO friendship VALUES (1, 2);
 INSERT INTO friendship VALUES (1, 2);
