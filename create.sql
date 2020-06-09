@@ -392,7 +392,7 @@ AS SELECT pp.*, kek.first_name, kek.last_name, kek.birthday,
           JOIN users kek ON pp.user_id = kek.user_id
           LEFT JOIN posts p ON pp.reposted_from = p.post_id
           LEFT JOIN users us ON p.user_id = us.user_id
-          ORDER BY pp.post_date DESC;
+          ORDER BY pp.post_date DESC, pp.post_id DESC;
 SELECT * FROM get_refactored_all_posts;
 
 ----
@@ -820,6 +820,7 @@ Skylar,Martin,1990-10-03,skylar.martin@cmail.org,In a civil partnership,Female,E
 Anna,Garcia,1997-05-29,anna.garcia@ymail.com,In a domestic partnership,Female,3o9T$mvqFJ8xvOp,42
 Maksym,Zub,2002-08-13,max,Single,Male,max, 1
 \.
+
 COPY friendship (friend1, friend2) FROM stdin(FORMAT CSV);
 85,7
 29,33
@@ -2524,6 +2525,7 @@ COPY friend_request (from_whom, to_whom) FROM STDIN (FORMAT CSV);
 75,79
 47,13
 \.
+
 COPY posts (user_id, post_text, reposted_from) from STDIN (FORMAT CSV);
 3,sit aliqua. non in consequat. nisi exercitation cillum magna veniam anim et ea laborum. officia minim Ut occaecat fugiat Lorem ex labore ut enim amet elit Duis laboris mollit eu sint,
 78,aute eiusmod enim veniam labore incididunt anim exercitation cupidatat eu magna qui non Excepteur adipiscing sint id cillum aliquip Duis occaecat ad et ut,

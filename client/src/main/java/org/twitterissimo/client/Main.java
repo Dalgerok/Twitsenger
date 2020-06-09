@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -147,6 +145,7 @@ public class Main extends Application{
         askForUpdatePostsScene();
         System.out.println("SET POSTS SCENE");
         mainSceneController.mainPane.getChildren().setAll(postsSceneController.postsVBox);
+        postsSceneController.TOGGLE_GROUP.selectToggle(postsSceneController.allPostsButton);
 
         clientPlace = ClientPlace.POST_SCENE;
     }
@@ -555,7 +554,13 @@ public class Main extends Application{
         System.out.println("ASK FOR MESSAGES FROM " + id);
         sendObject(new UserMessages(user.user_id, id));
     }
-
+    public static void goToPost(Post p) {
+        for(PostsSceneController.PostPane postPane : postsSceneController.postView.getItems()){
+            if(p.post_id == postPane.post_id){
+                postsSceneController.postView.scrollTo(postsSceneController.postView.getItems().indexOf(postPane));
+            }
+        }
+    }
     public static void sendPost(String s) {
         System.out.println("SEND MESSAGE " + s);
         sendObject(ConnectionMessage.NEW_POST);

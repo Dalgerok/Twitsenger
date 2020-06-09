@@ -2,7 +2,6 @@ package org.twitterissimo.server;
 
 import org.twitterissimo.tools.*;
 
-import java.awt.image.BandedSampleModel;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,7 +9,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -471,7 +469,7 @@ public class Server {
                     "LEFT JOIN posts p ON pp.reposted_from = p.post_id " +
                     "LEFT JOIN users us ON p.user_id = us.user_id ";
             if (user_id != null) SQL = SQL + "WHERE pp.user_id = " + user_id + " ";
-            SQL = SQL + "ORDER BY pp.post_date DESC;";
+            SQL = SQL + "ORDER BY pp.post_date DESC, pp.post_id DESC;";
 
 
 
@@ -590,7 +588,7 @@ public class Server {
                     "  FROM posts pp " +
                     "JOIN get_user_friends_with_user(" + user_id + ") kek ON pp.user_id = kek.user_id " +
                     "LEFT JOIN posts p ON pp.reposted_from = p.post_id LEFT JOIN users us ON p.user_id = us.user_id ";
-            SQL = SQL + "ORDER BY pp.post_date DESC;";
+            SQL = SQL + "ORDER BY pp.post_date DESC, pp.post_id DESC;";
 
             rs = sqlGetQuery(SQL);
             if (rs != null) {
