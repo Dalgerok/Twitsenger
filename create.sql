@@ -704,7 +704,10 @@ Berlin	Germany
 Algiers	Algeria
 Rome	Italy
 Pyongyang	Korea, North
+Jinan	China
 \.
+
+SELECT * FROM locations;
 
 INSERT INTO users
 VALUES ('Andrii', 'Orap', '12-12-2001', 'a', 'Single', 'Male', 'a');
