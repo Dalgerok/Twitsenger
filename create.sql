@@ -3013,4 +3013,107 @@ COPY posts (user_id, post_text, reposted_from) from STDIN (FORMAT CSV);
 56,in ea ut Lorem Duis dolore consequat. ex eiusmod in qui aute pariatur. sunt officia esse nulla mollit amet aliqua. commodo dolor irure,206
 15,voluptate dolor eu Excepteur non dolore veniam ad,
 \.
-SELECT * FROM posts;
+
+COPY facilities(facility_name, facility_location, facility_type) from stdin(FORMAT CSV);
+Mercedes High school,1,School
+Tebingtinggi High school,87,School
+Svatove High school,72,School
+Bhairāhawā High school,17,School
+Partinico High school,55,School
+Pederneiras High school,89,School
+El Hamma High school,91,School
+Lago da Pedra High school,72,School
+Gressier High school,73,School
+Conceição do Araguaia High school,53,School
+Carcar High school,60,School
+Fengxiang High school,19,School
+Saint Neots High school,22,School
+Găeşti High school,29,School
+Carnaxide High school,11,School
+Veinticinco de Mayo High school,42,School
+Asha High school,16,School
+Unaí High school,62,School
+Osório High school,56,School
+Nyalikungu High school,86,School
+Estrela High school,40,School
+Dazhong High school,1,School
+Khŭjaobod High school,96,School
+Yasenevo High school,83,School
+Joinville High school,16,School
+Espoo High school,97,School
+Nahariya High school,85,School
+Spassk-Dal’niy High school,33,School
+Tanah Merah High school,2,School
+Lebanon High school,70,School
+Zambrów High school,59,School
+Marano di Napoli High school,33,School
+Thousand Oaks High school,82,School
+Sesheke High school,17,School
+Isabela High school,94,School
+Zarya High school,10,School
+Correggio High school,49,School
+Spanish Lake High school,94,School
+Bartlesville High school,41,School
+Būsh High school,83,School
+Lakewood High school,5,School
+Hsinchu High school,27,School
+Roman High school,6,School
+Lauda-Königshofen High school,72,School
+Cantel High school,16,School
+Iwŏn-ŭp High school,78,School
+Haan High school,56,School
+Strakonice High school,84,School
+Farmington High school,71,School
+Gimcheon High school,14,School
+Tirmitine High school,57,School
+Pelabuhanratu High school,9,School
+Pointe-à-Pitre High school,61,School
+Mateus Leme High school,60,School
+Lugazi High school,8,School
+Teresina High school,77,School
+Gisenyi High school,71,School
+Harsewinkel High school,64,School
+Khenifra High school,57,School
+Giussano High school,8,School
+Kitakata High school,21,School
+Staryy Oskol High school,62,School
+Warner Robins High school,45,School
+Madīnat ‘Īsá High school,2,School
+Paôy Pêt High school,7,School
+Białogard High school,50,School
+Pace High school,71,School
+Téra High school,6,School
+Omagh High school,99,School
+Ellwangen High school,40,School
+Frenda High school,80,School
+Mahébourg High school,95,School
+Smolyan High school,92,School
+Ceadîr-Lunga High school,28,School
+Amiens High school,71,School
+Halle High school,42,School
+Korolev High school,45,School
+Zürich (Kreis 11) / Affoltern High school,96,School
+Ayamonte High school,55,School
+RMI Capitol High school,34,School
+Ban Lam Luk Ka High school,88,School
+Gero High school,36,School
+Olomouc High school,94,School
+Marseille 14 High school,9,School
+Phatthalung High school,33,School
+Jackson High school,38,School
+Willowdale High school,68,School
+Lille High school,35,School
+El Monte High school,28,School
+Germantown High school,46,School
+Mirpur Khas High school,49,School
+Metz High school,74,School
+Borzya High school,79,School
+Condado High school,66,School
+Fengcheng High school,20,School
+Shouguang High school,54,School
+San José de Guanipa High school,89,School
+Tecámac de Felipe Villanueva High school,50,School
+Chhāgalnāiya High school,43,School
+Hilden High school,94,School
+\.
+
