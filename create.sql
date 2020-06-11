@@ -51,7 +51,7 @@ CREATE  TABLE users (
             gender               genders                NOT NULL ,
             user_password 		 varchar(64)            NOT NULL ,
             user_location_id  	 integer DEFAULT NULL,
-            picture_url 		 varchar(500) DEFAULT NULL,
+            picture_url 		 varchar(2000) DEFAULT NULL,
             user_id              SERIAL ,
             CONSTRAINT pk_user PRIMARY KEY ( user_id ),
             CONSTRAINT un_email UNIQUE ( email ),

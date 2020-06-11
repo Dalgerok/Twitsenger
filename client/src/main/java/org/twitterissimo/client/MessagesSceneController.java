@@ -55,11 +55,13 @@ public class MessagesSceneController {
             if (!badUrl && p.getWidth() > 0) {
                 profileImage.setImage(p);
                 profileImage.setVisible(true);
+                circleAvatar.setVisible(false);
             }
             else {
                 firstNameAvatar.setText(otherUser.first_name.substring(0, 1));
                 lastNameAvatar.setText(otherUser.last_name.substring(0, 1));
                 circleAvatar.setVisible(true);
+                profileImage.setVisible(false);
             }
         }
     }

@@ -91,7 +91,10 @@ public class Server {
             } catch (SQLException e) {
                 System.out.println(e.getLocalizedMessage());
                 String[] s = e.toString().split("\"");
-                if(s.length == 3){
+                if (s.length <= 1){
+                    return "";
+                }else
+                if(s.length <= 3){
                     return s[1];
                 }
                 else{

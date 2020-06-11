@@ -25,7 +25,7 @@
             <groupId>org.twitterissimo.tools</groupId>
             <artifactId>tools</artifactId>
             <version>1.0</version>
-        </dependency>
+            </dependency>
     </dependencies>
 
     <groupId>org.twitterissimo.client</groupId>
