@@ -1,2 +1,2 @@
 # Twitterissimo
-Simple java/psql messenger
+Simple Java/PostgreSQL messenger
